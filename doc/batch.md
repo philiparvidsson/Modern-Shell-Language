@@ -87,4 +87,9 @@ for /l %%i in (0,1,2) do (
   echo !fr[%%i]!
 )
 endlocal
+
+:: output
+hej hej
+nej"nej
+utan
 ```
