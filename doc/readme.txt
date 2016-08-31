@@ -27,6 +27,7 @@ Kommentarer:
 Kommentar:
 	
 Kanske dålig idé med # som ledande tecken för kommentarer med tanke på kommentarer som spänner över flera rader?
+Eventuellt kan man köra ## {kommentar med flera rader} ## för att få multiline?
 
 
 If-satser:
@@ -83,3 +84,10 @@ Inbyggda funktioner:
 
 print:
 	Skriver ut en text till console. Ex. print “hej”
+
+...
+git-test
+...
+
+```if apa:
+    fer_sher()```
