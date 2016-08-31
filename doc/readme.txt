@@ -1,15 +1,15 @@
-“Batch 2.0”
+â€œBatch 2.0â€
 
-I detta dokument spånar vi på idéer till det språk vi ska designa som ska ersätta batch. Tanken är att skriva en transpilator som översätter från detta språk till batch-skript, eftersom batch är så uselt.
+I detta dokument spÃ¥nar vi pÃ¥ idÃ©er till det sprÃ¥k vi ska designa som ska ersÃ¤tta batch. Tanken Ã¤r att skriva en transpilator som Ã¶versÃ¤tter frÃ¥n detta sprÃ¥k till batch-skript, eftersom batch Ã¤r sÃ¥ uselt.
 
 
 
-Namnförslag
+NamnfÃ¶rslag
 
 Betch (Better Batch), Motch (Modern Batch), Crutch, Jatch (Java-like Batch?)
 
 
-Språkspec.
+SprÃ¥kspec.
 
 Scopes:
 
@@ -17,7 +17,7 @@ Scopes:
 
 Kommentar:
 		
-Vi kan antingen använda måsvingar för scopes (som JavaScript) eller indentering (som Python). Philip föredrar indentering eftersom måsvingar är fula samt indentering tvingar fram en vettig kod. Tvång är bra.
+Vi kan antingen anvÃ¤nda mÃ¥svingar fÃ¶r scopes (som JavaScript) eller indentering (som Python). Philip fÃ¶redrar indentering eftersom mÃ¥svingar Ã¤r fula samt indentering tvingar fram en vettig kod. TvÃ¥ng Ã¤r bra.
 
 
 Kommentarer:
@@ -26,8 +26,8 @@ Kommentarer:
 
 Kommentar:
 	
-Kanske dålig idé med # som ledande tecken för kommentarer med tanke på kommentarer som spänner över flera rader?
-Eventuellt kan man köra ## {kommentar med flera rader} ## för att få multiline?
+Kanske dÃ¥lig idÃ© med # som ledande tecken fÃ¶r kommentarer med tanke pÃ¥ kommentarer som spÃ¤nner Ã¶ver flera rader?
+Eventuellt kan man kÃ¶ra ## {kommentar med flera rader} ## fÃ¶r att fÃ¥ multiline?
 
 
 If-satser:
@@ -41,7 +41,7 @@ else:
 
 Kommentar:
 	
-Poänglöst med onödiga nyckelord som then. 
+PoÃ¤nglÃ¶st med onÃ¶diga nyckelord som then. 
 
 While-loopar:
 
@@ -50,7 +50,7 @@ while expr:
 
 Kommentar:
 	
-…
+â€¦
 
 For-loopar:
 
@@ -72,22 +72,15 @@ Kommentar:
 	
 ...
 
-Strängar:
+StrÃ¤ngar:
 
-s = ‘some string’
+s = â€˜some stringâ€™
 
 Kommentar:
 	
-Single- eller double-quotes, det är frågan.
+Single- eller double-quotes, det Ã¤r frÃ¥gan.
 
 Inbyggda funktioner:
 
 print:
-	Skriver ut en text till console. Ex. print “hej”
-
-...
-git-test
-...
-
-```if apa:
-    fer_sher()```
+	Skriver ut en text till console. Ex. print â€œhejâ€
