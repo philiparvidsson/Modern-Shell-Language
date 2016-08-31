@@ -71,7 +71,24 @@ nej
 
 **Q:** Hur fungerar det med spaces i strängarna?
 
-**A:** it don'ten't. Ska man ha support för både strängar med space, och strängar med doublequotes, så är det hax som gäller.
+**A:** it don'ten't. Ska man ha support för både strängar med space, och strängar med doublequotes, så är det hax som gäller. Om man nöjer sig med bara space i strängar så funkar följande:
+```bat
+for %%s in ("string with spaces" "no_space" no_space_or_quotes) do (
+  echo 1: %%~s
+  echo 2: %%s
+  echo.
+)
+
+:: output
+1: "string with spaces"
+2: string with spaces
+
+1: "no_space"
+2: no_space
+
+1: no_space_or_quotes
+2: no_space_or_quotes
+```
 
 #### förslag på hax som lösning till for-conundrum
 ```bat
