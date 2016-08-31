@@ -9,13 +9,15 @@ import ast
 #-------------------------------------------------
 
 def gen_assign(node):
+    #
     #          ASSIGN
     #            /\
     #           /  \
     #          /    \
     # IDENTIFIER     EXPR
-    ident = node.children[0].value
-    expr  = node.children[1].value
+    #
+    ident = node.children[0]
+    expr  = node.children[1]
 
 def gen_code(node):
     # Generate batch code here

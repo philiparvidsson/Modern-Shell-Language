@@ -1,10 +1,4 @@
 #-------------------------------------------------
-# IMPORTS
-#-------------------------------------------------
-
-import ast
-
-#-------------------------------------------------
 # CLASSES
 #-------------------------------------------------
 
@@ -17,3 +11,17 @@ class Node(object):
 
         self.kind  = None
         self.value = None
+
+#-------------------------------------------------
+# FUNCTIONS
+#-------------------------------------------------
+
+def expression(tokens):
+    token = tokens[0]
+
+    return None
+
+def from_tokens(tokens):
+    root = expression(tokens)
+
+    return root
