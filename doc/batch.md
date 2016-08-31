@@ -70,3 +70,5 @@ hej
 yay
 nej
 ```
+
+:question: Hur fungerar det med spaces i strängarna?
