@@ -1,4 +1,0 @@
-x = 4
-y = "foo"
-if x = y:
-    x = "boo"

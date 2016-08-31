@@ -11,4 +11,4 @@ def transpile(file_name):
         print str(token)
 
 if __name__=="__main__":
-    transpile("test.mb")
+    transpile("../examples/test.mb")
