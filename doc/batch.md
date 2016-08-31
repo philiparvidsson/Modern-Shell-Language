@@ -71,8 +71,9 @@ yay
 nej
 ```
 
-:question: Hur fungerar det med spaces i strängarna?
-it don'ten't. Ska man ha support för både strängar med space, och strängar med doublequotes, så är det hax som gäller.
+**Q:** Hur fungerar det med spaces i strängarna?
+
+**A:** it don'ten't. Ska man ha support för både strängar med space, och strängar med doublequotes, så är det hax som gäller.
 
 #### förslag på hax som lösning till for-conundrum
 ```bat
