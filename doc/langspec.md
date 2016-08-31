@@ -1,19 +1,20 @@
 # Scopes:
 
+```
 ...
+```
 
-Kommentar:
+**Kommentar:**
 		
 Vi kan antingen använda måsvingar för scopes (som JavaScript) eller indentering (som Python). Philip föredrar indentering eftersom måsvingar är fula samt indentering tvingar fram en vettig kod. Tvång är bra.
 
-
-Kommentarer:
+# Kommentarer:
 
 ```
 # Kommentar.
 ```
 
-Kommentar:
+**Kommentar:**
 	
 Kanske dålig idé med # som ledande tecken för kommentarer med tanke på kommentarer som spänner över flera rader?
 Eventuellt kan man köra ## {kommentar med flera rader} ## för att få multiline?
@@ -30,7 +31,7 @@ else:
     do_something_else()
 ```
 
-Kommentar:
+**Kommentar:**
 	
 Poänglöst med onödiga nyckelord som then. 
 
@@ -41,7 +42,7 @@ while expr:
     do_something()
 ```
 
-Kommentar:
+**Kommentar:**
 	
 …
 
@@ -52,7 +53,7 @@ for i in 1..10 step 2
     do_something()
 ```
 
-Kommentar:
+**Kommentar:**
 	
 ...
 
@@ -65,7 +66,7 @@ func foo(arg1, arg2):
     return x+y
 ```
 
-Kommentar:
+**Kommentar:**
 	
 ...
 
@@ -75,7 +76,7 @@ Kommentar:
 s = 'some string'
 ```
 
-Kommentar:
+**Kommentar:**
 	
 Single- eller double-quotes, det är frågan.
 
