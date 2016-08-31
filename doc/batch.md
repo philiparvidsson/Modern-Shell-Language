@@ -44,18 +44,16 @@ z: c, d
 ```
 ## Batch Language Constructs (flow control, function definitions, etc)
 
-### for i in 1..5
+### for i in 1..5 step 2
 ```bat
-for %%i in (1 2 3 4 5) do (
+for /l %%i in (1,2,5) do (
   set var%%i=%%i
   echo var%%i: !var%%i!
 )
 
 :: output
 var1: 1
-var2: 2
 var3: 3
-var4: 4
 var5: 5
 ```
 
