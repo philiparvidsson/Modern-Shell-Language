@@ -8,7 +8,7 @@
 		
 Vi kan antingen använda måsvingar för scopes (som JavaScript) eller indentering (som Python). Philip föredrar indentering eftersom måsvingar är fula samt indentering tvingar fram en vettig kod. Tvång är bra.
 
-# Kommentarer:
+## Kommentarer:
 
 ```
 # Kommentar.
@@ -20,7 +20,7 @@ Kanske dålig idé med # som ledande tecken för kommentarer med tanke på komme
 Eventuellt kan man köra ## {kommentar med flera rader} ## för att få multiline?
 
 
-# If-satser:
+## If-satser:
 
 ```
 if expr:
@@ -35,7 +35,7 @@ else:
 	
 Poänglöst med onödiga nyckelord som then. 
 
-# While-loopar:
+## While-loopar:
 
 ```
 while expr:
@@ -46,7 +46,7 @@ while expr:
 	
 …
 
-# For-loopar:
+## For-loopar:
 
 ```
 for i in 1..10 step 2
@@ -57,7 +57,7 @@ for i in 1..10 step 2
 	
 ...
 
-# Funktioner och funktionsanrop:
+## Funktioner och funktionsanrop:
 
 ```
 func foo(arg1, arg2):
@@ -70,7 +70,7 @@ func foo(arg1, arg2):
 	
 ...
 
-# Strängar:
+## Strängar:
 
 ```
 s = 'some string'
@@ -80,7 +80,7 @@ s = 'some string'
 	
 Single- eller double-quotes, det är frågan.
 
-# Inbyggda funktioner:
+## Inbyggda funktioner:
 
 print:
 	Skriver ut en text till console. Ex. print "hej"
