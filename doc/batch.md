@@ -72,3 +72,18 @@ nej
 ```
 
 :question: Hur fungerar det med spaces i strängarna?
+it don'ten't. Ska man ha support för både strängar med space, och strängar med doublequotes, så är det hax som gäller.
+
+#### förslag på hax som lösning till for-conundrum
+```bat
+setlocal enableDelayedExpansion
+set "fr[0]=hej hej"
+set "fr[1]=nej"nej"
+set "fr[2]=utan"
+
+:: /l gör om set (a,b,c,d,e) till iterator (start,step,end)
+for /l %%i in (0,1,2) do (
+  echo !fr[%%i]!
+)
+endlocal
+```
