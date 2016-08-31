@@ -1,4 +1,4 @@
-Scopes:
+# Scopes:
 
 ...
 
@@ -19,7 +19,7 @@ Kanske dålig idé med # som ledande tecken för kommentarer med tanke på komme
 Eventuellt kan man köra ## {kommentar med flera rader} ## för att få multiline?
 
 
-If-satser:
+# If-satser:
 
 ```
 if expr:
@@ -34,7 +34,7 @@ Kommentar:
 	
 Poänglöst med onödiga nyckelord som then. 
 
-While-loopar:
+# While-loopar:
 
 ```
 while expr:
@@ -45,7 +45,7 @@ Kommentar:
 	
 …
 
-For-loopar:
+# For-loopar:
 
 ```
 for i in 1..10 step 2
@@ -56,7 +56,7 @@ Kommentar:
 	
 ...
 
-Funktioner och funktionsanrop:
+# Funktioner och funktionsanrop:
 
 ```
 func foo(arg1, arg2):
@@ -69,7 +69,7 @@ Kommentar:
 	
 ...
 
-Strängar:
+# Strängar:
 
 ```
 s = 'some string'
@@ -79,7 +79,7 @@ Kommentar:
 	
 Single- eller double-quotes, det är frågan.
 
-Inbyggda funktioner:
+# Inbyggda funktioner:
 
 print:
 	Skriver ut en text till console. Ex. print "hej"
