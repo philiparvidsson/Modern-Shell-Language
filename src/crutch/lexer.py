@@ -52,9 +52,16 @@ def expression(tokens):
 
     result = None
 
-    if token.kind == parser.IDENTIFIER:
+    if token.kind == parser.LEFT_PAREN:
+        tokens.get_next()
+        result = expression(tokens)
+        right_paren = tokens.get_next()
+    elif token.kind == parser.IDENTIFIER:
         if tokens.peek(1).kind == parser.EQ_SIGN:
             result = assignment(tokens) # identifier = expr
+        else:
+            tokens.get_next()
+            result = Node(IDENTIFIER, token.value)
     elif token.kind == parser.NUMERAL:
         tokens.get_next()
         result = Node(NUMERAL, token.value)

@@ -55,7 +55,7 @@ def transpile_numeral(bat, node):
 
 @transpiles(lexer.STRING)
 def transpile_string(bat, node):
-    bat.return_value("\"{}\"".format(node.value))
+    bat.return_value("{}".format(node.value))
 
 @transpiles(lexer.ADD)
 def transpile_assignment(bat, node):
