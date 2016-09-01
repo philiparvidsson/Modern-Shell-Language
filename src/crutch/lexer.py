@@ -38,6 +38,39 @@ class Node(object):
         return "Node(kind={}, value={}, children={})".format(self.kind, self.value, children)
 
 #-------------------------------------------------
+# HELPER FUNCTIONS
+#-------------------------------------------------
+
+def print_node(node, level):
+    kind = node.kind[0:3]
+
+    tab = "    " * (level-1)
+    arrow = "|-- " if level > 0 else ""
+    nodeinfo = "[{}: {}]".format(kind, node.value)
+
+    print(tab + arrow + nodeinfo)
+    return len(tab+arrow+nodeinfo)
+
+def visualize(node, level=0):
+    print_node(node, level)
+    for child in node.children:
+        visualize(child, level+1)
+
+def max_len(node, level=0):
+    _max = level*4 + len(node.value) + 7
+    for child in node.children:
+        _temp = max_len(child, level+1)
+        _max = _max if _temp < _max else _temp
+
+    return _max
+
+def draw_ast_tree(node):
+    maxlen = max_len(node)
+    print("\n-----AST" + "-" * (maxlen-6))
+    visualize(node)
+    print("--------" + "-" * (maxlen-6) + "\n")
+
+#-------------------------------------------------
 # FUNCTIONS
 #-------------------------------------------------
 
