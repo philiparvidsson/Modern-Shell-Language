@@ -2,7 +2,7 @@
 # IMPORTS
 #-------------------------------------------------
 
-from crutch import codegen, lexer, parser
+from crutch import lexer, parser, transpiler
 
 #-------------------------------------------------
 # FUNCTIONS
@@ -20,13 +20,12 @@ def transpile(file_name):
 
     print "-" * 10
 
-    ast = lexer.generate_ast(token_list)
-    print str(ast)
+    bat = transpiler.Bat()
+    while len(token_list.tokens) > 0:
+        ast = lexer.generate_ast(token_list)
+        print str(ast)
+        transpiler.generate_code(bat, ast)
 
-    print "-" * 10
-
-    bat = codegen.Bat()
-    codegen.generate_code(bat, ast)
     print bat.code
 
 #-------------------------------------------------

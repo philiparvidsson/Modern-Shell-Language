@@ -9,14 +9,17 @@ from . import core
 #-------------------------------------------------
 
 # Below are the token types.
+ASTERISK    = "asterisk"
 COLON       = "colon"
 END_OF_FILE = "<eof>"
 EQ_SIGN     = "equal sign"
 IDENTIFIER  = "identifier"
 IF          = "if"
+MINUS       = "minus"
 NEWLINE     = "newline"
 NUMERAL     = "numeral"
 PLUS        = "plus"
+SLASH       = "slash"
 STRING      = "string"
 UNKNOWN     = "<unknown>"
 LEFT_PAREN = "left parenthesis"
@@ -93,10 +96,19 @@ def parse_into_tokens(source_code):
             column += 1
             token = Token(COLON, ":")
 
-        # Plus.
+        # Airthmetic tokens.
         elif char == "+":
             column += 1
             token = Token(PLUS, "+")
+        elif char == "-":
+            column += 1
+            token = Token(MINUS, "-")
+        elif char == "*":
+            column += 1
+            token = Token(ASTERISK, "*")
+        elif char == "/":
+            column += 1
+            token = Token(SLASH, "/")
 
         # Parentheses.
         elif char == "(":
@@ -153,6 +165,6 @@ def parse_into_tokens(source_code):
 
             tokens.append(token)
 
-    tokens.append(Token(END_OF_FILE, None, row, column))
+    #tokens.append(Token(END_OF_FILE, None, row, column))
 
     return TokenList(tokens)

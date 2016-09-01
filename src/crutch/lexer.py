@@ -9,11 +9,14 @@ from . import parser
 # CONSTANTS
 #-------------------------------------------------
 
-ADD         = "add"
-ASSIGNMENT  = "assignment"
-IDENTIFIER  = "identifier"
-NUMERAL     = "numeral"
-STRING      = "string"
+ADD        = "add"
+ASSIGNMENT = "assignment"
+DIVIDE     = "divide"
+IDENTIFIER = "identifier"
+MULTIPLY   = "multiply"
+NUMERAL    = "numeral"
+STRING     = "string"
+SUBTRACT   = "subtract"
 
 #-------------------------------------------------
 # CLASSES
@@ -76,6 +79,21 @@ def expression(tokens):
             lhs = result
             rhs = expression(tokens)
             result = Node(ADD, "+", [lhs, rhs])
+        elif token.kind == parser.MINUS:
+            tokens.get_next()
+            lhs = result
+            rhs = expression(tokens)
+            result = Node(SUBTRACT, "-", [lhs, rhs])
+        elif token.kind == parser.ASTERISK:
+            tokens.get_next()
+            lhs = result
+            rhs = expression(tokens)
+            result = Node(MULTIPLY, "*", [lhs, rhs])
+        elif token.kind == parser.SLASH:
+            tokens.get_next()
+            lhs = result
+            rhs = expression(tokens)
+            result = Node(DIVIDE, "/", [lhs, rhs])
 
     return result
 
