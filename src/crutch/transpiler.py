@@ -47,7 +47,13 @@ def transpiles(node_kind):
 
 @transpiles(lexer.CALL)
 def transpile_call(bat, node):
-    bat.emit_code("cscript //Nologo stdlib/{}.vbs".format(node.value))
+    args = []
+
+    for arg_node in node.children:
+        generate_code(bat, arg_node)
+        args.append(bat.returned_value)
+
+    bat.emit_code("cscript //Nologo stdlib/{}.vbs {}".format(node.value, " ".join(args)))
 
 @transpiles(lexer.IDENTIFIER)
 def transpile_identifier(bat, node):

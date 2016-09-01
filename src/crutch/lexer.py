@@ -57,9 +57,25 @@ def call(tokens):
 
     arg_nodes = []
 
+    arg_token = tokens.peek()
+    while arg_token.kind != parser.RIGHT_PAREN:
+        arg_node = expression(tokens)
+
+        # Cannot use calls as args.
+        assert arg_node.kind != CALL
+
+        arg_nodes.append(arg_node)
+
+        comma_token = tokens.peek()
+        if comma_token.kind != parser.COMMA:
+            break
+
+        # Eat comma.
+        tokens.get_next()
+
     right_paren_token = tokens.get_next()
 
-    return Node(CALL, identifier_token.value)
+    return Node(CALL, identifier_token.value, arg_nodes)
 
 def expression(tokens):
     token = tokens.peek()
