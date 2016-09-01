@@ -11,14 +11,28 @@ from . import lexer
 translators = {}
 
 #-------------------------------------------------
+# CLASSES
+#-------------------------------------------------
+
+class Bat(object):
+    def __init__(self):
+        self.code = ""
+        self.returned_code = ""
+
+    def emit_code(self, code):
+        self.code += code + "\n"
+
+    def return_code(self, code):
+        self.returned_code = code
+
+#-------------------------------------------------
 # FUNCTIONS
 #-------------------------------------------------
 
-
 def transpiles(node_kind):
     def decorator(func):
-        def deco(node):
-            return func(node)
+        def deco(bat, node):
+            return func(bat, node)
 
         global translators
         translators[node_kind] = func
@@ -27,15 +41,28 @@ def transpiles(node_kind):
 
     return decorator
 
+@transpiles(lexer.IDENTIFIER)
+def transpile_identifier(bat, node):
+    bat.return_code("%{}%".format(node.value))
+
+@transpiles(lexer.NUMERAL)
+def transpile_numeral(bat, node):
+    bat.return_code("{}".format(node.value))
+
+@transpiles(lexer.STRING)
+def transpile_string(bat, node):
+    bat.return_code("\"{}\"".format(node.value))
 
 @transpiles(lexer.ASSIGNMENT)
-def assignment(node):
+def transpile_assignment(bat, node):
     identifier_node = node.children[0]
-    literal_node    = node.children[1]
+    expression_node = node.children[1]
 
-    print "set %{}={}".format(identifier_node.value, literal_node.value)
+    generate_code(bat, expression_node)
 
-def generate_code(ast):
+    bat.emit_code("set /a {}={}".format(identifier_node.value, bat.returned_code))
+    transpile_identifier(bat, identifier_node)
+
+def generate_code(bat, ast):
     transpile_fn = translators[ast.kind]
-
-    transpile_fn(ast)
+    transpile_fn(bat, ast)

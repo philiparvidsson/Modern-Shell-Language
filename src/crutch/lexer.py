@@ -39,11 +39,10 @@ class Node(object):
 def assignment(tokens):
     identifier_token = tokens.get_next()
     assignment_token = tokens.get_next()
-    literal_token    = tokens.get_next()
 
     identifier_node = Node(IDENTIFIER, identifier_token.value)
-    literal_node    = Node(NUMERAL if literal_token.kind == parser.NUMERAL else STRING, literal_token.value)
-    assignment_node = Node(ASSIGNMENT, children=[identifier_node, literal_node])
+    expression_node = expression(tokens)
+    assignment_node = Node(ASSIGNMENT, children=[identifier_node, expression_node])
 
     return assignment_node
 

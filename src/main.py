@@ -25,7 +25,9 @@ def transpile(file_name):
 
     print "-" * 10
 
-    codegen.generate_code(ast)
+    bat = codegen.Bat()
+    codegen.generate_code(bat, ast)
+    print bat.code
 
 #-------------------------------------------------
 # SCRIPT
