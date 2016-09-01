@@ -11,6 +11,7 @@ from . import core
 # Below are the token types.
 ASTERISK    = "asterisk"
 COLON       = "colon"
+COMMA       = "comma"
 END_OF_FILE = "<eof>"
 EQ_SIGN     = "equal sign"
 IDENTIFIER  = "identifier"
@@ -95,6 +96,11 @@ def parse_into_tokens(source_code):
         elif char == ":":
             column += 1
             token = Token(COLON, ":")
+
+        # Comma.
+        elif char == ",":
+            column += 1
+            token = Token(COMMA, ",")
 
         # Airthmetic tokens.
         elif char == "+":

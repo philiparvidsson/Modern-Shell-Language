@@ -11,6 +11,7 @@ from . import parser
 
 ADD        = "add"
 ASSIGNMENT = "assignment"
+CALL       = "call"
 DIVIDE     = "divide"
 IDENTIFIER = "identifier"
 MULTIPLY   = "multiply"
@@ -50,6 +51,16 @@ def assignment(tokens):
 
     return assignment_node
 
+def call(tokens):
+    identifier_token = tokens.get_next()
+    left_paren_token = tokens.get_next()
+
+    arg_nodes = []
+
+    right_paren_token = tokens.get_next()
+
+    return Node(CALL, identifier_token.value)
+
 def expression(tokens):
     token = tokens.peek()
 
@@ -62,6 +73,8 @@ def expression(tokens):
     elif token.kind == parser.IDENTIFIER:
         if tokens.peek(1).kind == parser.EQ_SIGN:
             result = assignment(tokens) # identifier = expr
+        elif tokens.peek(1).kind == parser.LEFT_PAREN:
+            result = call(tokens)
         else:
             tokens.get_next()
             result = Node(IDENTIFIER, token.value)
