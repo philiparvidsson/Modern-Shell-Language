@@ -9,12 +9,12 @@ from . import core
 #-------------------------------------------------
 
 # Below are the token types.
-ASSIGNMENT  = "="
 COLON       = ":"
 END_OF_FILE = "<eof>"
+EQ_SIGN     = "equal sign"
 IDENTIFIER  = "identifier"
 IF          = "if"
-NEWLINE     = "\\n"
+NEWLINE     = "newline"
 NUMERAL     = "numeral"
 STRING      = "string"
 UNKNOWN     = "<unknown>"
@@ -34,6 +34,20 @@ class Token(object):
     def __str__(self):
         return "Token(kind={}, row={}, column={}, value={})".format(self.kind, self.row, self.column, self.value)
 
+class TokenList(object):
+    def __init__(self, tokens):
+        self.tokens = tokens
+
+    def get_next(self):
+        token = self.tokens[0]
+        self.tokens = self.tokens[1:]
+        return token
+
+    def peek(self, num_tokens_to_skip = 0):
+        print "peek", self.tokens[num_tokens_to_skip]
+        return self.tokens[num_tokens_to_skip]
+
+
 #-------------------------------------------------
 # FUNCTIONS
 #-------------------------------------------------
@@ -52,7 +66,7 @@ def parse_into_tokens(source_code):
 
         # Line breaks etc.
         if char == "\n":
-            token = Token(NEWLINE)
+            token = Token(NEWLINE, "\n")
             row += 1
             column = 1
         elif char == "\r":
@@ -68,7 +82,7 @@ def parse_into_tokens(source_code):
         # Assignment (identifier = expression)
         elif char == "=":
             column += 1
-            token = Token(ASSIGNMENT, "=")
+            token = Token(EQ_SIGN, "=")
 
         # Colon
         elif char == ":":
@@ -124,4 +138,4 @@ def parse_into_tokens(source_code):
 
     tokens.append(Token(END_OF_FILE, None, row, column))
 
-    return tokens
+    return TokenList(tokens)
