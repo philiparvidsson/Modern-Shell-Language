@@ -9,15 +9,18 @@ from . import core
 #-------------------------------------------------
 
 # Below are the token types.
-COLON       = ":"
+COLON       = "colon"
 END_OF_FILE = "<eof>"
 EQ_SIGN     = "equal sign"
 IDENTIFIER  = "identifier"
 IF          = "if"
 NEWLINE     = "newline"
 NUMERAL     = "numeral"
+PLUS        = "plus"
 STRING      = "string"
 UNKNOWN     = "<unknown>"
+LEFT_PAREN = "left parenthesis"
+RIGHT_PAREN = "right parenthesis"
 
 #-------------------------------------------------
 # CLASSES
@@ -44,7 +47,8 @@ class TokenList(object):
         return token
 
     def peek(self, num_tokens_to_skip = 0):
-        print "peek", self.tokens[num_tokens_to_skip]
+        if len(self.tokens) == 0:
+            return None
         return self.tokens[num_tokens_to_skip]
 
 
@@ -84,10 +88,23 @@ def parse_into_tokens(source_code):
             column += 1
             token = Token(EQ_SIGN, "=")
 
-        # Colon
+        # Colon.
         elif char == ":":
             column += 1
             token = Token(COLON, ":")
+
+        # Plus.
+        elif char == "+":
+            column += 1
+            token = Token(PLUS, "+")
+
+        # Parentheses.
+        elif char == "(":
+            column += 1
+            token = Token(LEFT_PAREN, "(")
+        elif char == ")":
+            column += 1
+            token = Token(RIGHT_PAREN, ")")
 
         # Identifiers.
         elif char.isalpha():

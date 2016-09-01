@@ -9,6 +9,7 @@ from . import parser
 # CONSTANTS
 #-------------------------------------------------
 
+ADD         = "add"
 ASSIGNMENT  = "assignment"
 IDENTIFIER  = "identifier"
 NUMERAL     = "numeral"
@@ -49,13 +50,27 @@ def assignment(tokens):
 def expression(tokens):
     token = tokens.peek()
 
+    result = None
+
     if token.kind == parser.IDENTIFIER:
         if tokens.peek(1).kind == parser.EQ_SIGN:
-            return assignment(tokens) # identifier = expr
+            result = assignment(tokens) # identifier = expr
     elif token.kind == parser.NUMERAL:
-        return Node(NUMERAL, token.value)
+        tokens.get_next()
+        result = Node(NUMERAL, token.value)
     elif token.kind == parser.STRING:
-        return Node(STRING, token.value)
+        tokens.get_next()
+        result = Node(STRING, token.value)
+
+    token = tokens.peek()
+    if token:
+        if token.kind == parser.PLUS:
+            tokens.get_next()
+            lhs = result
+            rhs = expression(tokens)
+            result = Node(ADD, "+", [lhs, rhs])
+
+    return result
 
 def generate_ast(tokens):
     return expression(tokens)

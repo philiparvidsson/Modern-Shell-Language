@@ -5,6 +5,10 @@
 from . import lexer
 
 #-------------------------------------------------
+# CONSTANTS
+#-------------------------------------------------
+
+#-------------------------------------------------
 # GLOBALS
 #-------------------------------------------------
 
@@ -17,13 +21,13 @@ translators = {}
 class Bat(object):
     def __init__(self):
         self.code = ""
-        self.returned_code = ""
+        self.returned_value = ""
 
     def emit_code(self, code):
         self.code += code + "\n"
 
-    def return_code(self, code):
-        self.returned_code = code
+    def return_value(self, value):
+        self.returned_value = value
 
 #-------------------------------------------------
 # FUNCTIONS
@@ -43,15 +47,28 @@ def transpiles(node_kind):
 
 @transpiles(lexer.IDENTIFIER)
 def transpile_identifier(bat, node):
-    bat.return_code("%{}%".format(node.value))
+    bat.return_value("!{}!".format(node.value))
 
 @transpiles(lexer.NUMERAL)
 def transpile_numeral(bat, node):
-    bat.return_code("{}".format(node.value))
+    bat.return_value("{}".format(node.value))
 
 @transpiles(lexer.STRING)
 def transpile_string(bat, node):
-    bat.return_code("\"{}\"".format(node.value))
+    bat.return_value("\"{}\"".format(node.value))
+
+@transpiles(lexer.ADD)
+def transpile_assignment(bat, node):
+    lhs = node.children[0]
+    rhs = node.children[1]
+
+    generate_code(bat, lhs)
+    lhs_code = bat.returned_value
+
+    generate_code(bat, rhs)
+    rhs_code = bat.returned_value
+
+    bat.return_value("{}+{}".format(lhs_code, rhs_code))
 
 @transpiles(lexer.ASSIGNMENT)
 def transpile_assignment(bat, node):
@@ -60,7 +77,7 @@ def transpile_assignment(bat, node):
 
     generate_code(bat, expression_node)
 
-    bat.emit_code("set /a {}={}".format(identifier_node.value, bat.returned_code))
+    bat.emit_code("set {}={}".format(identifier_node.value, bat.returned_value))
     transpile_identifier(bat, identifier_node)
 
 def generate_code(bat, ast):
