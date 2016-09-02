@@ -1,4 +1,5 @@
+snabel(a+b)
+
 func snabel(x):
     y = x+1
-    return
-    x=3
+    return y
