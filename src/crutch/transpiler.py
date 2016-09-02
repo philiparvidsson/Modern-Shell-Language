@@ -24,6 +24,7 @@ class Bat(object):
         self.returned_value = ""
         self.temp_index = 0
 
+        self.emit_code("@echo off")
         self.emit_code("setlocal enabledelayedexpansion")
 
     def emit_code(self, code):
@@ -78,10 +79,23 @@ def transpile_call(bat, node):
 
     #bat.emit_code("cscript //Nologo stdlib/{}.vbs {}".format(node.value, " ".join(args)))
 
-    if len(args) == 0:
-        bat.emit_code("call :{}".format(node.value))
+    funcname = node.value
+    import os.path
+    if os.path.isfile("lib/" + funcname + ".bat"):
+        if len(args) == 0:
+            bat.emit_code("call lib/{}.bat".format(funcname))
+        else:
+            bat.emit_code("call lib/{}.bat {}".format(funcname, " ".join(args)))
+    elif os.path.isfile("lib/" + funcname + ".vbs"):
+        if len(args) == 0:
+            bat.emit_code("cscript //Nologo lib/{}.vbs".format(funcname))
+        else:
+            bat.emit_code("cscript //Nologo lib/{}.vbs {}".format(funcname, " ".join(args)))
     else:
-        bat.emit_code("call :{} {}".format(node.value, " ".join(args)))
+        if len(args) == 0:
+            bat.emit_code("call :{}".format(funcname))
+        else:
+            bat.emit_code("call :{} {}".format(funcname, " ".join(args)))
 
 @transpiles(lexer.IDENTIFIER)
 def transpile_identifier(bat, node):

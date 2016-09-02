@@ -1,5 +1,4 @@
-snabel(a+b)
-
-func snabel(x):
-    y = x+1
-    return y
+y = 99
+x = (1337-(99*2))+y
+print("x+y")
+vbsprint((2*(x+y))/2)
