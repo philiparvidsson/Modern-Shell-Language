@@ -13,9 +13,11 @@ ADD        = "add"
 ASSIGNMENT = "assignment"
 CALL       = "call"
 DIVIDE     = "divide"
+FUNC       = "func"
 IDENTIFIER = "identifier"
 MULTIPLY   = "multiply"
 NUMERAL    = "numeral"
+RETURN     = "return"
 STRING     = "string"
 SUBTRACT   = "subtract"
 
@@ -84,6 +86,46 @@ def assignment(tokens):
 
     return assignment_node
 
+def func(tokens):
+    func_token = tokens.get_next()
+    identifier_token = tokens.get_next() # func name
+    left_paren_token = tokens.get_next()
+
+    while True:
+        token = tokens.peek()
+        if token.kind != parser.IDENTIFIER:
+            break
+
+        tokens.get_next()
+
+        if tokens.peek() != parser.COMMA:
+            break
+
+    right_paren_token = tokens.get_next()
+
+    colon_token = tokens.get_next()
+
+    body_nodes = []
+
+    while True:
+        token = tokens.peek()
+        while token and token.kind == parser.NEWLINE:
+            tokens.get_next()
+            token = tokens.peek()
+
+        if not token or token.indentation <> 1:
+            break
+
+        expr = expression(tokens)
+
+        # not sure why this is needed
+        if not expr:
+            break
+
+        body_nodes.append(expr)
+
+    return Node(FUNC, identifier_token.value, body_nodes)
+
 def call(tokens):
     identifier_token = tokens.get_next()
     left_paren_token = tokens.get_next()
@@ -113,12 +155,25 @@ def call(tokens):
 def expression(tokens):
     token = tokens.peek()
 
+    while token and token.kind == parser.NEWLINE:
+        tokens.get_next()
+        token = tokens.peek()
+
     result = None
 
     if token.kind == parser.LEFT_PAREN:
         tokens.get_next()
         result = expression(tokens)
         right_paren = tokens.get_next()
+    elif token.kind == parser.RETURN:
+        tokens.get_next()
+        if tokens.peek().kind != parser.NEWLINE:
+            ret_val = expression(tokens)
+            result = Node(RETURN, "return", [ret_val])
+        else:
+            result = Node(RETURN, "return")
+    elif token.kind == parser.FUNC:
+        result = func(tokens)
     elif token.kind == parser.IDENTIFIER:
         if tokens.peek(1).kind == parser.EQ_SIGN:
             result = assignment(tokens) # identifier = expr

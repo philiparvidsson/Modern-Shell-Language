@@ -14,6 +14,7 @@ COLON       = "colon"
 COMMA       = "comma"
 END_OF_FILE = "<eof>"
 EQ_SIGN     = "equal sign"
+FUNC        = "func"
 IDENTIFIER  = "identifier"
 IF          = "if"
 MINUS       = "minus"
@@ -22,6 +23,7 @@ NUMERAL     = "numeral"
 PLUS        = "plus"
 SLASH       = "slash"
 STRING      = "string"
+RETURN      = "return"
 UNKNOWN     = "<unknown>"
 LEFT_PAREN = "left parenthesis"
 RIGHT_PAREN = "right parenthesis"
@@ -37,9 +39,10 @@ class Token(object):
 
         self.kind  = kind
         self.value = value
+        self.indentation = 0
 
     def __str__(self):
-        return "Token(kind={}, row={}, column={}, value={})".format(self.kind, self.row, self.column, self.value)
+        return "Token(kind={}, row={}, column={}, value={}, indent={})".format(self.kind, self.row, self.column, self.value, self.indentation)
 
 class TokenList(object):
     def __init__(self, tokens):
@@ -51,8 +54,8 @@ class TokenList(object):
         return token
 
     def peek(self, num_tokens_to_skip = 0):
-        if len(self.tokens) == 0:
-            return None
+        if len(self.tokens) <= num_tokens_to_skip:
+            return Token(UNKNOWN)
         return self.tokens[num_tokens_to_skip]
 
 
@@ -66,6 +69,8 @@ def parse_into_tokens(source_code):
     row    = 1
     column = 1
 
+    indentation = 0
+    count_indent = True
     source_code = core.StringEater(source_code)
 
     while source_code.num_chars_left() > 0:
@@ -77,15 +82,21 @@ def parse_into_tokens(source_code):
             token = Token(NEWLINE, "\n")
             row += 1
             column = 1
+            count_indent = True
+            indentation = 0
         elif char == "\r":
             pass
 
         # Whitespace.
         elif char == " ":
             column += 1
+            if count_indent and (column % 4) == 0:
+                indentation += 1
         elif char == "\t":
             # Assume tab width is eight characters.
             column += 8
+            if count_indent:
+                indentation += 1
 
         # Assignment (identifier = expression)
         elif char == "=":
@@ -163,9 +174,15 @@ def parse_into_tokens(source_code):
 
         # Keywords.
         if token and token.kind == IDENTIFIER:
-            if token.value == "if": token.kind = Token.K_IF;
+            if   token.value == "if"     : token.kind = IF
+            elif token.value == "func"   : token.kind = FUNC
+            elif token.value == "return" : token.kind = RETURN
 
         if token:
+            if token.kind != NEWLINE and count_indent:
+                count_indent = False
+
+            token.indentation = indentation
             token.row    = row
             token.column = column
 

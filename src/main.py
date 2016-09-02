@@ -15,17 +15,17 @@ def transpile(file_name):
 
     token_list = parser.parse_into_tokens(source_code)
 
-    for token in token_list.tokens:
-        print str(token)
-
-    print "-" * 10
-
     bat = transpiler.Bat()
     while len(token_list.tokens) > 0:
+        print '-' * 30
+        for t in token_list.tokens:
+            print t
         ast = lexer.generate_ast(token_list)
-        print str(ast)
+        print lexer.draw_ast_tree(ast)
         transpiler.generate_code(bat, ast)
 
+    print
+    print
     print bat.code
 
 #-------------------------------------------------
