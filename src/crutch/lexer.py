@@ -9,6 +9,7 @@ from . import parser
 # CONSTANTS
 #-------------------------------------------------
 
+ARGS       = "args"
 ADD        = "add"
 ASSIGNMENT = "assignment"
 CALL       = "call"
@@ -91,12 +92,15 @@ def func(tokens):
     identifier_token = tokens.get_next() # func name
     left_paren_token = tokens.get_next()
 
+    args = []
     while True:
         token = tokens.peek()
         if token.kind != parser.IDENTIFIER:
             break
 
         tokens.get_next()
+
+        args.append(Node(IDENTIFIER, token.value))
 
         if tokens.peek() != parser.COMMA:
             break
@@ -105,7 +109,7 @@ def func(tokens):
 
     colon_token = tokens.get_next()
 
-    body_nodes = []
+    body_nodes = [Node(ARGS, "args", args)]
 
     while True:
         token = tokens.peek()

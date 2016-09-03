@@ -1,4 +1,7 @@
-y = 99
-x = (1337-(99*2))+y
-print("x+y")
-vbsprint((2*(x+y))/2)
+x = 5
+z = myfunc(x)
+print(z)
+
+func myfunc(a):
+    b = a+1332
+    return b
