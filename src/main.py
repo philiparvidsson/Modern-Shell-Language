@@ -9,9 +9,10 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-x="bosse"
-asd=2
-y=2*X
+func bosse(x,y,z)
+    a=1
+    b=2*a
+end
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)

@@ -21,6 +21,15 @@ class Lexer(object):
 
     def create_token(self, lexeme):
         # Find the longest possible matching lexeme.
+
+        # First, attempt to do exact matching.
+        for regex, category in LEXEMES.iteritems():
+            if regex != lexeme:
+                continue
+
+            return Token(category, lexeme)
+
+        # Secondly, attempt regex matching.
         for regex, category in LEXEMES.iteritems():
             match = re.match(regex, lexeme)
             if not match or match.group() != lexeme:
@@ -77,6 +86,7 @@ class Lexer(object):
         if token:
             token.row = row
             token.column = column
+            print token
             return token
 
         if len(lexeme) == 0:

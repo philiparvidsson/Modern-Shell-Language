@@ -3,7 +3,10 @@
 #--------------------------------------------------
 
 def print_node(node, level):
-    nodetype = node.construct[0:3]
+    words = node.construct.split(' ')
+    s = '_'.join([x[:4] for x in words])
+
+    nodetype = s# node.construct[0:3]
     tab = "    " * (level - 1)
     sep = "|-- " if level > 0 else ""
 
