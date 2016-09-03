@@ -7,3 +7,4 @@ class Node(object):
         self.children  = children
         self.construct = construct
         self.data      = data
+        self.token     = None

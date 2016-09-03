@@ -9,5 +9,5 @@ class Error(object):
         self.column = column
 
     def __str__(self):
-        s = "parsing error @ {}:{}: {}"
+        s = "lexing error @ {}:{}: {}"
         return s.format(self.row, self.column, self.message)

@@ -5,7 +5,7 @@
 import re
 
 from .error   import Error
-from .lexemes import LEXEMES
+from .lexemes import EOF, LEXEMES, NEWLINE
 from .token   import Token
 
 #--------------------------------------------------
@@ -40,9 +40,15 @@ class Lexer(object):
     def read_token(self):
         # Skip whitespace.
         char = self.peek_char()
+        newline = False
         while char and char.isspace():
+            if char == '\n':
+                newline = True
             self.read_char()
             char = self.peek_char()
+
+        if newline:
+            return Token(NEWLINE, '\n')
 
         lexeme = ''
         row    = self.row
@@ -75,8 +81,9 @@ class Lexer(object):
 
         if len(lexeme) == 0:
             # We've reached the end of the source.
-            return None
+            return Token(EOF)
 
+        # FIXME: Don't return error, pile it up somewhere.
         s = "sequence not understood: {}"
         return Error(s.format(lexeme), row, column)
 

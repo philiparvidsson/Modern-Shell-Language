@@ -4,8 +4,11 @@
 
 import inspect
 
+from .error  import Error
 from .node   import Node
 from .syntax import PROGRAM, rules
+
+from lexing.lexemes import EOF, NEWLINE
 
 #--------------------------------------------------
 # CLASSES
@@ -13,12 +16,13 @@ from .syntax import PROGRAM, rules
 
 class Parser(object):
     def __init__(self, lexer):
-        self.lexer  = lexer
-        self.syntax = dict()
-        self.tokens = []
+        self.lexer         = lexer
+        self.previous_node = None
+        self.tokens        = []
 
     def error(self, message, token=None):
-        print "implement Parser.error pls"
+        e = Error(message, token)
+        print e
 
     def generate_abstract_syntax_tree(self):
         expressions = []
@@ -34,36 +38,32 @@ class Parser(object):
         return Node(PROGRAM, children=expressions)
 
     def parse_expression(self):
-        parse_fn = None
-        token = self.read_token()
+        node = None
 
-        if not token:
-            return None
-
-        tokens = token,
         while True:
-            sequence = tuple(map(lambda token: token.category, tokens))
-
-            if sequence in rules:
-                parse_fn = rules[sequence]
-            elif parse_fn:
-                break
-
             token = self.read_token()
-
-            # No more tokens in the source.
-            if not token:
+            if token.category == EOF:
                 break
 
-            tokens += token,
+            if token.category == NEWLINE:
+                if node:
+                    self.putback(token)
+                    break
+                continue
 
-        for token in tokens:
+            if not token.category in rules:
+                self.putback(token)
+                if not node:
+                    self.error('something is afuck', token)
+                break
+
+            parse_fn = rules[token.category]
             self.putback(token)
+            node = parse_fn(self, node)
+            if node:
+                node.token = token
 
-        if parse_fn:
-            return parse_fn(self)
-        else:
-            self.error("cant parse this shit")
+        return node
 
     def read_token(self):
         if len(self.tokens) > 0:
@@ -75,3 +75,16 @@ class Parser(object):
 
     def putback(self, token):
         self.tokens.append(token)
+
+#--------------------------------------------------
+# FUNCTIONS
+#--------------------------------------------------
+
+#def prune_tree(root):
+#    if not root.children:
+#        return
+#
+#    root.children = filter(lambda child: child.construct, root.children)
+#
+#    for child in root.children:
+#        prune_tree(child)
