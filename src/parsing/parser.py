@@ -6,7 +6,7 @@ import inspect
 
 from .error  import Error
 from .node   import Node
-from .syntax import parse_expr, PROGRAM
+from .syntax import PROGRAM, parse_expr
 
 from lexing.lexemes import EOF, NEWLINE
 
@@ -34,6 +34,12 @@ class Parser(object):
         self.errors.append(e)
 
         print e
+
+    def eat_whitespace(self):
+        tok = self.peek_token()
+        while tok.category == NEWLINE:
+            self.read_token()
+            tok = self.peek_token()
 
     def expect(self, *args):
         tokens = []
@@ -86,16 +92,3 @@ class Parser(object):
             return token
 
         return self.lexer.read_token()
-
-#--------------------------------------------------
-# FUNCTIONS
-#--------------------------------------------------
-
-#def prune_tree(root):
-#    if not root.children:
-#        return
-#
-#    root.children = filter(lambda child: child.construct, root.children)
-#
-#    for child in root.children:
-#        prune_tree(child)

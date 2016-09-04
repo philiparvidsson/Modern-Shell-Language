@@ -11,13 +11,16 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
+main()
 
-a=100
-b=500
-c=1+2*b+a*3+(a/10)*3+6
-print(c, c+1)
-
-
+func main()
+    a = input("watap? ")
+    if a=="snabel"
+        print("wow elite!")
+    else
+        print("very noob")
+    end
+end
 
 """)
     lexer  = Lexer(source)

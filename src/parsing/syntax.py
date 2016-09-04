@@ -15,17 +15,20 @@ from lexing import lexemes
 ADD          = 'add'
 ASSIGN       = 'assignment'
 DIVIDE       = 'divide'
+ELSE         = 'else'
 END          = 'end'
 FUNC         = 'function'
 FUNC_CALL    = 'function call'
 FUNC_DECL    = 'function declaration'
 FUNC_DEF     = 'function definition'
 IDENTIFIER   = 'identifier'
+IF           = 'if'
 INTEGER      = 'integer'
 MULTIPLY     = 'multiply'
 PROGRAM      = 'program'
 STRING       = 'string'
 SUBTRACT     = 'subtract'
+THEN         = 'then'
 
 #--------------------------------------------------
 # GLOBALS
@@ -64,6 +67,9 @@ def parse_expr(parser):
         parser.read_token()
         expr = Node(SUBTRACT, children=[expr, parse_expr(parser)])
 
+    if expr:
+        expr.token = tok
+
     return expr
 
 def parse_expr2(parser):
@@ -80,6 +86,9 @@ def parse_expr2(parser):
     elif tok.category == lexemes.SLASH:
         parser.read_token()
         expr = Node(DIVIDE, children=[expr, parse_expr2(parser)])
+
+    if expr:
+        expr.token = tok
 
     return expr
 
@@ -110,7 +119,10 @@ def parse_expr3(parser):
         if len(args) == 0:
             args = None
 
-        expr = Node(FUNC_CALL, expr.data, args)
+        expr = Node(FUNC_CALL, expr.data, tok, args)
+
+    if expr:
+        expr.token = tok
 
     return expr
 
@@ -137,9 +149,13 @@ def parse_expr4(parser):
     elif tok.category == lexemes.STR:
         expr = parse_str(parser)
 
-    # func <identifier>()
+    # func <identifier>(...)
     elif tok.category == lexemes.FUNC:
         expr = parse_func(parser)
+
+    # if <expression> [= <expression>]
+    elif tok.category == lexemes.IF:
+        expr = parse_if(parser)
 
     # <eof> | <newline>
     #elif tok.category in (lexemes.EOF, lexemes.NEWLINE):
@@ -148,16 +164,18 @@ def parse_expr4(parser):
     else:
         parser.err("unexpected token: {}".format(tok.category), tok)
 
+    if expr:
+        expr.token = tok
     return expr
 
 def parse_func(parser):
-    parser.expect(lexemes.FUNC)
+    func_tok = parser.expect(lexemes.FUNC)
 
     name = parse_ident(parser).data
 
     parser.expect(lexemes.LEFT_PAREN)
 
-    args = Node(FUNC_DECL, children=[])
+    args = Node(FUNC_DECL, token=func_tok, children=[])
 
     while True:
         tok = parser.peek_token()
@@ -174,14 +192,12 @@ def parse_func(parser):
 
     parser.expect(lexemes.RIGHT_PAREN)
 
-    body = Node(FUNC_DEF, children=[])
+    body = Node(FUNC_DEF, token=func_tok, children=[])
 
     while True:
-        tok = parser.peek_token()
-        while tok.category == lexemes.NEWLINE:
-            parser.read_token()
-            tok = parser.peek_token()
+        parser.eat_whitespace()
 
+        tok = parser.peek_token()
         if tok.category in (lexemes.END, lexemes.EOF):
             break
 
@@ -189,7 +205,7 @@ def parse_func(parser):
 
     parser.expect(lexemes.END)
 
-    return Node(FUNC, name, [args, body])
+    return Node(FUNC, name, func_tok, [args, body])
 
 def parse_ident(parser):
     tok = parser.expect(lexemes.IDENT)
@@ -197,7 +213,61 @@ def parse_ident(parser):
     #if len(tok.lexeme) > 64:
     #    parser.warn("identifier unnecessarily long", tok)
 
-    return Node(IDENTIFIER, tok.lexeme)
+    return Node(IDENTIFIER, tok.lexeme, tok)
+
+def parse_if(parser):
+    if_tok = parser.expect(lexemes.IF)
+
+    cond = parse_expr(parser)
+
+    tok = parser.peek_token()
+    if tok.category == lexemes.DOUBLE_EQ_SIGN:
+        parser.read_token()
+        comp = parse_expr(parser)
+    else:
+        comp = Node(INTEGER, 1, tok)
+
+    then_expr = Node(THEN, token=tok, children=[])
+
+    tok = parser.peek_token()
+    if tok.category == lexemes.NEWLINE:
+        while True:
+            parser.eat_whitespace()
+
+            tok = parser.peek_token()
+            if tok.category == lexemes.ELSE:
+                break
+
+            if tok.category == lexemes.END:
+                parser.read_token()
+                break
+
+            then_expr.children.append(parse_expr(parser))
+    else:
+        then_expr.children.append(parse_expr(parser))
+
+    parser.eat_whitespace()
+
+    else_expr = Node(ELSE, token=tok, children=[])
+
+    tok = parser.peek_token()
+    if tok.category == lexemes.ELSE:
+        parser.read_token()
+        tok = parser.peek_token()
+        if tok.category == lexemes.NEWLINE:
+            while True:
+                parser.eat_whitespace()
+
+                tok = parser.peek_token()
+                if tok.category == lexemes.END:
+                    parser.read_token()
+                    break
+
+                else_expr.children.append(parse_expr(parser))
+        else:
+            else_expr.children.append(parse_expr(parser))
+
+    return Node(IF, token=if_tok, children=[cond, comp, then_expr, else_expr])
 
 def parse_int(parser):
     tok = parser.expect(lexemes.INT)
@@ -205,7 +275,7 @@ def parse_int(parser):
     #if len(tok.lexeme) > 10:
     #    parser.warn("integer too large", tok)
 
-    return Node(INTEGER, int(tok.lexeme))
+    return Node(INTEGER, int(tok.lexeme), tok)
 
 def parse_str(parser):
     tok = parser.expect(lexemes.STR)
@@ -217,4 +287,4 @@ def parse_str(parser):
 
     value = value[1:-1]
 
-    return Node(STRING, value)
+    return Node(STRING, value, tok)

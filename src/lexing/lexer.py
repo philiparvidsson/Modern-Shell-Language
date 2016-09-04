@@ -5,7 +5,7 @@
 import re
 
 from .error   import Error
-from .lexemes import EOF, LEXEME_MAP, NEWLINE
+from .lexemes import COMMENT_CHAR, EOF, LEXEME_MAP, NEWLINE
 from .token   import Token
 
 #--------------------------------------------------
@@ -57,7 +57,17 @@ class Lexer(object):
             char = self.peek_char()
 
         if newline:
+            print Token(NEWLINE, '\n')
             return Token(NEWLINE, '\n')
+
+        char = self.peek_char()
+        if char == COMMENT_CHAR:
+            while char != '\n':
+                self.read_char()
+                char = self.peek_char()
+
+            self.read_char()
+            return self.read_token()
 
         lexeme = ''
         row    = self.row
