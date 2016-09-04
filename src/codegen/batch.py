@@ -12,8 +12,8 @@ class Batch(object):
     def __init__(self, ast):
         self.construct_map = {
             syntax.ADD        : self.__add,
-            syntax.ASSIGNMENT : self.__assignment,
-            syntax.FUNCTION   : self.__function,
+            syntax.ASSIGN     : self.__assign,
+            syntax.FUNC       : self.__func,
             syntax.IDENTIFIER : self.__identifier,
             syntax.INTEGER    : self.__integer,
             syntax.PROGRAM    : self.__program,
@@ -52,7 +52,7 @@ class Batch(object):
         self.emit('set /a {}={}+{}'.format(temp, self.value_stack.pop(), self.value_stack.pop()))
         self.value_stack.append('!{}!'.format(temp))
 
-    def __assignment(self, node):
+    def __assign(self, node):
         switches = []
 
         ident = node.children[0]
@@ -67,7 +67,7 @@ class Batch(object):
             self.emit('set {}={}'.format(ident.data, self.value_stack.pop()))
 
 
-    def __function(self, node):
+    def __func(self, node):
         self.emit(':{}'.format(node.data))
 
         self.emit('exit /b')

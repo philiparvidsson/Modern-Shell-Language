@@ -13,12 +13,12 @@ from lexing import lexemes
 #--------------------------------------------------
 
 ADD                = 'add'
-ASSIGNMENT         = 'assignment'
+ASSIGN         = 'assignment'
 DIVIDE             = 'divide'
 END                = 'end'
-FUNCTION           = 'function'
-FUNCTION_ARGUMENTS = 'function arguments'
-FUNCTION_BODY      = 'function body'
+FUNC           = 'function'
+FUNC_ARGUMENTS = 'function arguments'
+FUNC_BODY      = 'function body'
 FUNC_CALL      = 'function call'
 IDENTIFIER         = 'identifier'
 INTEGER            = 'integer'
@@ -52,7 +52,7 @@ def parse_expr(parser):
     # <expr2> = <expr>
     if tok.category == lexemes.EQUALS_SIGN:
         parser.read_token()
-        expr = Node(ASSIGNMENT, children=[expr, parse_expr(parser)])
+        expr = Node(ASSIGN, children=[expr, parse_expr(parser)])
 
     # <expr2> + <expr>
     if tok.category == lexemes.PLUS_SIGN:
@@ -172,7 +172,7 @@ def parse_function(parser):
 
     parser.expect(lexemes.END)
 
-    return Node(FUNCTION, name, body)
+    return Node(FUNC, name, body)
 
 def parse_identifier(parser):
     tok = parser.expect(lexemes.IDENTIFIER)
