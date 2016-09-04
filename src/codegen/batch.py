@@ -14,6 +14,7 @@ class Batch(object):
             syntax.ADD        : self.__add,
             syntax.ASSIGN     : self.__assign,
             syntax.FUNC       : self.__func,
+            syntax.FUNC_CALL  : self.__func_call,
             syntax.IDENTIFIER : self.__identifier,
             syntax.INTEGER    : self.__integer,
             syntax.PROGRAM    : self.__program,
