@@ -16,7 +16,7 @@ func bosse(x, y)
     z = x + y
 end
 
-b=11
+b=9
 bosse(5, 9+b)
 
 
