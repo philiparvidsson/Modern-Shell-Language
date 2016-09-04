@@ -72,6 +72,9 @@ class Batch(object):
 
         self.emit('exit /b')
 
+    def __func_call(self, node):
+        self.emit('call :{} args'.format(node.data))
+
     def __identifier(self, node):
         self.value_stack.append('!{}!'.format(node.data))
 
