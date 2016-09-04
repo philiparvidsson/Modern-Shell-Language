@@ -12,20 +12,20 @@ from lexing import lexemes
 # CONSTANTS
 #--------------------------------------------------
 
-ADD        = 'add'
-ASSIGN     = 'assignment'
-DIVIDE     = 'divide'
-END        = 'end'
-FUNC       = 'function'
-FUNC_CALL  = 'function call'
-FUNC_DECL  = 'function declaration'
-FUNC_DEF   = 'function definition'
-IDENTIFIER = 'identifier'
-INTEGER    = 'integer'
-MULTIPLY   = 'multiply'
-PROGRAM    = 'program'
-STRING     = 'string'
-SUBTRACT   = 'subtract'
+ADD          = 'add'
+ASSIGN       = 'assignment'
+DIVIDE       = 'divide'
+END          = 'end'
+FUNC         = 'function'
+FUNC_CALL    = 'function call'
+FUNC_DECL    = 'function declaration'
+FUNC_DEF     = 'function definition'
+IDENTIFIER   = 'identifier'
+INTEGER      = 'integer'
+MULTIPLY     = 'multiply'
+PROGRAM      = 'program'
+STRING       = 'string'
+SUBTRACT     = 'subtract'
 
 #--------------------------------------------------
 # GLOBALS
@@ -50,7 +50,7 @@ def parse_expr(parser):
     tok = parser.peek_token()
 
     # <expr2> = <expr>
-    if tok.category == lexemes.EQUALS_SIGN:
+    if tok.category == lexemes.EQ_SIGN:
         parser.read_token()
         expr = Node(ASSIGN, children=[expr, parse_expr(parser)])
 
@@ -89,23 +89,23 @@ def parse_expr3(parser):
     tok = parser.peek_token()
 
     # <expr4> (<expr>[, <expr> ...])
-    if tok.category == lexemes.LEFT_PARENTHESIS:
+    if tok.category == lexemes.LEFT_PAREN:
         parser.read_token()
         args = []
         while True:
             tok = parser.peek_token()
-            if tok.category == lexemes.RIGHT_PARENTHESIS:
+            if tok.category == lexemes.RIGHT_PAREN:
                 break
 
             args.append(parse_expr(parser))
 
             tok = parser.peek_token()
-            if tok.category == lexemes.RIGHT_PARENTHESIS:
+            if tok.category == lexemes.RIGHT_PAREN:
                 break
 
             parser.expect(lexemes.COMMA)
 
-        parser.expect(lexemes.RIGHT_PARENTHESIS)
+        parser.expect(lexemes.RIGHT_PAREN)
 
         if len(args) == 0:
             args = None
@@ -120,18 +120,22 @@ def parse_expr4(parser):
     tok = parser.peek_token()
 
     # (<expr>)
-    if tok.category == lexemes.LEFT_PARENTHESIS:
-        parser.expect(lexemes.LEFT_PARENTHESIS)
+    if tok.category == lexemes.LEFT_PAREN:
+        parser.expect(lexemes.LEFT_PAREN)
         expr = parse_expr(parser)
-        parser.expect(lexemes.RIGHT_PARENTHESIS)
+        parser.expect(lexemes.RIGHT_PAREN)
 
     # <identifier>
-    elif tok.category == lexemes.IDENTIFIER:
+    elif tok.category == lexemes.IDENT:
         expr = parse_ident(parser)
 
     # <integer>
-    elif tok.category == lexemes.INTEGER:
+    elif tok.category == lexemes.INT:
         expr = parse_int(parser)
+
+    # <string>
+    elif tok.category == lexemes.STR:
+        expr = parse_str(parser)
 
     # func <identifier>()
     elif tok.category == lexemes.FUNC:
@@ -151,24 +155,24 @@ def parse_func(parser):
 
     name = parse_ident(parser).data
 
-    parser.expect(lexemes.LEFT_PARENTHESIS)
+    parser.expect(lexemes.LEFT_PAREN)
 
     args = Node(FUNC_DECL, children=[])
 
     while True:
         tok = parser.peek_token()
-        if tok.category == lexemes.RIGHT_PARENTHESIS:
+        if tok.category == lexemes.RIGHT_PAREN:
             break
 
         args.children.append(parse_ident(parser))
 
         tok = parser.peek_token()
-        if tok.category == lexemes.RIGHT_PARENTHESIS:
+        if tok.category == lexemes.RIGHT_PAREN:
             break
 
         parser.expect(lexemes.COMMA)
 
-    parser.expect(lexemes.RIGHT_PARENTHESIS)
+    parser.expect(lexemes.RIGHT_PAREN)
 
     body = Node(FUNC_DEF, children=[])
 
@@ -188,7 +192,7 @@ def parse_func(parser):
     return Node(FUNC, name, [args, body])
 
 def parse_ident(parser):
-    tok = parser.expect(lexemes.IDENTIFIER)
+    tok = parser.expect(lexemes.IDENT)
 
     #if len(tok.lexeme) > 64:
     #    parser.warn("identifier unnecessarily long", tok)
@@ -196,9 +200,21 @@ def parse_ident(parser):
     return Node(IDENTIFIER, tok.lexeme)
 
 def parse_int(parser):
-    tok = parser.expect(lexemes.INTEGER)
+    tok = parser.expect(lexemes.INT)
 
     #if len(tok.lexeme) > 10:
     #    parser.warn("integer too large", tok)
 
     return Node(INTEGER, int(tok.lexeme))
+
+def parse_str(parser):
+    tok = parser.expect(lexemes.STR)
+
+    value = str(tok.lexeme)
+
+    if not value.startswith('"') or not value.endswith('"'):
+        parser.error("unterminated string", token)
+
+    value = value[1:-1]
+
+    return Node(STRING, value)

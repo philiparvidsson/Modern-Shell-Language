@@ -12,12 +12,11 @@ if __name__ == '__main__':
     source = StringSource(
 """
 
-func bosse(x, y)
-    z = x + y
-end
+a=100
+b=500
+c=1+2*b+a*3+(a/10)*3+6
+print(c, c+1)
 
-b=9
-bosse(5, 9+b)
 
 
 """)
