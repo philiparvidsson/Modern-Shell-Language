@@ -2,37 +2,48 @@
 # CONSTANTS
 #--------------------------------------------------
 
+# Special lexemes.
+EOF = '<eof>'
+
+# Special characters.
 ASTERISK          = 'asterisk'
 COMMA             = 'comma'
-END               = 'end'
-EOF               = '<eof>'
 EQUALS_SIGN       = 'equals sign'
-FUNCTION          = 'function'
-IDENTIFIER        = 'identifier'
-INTEGER           = 'integer'
 LEFT_PARENTHESIS  = 'left parenthesis'
 MINUS_SIGN        = 'minus sign'
 NEWLINE           = 'newline'
 PLUS_SIGN         = 'plus sign'
 RIGHT_PARENTHESIS = 'right parenthesis'
 SLASH             = 'slash'
-STRING            = 'string'
 
-# FIXME: Order of iteration cannot be guaranteed.  How do we know lexer doesn't
-# think func is an identifier?
+# Keywords.
+END  = 'end'
+FUNC = 'function'
 
-LEXEMES = {
-    '"[^"\n]*"?$'            : STRING,
-    ','                      : COMMA,
-    '-'                      : MINUS_SIGN,
-    '-?[0-9]+'               : INTEGER,
-    '/'                      : SLASH,
-    '='                      : EQUALS_SIGN,
+# User specified.
+IDENTIFIER = 'identifier'
+INTEGER    = 'integer'
+STRING     = 'string'
+
+# Lexeme lookup table.
+LEXEME_MAP = {
+    # Special characters.
+    ','  : COMMA,
+    '-'  : MINUS_SIGN,
+    '/'  : SLASH,
+    '='  : EQUALS_SIGN,
+    '\(' : LEFT_PARENTHESIS,
+    '\)' : RIGHT_PARENTHESIS,
+    '\*' : ASTERISK,
+    '\+' : PLUS_SIGN,
+
+    # Keywords.
+    'end'  : END,
+    'func' : FUNC,
+
+    # User specified.
+
     '[_A-Za-z][_A-Za-z0-9]*' : IDENTIFIER,
-    '\('                     : LEFT_PARENTHESIS,
-    '\)'                     : RIGHT_PARENTHESIS,
-    '\*'                     : ASTERISK,
-    '\+'                     : PLUS_SIGN,
-    'end'                    : END,
-    'func'                   : FUNCTION,
+    '[0-9]+'                 : INTEGER,
+    '"[^"\n]*"?'             : STRING,
 }

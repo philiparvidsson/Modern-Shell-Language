@@ -5,7 +5,7 @@
 import re
 
 from .error   import Error
-from .lexemes import EOF, LEXEMES, NEWLINE
+from .lexemes import EOF, LEXEME_MAP, NEWLINE
 from .token   import Token
 
 #--------------------------------------------------
@@ -23,14 +23,14 @@ class Lexer(object):
         # Find the longest possible matching lexeme.
 
         # First, attempt to do exact matching.
-        for regex, category in LEXEMES.iteritems():
+        for regex, category in LEXEME_MAP.iteritems():
             if regex != lexeme:
                 continue
 
             return Token(category, lexeme)
 
         # Secondly, attempt regex matching.
-        for regex, category in LEXEMES.iteritems():
+        for regex, category in LEXEME_MAP.iteritems():
             match = re.match(regex, lexeme)
             if not match or match.group() != lexeme:
                 continue

@@ -19,6 +19,7 @@ END                = 'end'
 FUNCTION           = 'function'
 FUNCTION_ARGUMENTS = 'function arguments'
 FUNCTION_BODY      = 'function body'
+FUNC_CALL      = 'function call'
 IDENTIFIER         = 'identifier'
 INTEGER            = 'integer'
 MULTIPLY           = 'multiply'
@@ -36,221 +37,155 @@ rules = dict()
 # FUNCTIONS
 #--------------------------------------------------
 
-def rule(lexeme):
+def rule(*args):
     def decorator(func):
-        rules[lexeme] = func
+        rules[args] = func
         return func
 
     return decorator
 
-@rule(lexemes.ASTERISK)
-def parse_asterisk(parser, previous_node):
-    # Consume asterisk.
-    asterisk = parser.read_token()
+def parse_expr(parser):
+    expr = parse_expr2(parser)
 
-    if not previous_node:
-        parser.error("unexpected token: *", asterisk)
-        return
+    tok = parser.peek_token()
 
-    left_hand_side  = previous_node
-    right_hand_side = parser.parse_expression()
-
-    if not right_hand_side:
-        parser.error("expected: expression", asterisk)
-        return
-
-    return Node(MULTIPLY, children=[left_hand_side, right_hand_side])
-
-@rule(lexemes.END)
-def parse_end(parser, previous_node):
-    token = parser.read_token()
-
-    if previous_node:
-        parser.error("end was unexpected here", token)
-        return
-
-    return Node(END)
-
-@rule(lexemes.EQUALS_SIGN)
-def parse_assignment(parser, previous_node):
-    identifier = previous_node
-
-    # Consume the equals sign token.
-    token = parser.read_token()
-
-    if not identifier:
-        parser.error("unexpected token: =", token)
-        return
-    elif identifier.construct != IDENTIFIER:
-        parser.error("can only assign to variables", token)
-        return
-
-    expression = parser.parse_expression()
-
-    node = Node(ASSIGNMENT, children=[identifier, expression])
-
-    return node
-
-@rule(lexemes.FUNCTION)
-def parse_func(parser, previous_node):
-    token = parser.read_token()
-
-    if previous_node:
-        parser.error("function was unexpected here", token)
-        return
-
-    function_name = str(parse_identifier(parser, None).data)
-
-    token = parser.read_token()
-    if token.category != lexemes.LEFT_PARENTHESIS:
-        parser.error("expected left parenthesis", token)
-        return
-
-    arguments = Node(FUNCTION_ARGUMENTS, children=[])
-    while True:
-        token = parser.peek_token()
-
-        if token.category == lexemes.RIGHT_PARENTHESIS:
-            break
-
-        node = parse_identifier(parser, None)
-        arguments.children.append(node)
-
-
-        token = parser.peek_token()
-        token = parser.peek_token()
-        if token.category == lexemes.RIGHT_PARENTHESIS:
-            break
-
-        if token.category != lexemes.COMMA:
-            parser.error("expected comma or right parenthesis", token)
-            return
-
+    # <expr2> = <expr>
+    if tok.category == lexemes.EQUALS_SIGN:
         parser.read_token()
+        expr = Node(ASSIGNMENT, children=[expr, parse_expr(parser)])
 
-    token = parser.read_token()
-    if token.category != lexemes.RIGHT_PARENTHESIS:
-        parser.error("expected right parenthesis", token)
-        return
+    # <expr2> + <expr>
+    if tok.category == lexemes.PLUS_SIGN:
+        parser.read_token()
+        expr = Node(ADD, children=[expr, parse_expr(parser)])
 
-    body = Node(FUNCTION_BODY, children=[])
+    # <expr2> - <expr>
+    elif tok.category == lexemes.MINUS_SIGN:
+        parser.read_token()
+        expr = Node(SUBTRACT, children=[expr, parse_expr(parser)])
+
+    return expr
+
+def parse_expr2(parser):
+    expr = parse_expr3(parser)
+
+    tok = parser.peek_token()
+
+    # <expr3> * <expr2>
+    if tok.category == lexemes.ASTERISK:
+        parser.read_token()
+        expr = Node(MULTIPLY, children=[expr, parse_expr2(parser)])
+
+    # <expr3> / <expr2>
+    elif tok.category == lexemes.SLASH:
+        parser.read_token()
+        expr = Node(DIVIDE, children=[expr, parse_expr2(parser)])
+
+    return expr
+
+def parse_expr3(parser):
+    expr = parse_expr4(parser)
+
+    tok = parser.peek_token()
+
+    # <expr4> (<expr>[, <expr> ...])
+    if tok.category == lexemes.LEFT_PARENTHESIS:
+        parser.read_token()
+        args = []
+        while True:
+            tok = parser.peek_token()
+            if tok.category == lexemes.RIGHT_PARENTHESIS:
+                break
+
+            args.append(parse_expr(parser))
+
+            tok = parser.peek_token()
+            if tok.category == lexemes.RIGHT_PARENTHESIS:
+                break
+
+            parser.expect(lexemes.COMMA)
+
+        parser.expect(lexemes.RIGHT_PARENTHESIS)
+
+        if len(args) == 0:
+            args = None
+
+        expr = Node(FUNC_CALL, expr.data, args)
+
+    return expr
+
+def parse_expr4(parser):
+    expr = None
+
+    tok = parser.peek_token()
+
+    # (<expr>)
+    if tok.category == lexemes.LEFT_PARENTHESIS:
+        parser.expect(lexemes.LEFT_PARENTHESIS)
+        expr = parse_expr(parser)
+        parser.expect(lexemes.RIGHT_PARENTHESIS)
+
+    # <identifier>
+    elif tok.category == lexemes.IDENTIFIER:
+        expr = parse_identifier(parser)
+
+    # <integer>
+    elif tok.category == lexemes.INTEGER:
+        expr = parse_integer(parser)
+
+    # func <identifier>()
+    elif tok.category == lexemes.FUNC:
+        expr = parse_function(parser)
+
+    # <eof> | <newline>
+    elif tok.category in (lexemes.EOF, lexemes.NEWLINE):
+        pass
+
+    else:
+        parser.err("unexpected token: {}".format(tok.category), tok)
+
+    return expr
+
+def parse_function(parser):
+    parser.expect(lexemes.FUNC)
+
+    name = parse_identifier(parser).data
+
+    parser.expect(lexemes.LEFT_PARENTHESIS)
+
+    # parse args here
+
+    parser.expect(lexemes.RIGHT_PARENTHESIS)
+
+    body = []
+
     while True:
-        node = parser.parse_expression()
-        if node.construct == END:
+        tok = parser.peek_token()
+        while tok.category == lexemes.NEWLINE:
+            parser.read_token()
+            tok = parser.peek_token()
+
+        if tok.category in (lexemes.END, lexemes.EOF):
             break
-        body.children.append(node)
 
-    return Node(FUNCTION, function_name, children=[arguments, body])
+        body.append(parse_expr(parser))
 
+    parser.expect(lexemes.END)
 
+    return Node(FUNCTION, name, body)
 
-@rule(lexemes.IDENTIFIER)
-def parse_identifier(parser, previous_node):
-    token = parser.read_token()
+def parse_identifier(parser):
+    tok = parser.expect(lexemes.IDENTIFIER)
 
-    if previous_node:
-        parser.error("identifier was unexpected here", token)
-        return
+    #if len(tok.lexeme) > 64:
+    #    parser.warn("identifier unnecessarily long", tok)
 
-    return Node(IDENTIFIER, str(token.lexeme))
+    return Node(IDENTIFIER, tok.lexeme)
 
-@rule(lexemes.INTEGER)
-def parse_integer(parser, previous_node):
-    token = parser.read_token()
+def parse_integer(parser):
+    tok = parser.expect(lexemes.INTEGER)
 
-    if previous_node:
-        parser.error("integer was unexpected here", token)
-        return
+    #if len(tok.lexeme) > 10:
+    #    parser.warn("integer too large", tok)
 
-    return Node(INTEGER, int(token.lexeme))
-
-@rule(lexemes.LEFT_PARENTHESIS)
-def parse_left_parenthesis(parser, previous_node):
-    # Consume minus sign.
-    token = parser.read_token()
-
-    if not previous_node:
-        parser.error("unexpected token: (", token)
-        return
-
-    node = parser.parse_expression()
-
-    # Make sure we end the exprssion with a right parenthesis.
-    token = parser.read_token()
-    if token.category != lexemes.RIGHT_PARENTHESIS:
-        s = "expected right parenthesis but got {}"
-        parser.error(s.format(token.lexeme), token)
-        return
-
-    return node
-
-@rule(lexemes.MINUS_SIGN)
-def parse_slash(parser, previous_node):
-    # Consume minus sign.
-    token = parser.read_token()
-
-    if not previous_node:
-        parser.error("unexpected token: -", token)
-        return
-
-    left_hand_side  = previous_node
-    right_hand_side = parser.parse_expression()
-
-    if not right_hand_side:
-        parser.error("expected: expression", token)
-        return
-
-    return Node(SUBTRACT, children=[left_hand_side, right_hand_side])
-
-@rule(lexemes.PLUS_SIGN)
-def parse_plus_sign(parser, previous_node):
-    # Consume plus sign.
-    token = parser.read_token()
-
-    if not previous_node:
-        parser.error("unexpected token: +", token)
-        return
-
-    left_hand_side  = previous_node
-    right_hand_side = parser.parse_expression()
-
-    if not right_hand_side:
-        parser.error("expected: expression", token)
-        return
-
-    return Node(ADD, children=[left_hand_side, right_hand_side])
-
-@rule(lexemes.SLASH)
-def parse_slash(parser, previous_node):
-    # Consume slash.
-    token = parser.read_token()
-
-    if not previous_node:
-        parser.error("unexpected token: /", token)
-        return
-
-    left_hand_side  = previous_node
-    right_hand_side = parser.parse_expression()
-
-    if not right_hand_side:
-        parser.error("expected: expression", token)
-        return
-
-    return Node(DIVIDE, children=[left_hand_side, right_hand_side])
-
-@rule(lexemes.STRING)
-def parse_string(parser, previous_node):
-    token = parser.read_token()
-    value = str(token.lexeme)
-
-    if previous_node:
-        parser.error("string was unexpected here", token)
-        return
-
-    if not value.startswith('"') or not value.endswith('"'):
-        parser.error("unterminated string", token)
-        return
-
-    value = value[1:-1]
-
-    return Node(STRING, value)
+    return Node(INTEGER, int(tok.lexeme))

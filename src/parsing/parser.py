@@ -6,7 +6,7 @@ import inspect
 
 from .error  import Error
 from .node   import Node
-from .syntax import PROGRAM, rules
+from .syntax import parse_expr, PROGRAM
 
 from lexing.lexemes import EOF, NEWLINE
 
@@ -29,11 +29,27 @@ class Parser(object):
 
         self.peeked_token = None
 
-    def error(self, message, token=None):
+    def err(self, message, token=None):
         e = Error(message, token)
         self.errors.append(e)
 
         print e
+
+    def expect(self, *args):
+        tokens = []
+
+        for lexeme in args:
+            token = self.read_token()
+
+            if token.category != lexeme:
+                self.err("expected {}".format(lexeme), token)
+
+            tokens.append(token)
+
+        if len(tokens) == 1:
+            tokens = tokens[0]
+
+        return tokens
 
     def generate_abstract_syntax_tree(self):
         expressions = []
@@ -49,32 +65,12 @@ class Parser(object):
         return Node(PROGRAM, children=expressions)
 
     def parse_expression(self):
-        node = None
+        tok = self.peek_token()
+        while tok.category == NEWLINE:
+            self.read_token()
+            tok = self.peek_token()
 
-        while len(self.errors) < self.max_errors:
-            token = self.peek_token()
-            if token.category == EOF:
-                break
-
-            if token.category == NEWLINE:
-                self.read_token()
-                continue
-
-            if not token.category in rules:
-                if not node:
-                    s = "unexpected token encountered: {}"
-                    self.error(s.format(token.category), token)
-                break
-
-            parse_fn = rules[token.category]
-            node = parse_fn(self, node)
-            if node:
-                node.token = token
-
-            if self.peek_token().category == NEWLINE:
-                break
-
-        return node
+        return parse_expr(self)
 
     def peek_token(self):
         if not self.peeked_token:
