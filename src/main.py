@@ -12,7 +12,7 @@ if __name__ == '__main__':
     source = StringSource(
         """
 
-        z = 9
+        z = (y=2)+1+(3+10)
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
