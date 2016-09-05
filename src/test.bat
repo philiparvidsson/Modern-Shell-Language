@@ -28,32 +28,25 @@ goto :__after_fac
 setlocal
 if %2 leq 1 (set /a __1=1) else (set /a __1=0)
 if !__1! neq 0 (
-endlocal & (
-set /a %1=1
+set "__2=1"
+) else (
+set /a "__3=%2-1"
+call :!fac! __4 !__3!
+set /a "__5=%2*!__4!"
+set "__2=!__5!"
 )
-exit /b
-)
-set /a "__2=%2-1"
-call :!fac! __3 !__2!
-set /a "__4=%2*!__3!"
 endlocal & (
-set /a %1=%__4%
+set /a %1=%__2%
 )
 exit /b
 :__after_fac
 goto :__after_main
 :main
 setlocal
-set /a b=0
-if !b! neq 0 (
-set "__5=noob"
-) else (
-set "__5=not oob"
-)
-set  x=!__5!
-call :!print! __6 !b! !x!
+call :!fac! __6 5
+call :!print! __7 !__6!
 endlocal & (set %1=0)
 exit /b
 :__after_main
-call :!main! __7 
+call :!main! __8 
 

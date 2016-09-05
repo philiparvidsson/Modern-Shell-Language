@@ -269,8 +269,11 @@ def parse_expr2(parser):
     # <expr3> ? <expr2> : <expr2>
     elif tok.category == lexemes.Q_MARK:
         parser.read_token()
+        parser.eat_whitespace()
         then_expr = parse_expr2(parser)
+        parser.eat_whitespace()
         parser.expect(lexemes.COLON)
+        parser.eat_whitespace()
         else_expr = parse_expr2(parser)
         expr = Node(IF_TERNARY, children=[expr, then_expr, else_expr])
 

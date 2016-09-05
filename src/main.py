@@ -13,14 +13,12 @@ if __name__ == '__main__':
 """
 
 function fac(x) {
-    if (x <= 1) return 1
-    return x * fac(x-1)
+    return (x <= 1) ? 1
+                    : x*fac(x-1)
 }
 
 function main() {
-    b = 0
-    x = (b ? "noob" : "not oob")
-    print(b, x)
+    print(fac(5))
 }
 
 main()
