@@ -2,6 +2,8 @@
 # IMPORTS
 #--------------------------------------------------
 
+import collections
+
 from .codegenerator import code_emitter, CodeGenerator
 
 from parsing import syntax
@@ -28,18 +30,26 @@ class Batch(CodeGenerator):
         self.value_stack = []
         self.scope = Scope()
 
-    def emit_args(self, node):
-        args = []
+        self.segments = collections.OrderedDict((
+            ('init', ''),
+            ('decl', ''),
+            ('code', '')
 
-        if node.children:
-            for arg in reversed(node.children):
-                self.generate_code(arg)
+        ))
 
-            num_args = len(node.children)
-            for i in range(num_args):
-                args.append(self.pop().value)
+    def code(self):
+        code = ''
 
-        return args
+        for s in self.segments:
+            code += self.segments[s] + '\n'
+
+        return code
+
+    def emit(self, code, segment='code'):
+        if segment not in self.segments:
+            self.segments[segment] = ''
+
+        self.segments[segment] += code + '\n'
 
     def label(self):
         self.label_counter += 1
@@ -55,7 +65,7 @@ class Batch(CodeGenerator):
 
         self.tempvar_counter += 1
 
-        name =  '_{}'.format(self.tempvar_counter)
+        name =  '__{}'.format(self.tempvar_counter)
         return self.scope.declare_variable(name, type_)
 
     def enter_scope(self):
@@ -92,8 +102,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         a = self.pop()
         b = self.pop()
@@ -114,12 +124,12 @@ class Batch(CodeGenerator):
         ident = node.children[0]
         expr = node.children[1]
 
-        self.generate_code(expr)
+        self._gen_code(expr)
 
         a = self.pop()
         var = self.scope.declare_variable(ident.data, a.type_)
 
-        self.generate_code(ident)
+        self._gen_code(ident)
         switches = []
 
         if a.type_ == INT:
@@ -133,8 +143,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         a = self.pop()
         b = self.pop()
@@ -151,8 +161,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         temp = self.tempvar(INT)
         s = 'if {} equ {} (set /a {}=1) else (set /a {}=0)'
@@ -167,8 +177,8 @@ class Batch(CodeGenerator):
 
         self.scope.declare_variable(func_name, STR)
         self.enter_scope()
-        self.emit('set {}={}'.format(func_name, func_name))
-        self.emit('goto :eof'),
+        self.emit('set {}={}'.format(func_name, func_name), 'decl')
+        self.emit('goto :{}_skip'.format(func_name)),
         self.emit(':{}'.format(func_name))
         self.emit('setlocal')
 
@@ -183,39 +193,38 @@ class Batch(CodeGenerator):
             param_counter += 1
 
         for expr in body.children:
-            self.generate_code(expr)
+            self._gen_code(expr)
 
         if not body.children or not body.children[-1].construct == syntax.RETURN:
             self.emit('endlocal & (set %1=0)')
             self.emit('exit /b')
         self.leave_scope()
-
         self.push(func_name, STR)
+        self.emit(':{}_skip'.format(func_name))
 
     @code_emitter(syntax.FUNC_CALL)
     def __func_call(self, node):
-        if node.data == 'input':
-            self.__input(node)
-        elif node.data == 'int':
-            self.__int(node)
-        elif node.data == 'print':
-            self.__print(node)
-        elif node.data == 'str':
-            self.__str(node)
-        else:
-            args = self.emit_args(node)
-            temp = self.tempvar(STR) # FIXME: Don't assume str!
-            var = self.scope.get_variable(node.data)
-            self.emit('call :!{}! {} {}'.format(node.data, temp.name, ' '.join(args)))
-            self.push(temp, VAR)
+        args = []
+
+        for arg in reversed(node.children):
+            self._gen_code(arg)
+
+        num_args = len(node.children)
+        for i in range(num_args):
+            args.append(self.pop().value)
+
+        temp = self.tempvar(STR) # FIXME: Don't assume str!
+        var = self.scope.get_variable(args[0])
+        self.emit('call :{} {} {}'.format(args[0], temp.name, ' '.join(args[1:])))
+        self.push(temp, VAR)
 
     @code_emitter(syntax.GREATER)
     def __greater(self, node):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         temp = self.tempvar(INT)
         s = 'if {} gtr {} (set /a {}=1) else (set /a {}=0)'
@@ -227,8 +236,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         temp = self.tempvar(INT)
         s = 'if {} geq {} (set /a {}=1) else (set /a {}=0)'
@@ -237,6 +246,7 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.IDENTIFIER)
     def __identifier(self, node):
+        ident = node.data
         self.push(self.scope.get_variable(node.data), VAR)
 
     @code_emitter(syntax.IF)
@@ -245,18 +255,18 @@ class Batch(CodeGenerator):
         then_expr = node.children[1]
         else_expr = node.children[2]
 
-        self.generate_code(cond)
+        self._gen_code(cond)
 
         self.emit('if {} neq 0 ('.format(self.pop().value))
 
         for expr in then_expr.children:
-            self.generate_code(expr)
+            self._gen_code(expr)
 
         if len(else_expr.children) > 0:
             self.emit(') else (')
 
             for expr in else_expr.children:
-                self.generate_code(expr)
+                self._gen_code(expr)
 
         self.emit(')')
 
@@ -269,8 +279,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         temp = self.tempvar(INT)
         s = 'if {} lss {} (set /a {}=1) else (set /a {}=0)'
@@ -282,8 +292,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         temp = self.tempvar(INT)
         s = 'if {} leq {} (set /a {}=1) else (set /a {}=0)'
@@ -295,9 +305,9 @@ class Batch(CodeGenerator):
         cond = node.children[0]
         then_expr = node.children[1]
 
-        self.generate_code(cond)
+        self._gen_code(cond)
         self.emit('if {} neq 0 ('.format(self.pop().value))
-        self.generate_code(then_expr)
+        self._gen_code(then_expr)
         self.emit(')')
 
     @code_emitter(syntax.LOGIC_OR)
@@ -307,12 +317,12 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
 
-        self.generate_code(cond)
+        self._gen_code(cond)
         self.emit('set /a {}=0'.format(temp.name))
         self.emit('if {} neq 0 ('.format(self.pop().value))
         self.emit('set /a {}=1'.format(temp.name))
         self.emit(') else (')
-        self.generate_code(then_expr)
+        self._gen_code(then_expr)
         self.emit('if {} neq 0 ('.format(self.pop().value))
         self.emit('set /a {}=1'.format(temp.name))
         self.emit(')')
@@ -324,8 +334,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         a = self.pop()
         b = self.pop()
@@ -342,8 +352,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         temp = self.tempvar(INT)
         s = 'if {} neq {} (set /a {}=1) else (set /a {}=0)'
@@ -352,16 +362,16 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.PROGRAM)
     def __program(self, node):
-        self.emit('@echo off')
-        self.emit('setlocal enabledelayedexpansion')
+        self.emit('@echo off', 'init')
+        self.emit('setlocal enabledelayedexpansion', 'init')
 
         for child in node.children:
-            self.generate_code(child)
+            self._gen_code(child)
 
     @code_emitter(syntax.RETURN)
     def __return(self, node):
         expr = node.children[0]
-        self.generate_code(expr)
+        self._gen_code(expr)
         self.emit('endlocal & (')
 
         a = self.pop()
@@ -389,8 +399,8 @@ class Batch(CodeGenerator):
         lhs = node.children[0]
         rhs = node.children[1]
 
-        self.generate_code(rhs)
-        self.generate_code(lhs)
+        self._gen_code(rhs)
+        self._gen_code(lhs)
 
         a = self.pop()
         b = self.pop()
@@ -406,39 +416,11 @@ class Batch(CodeGenerator):
     def __while(self, node):
         label = self.label()
         self.emit(':{}'.format(label))
-        self.generate_code(node.children[0])
+        self._gen_code(node.children[0])
         self.emit('if {} neq 0 ('.format(self.pop().value))
 
         for expr in node.children[1:]:
-            self.generate_code(expr)
+            self._gen_code(expr)
 
         self.emit('goto :{}'.format(label))
         self.emit(')')
-
-    def __input(self, node):
-        args = self.emit_args(node)
-
-        temp = self.tempvar(STR)
-        self.emit('set /p {}={}'.format(temp.name, ' '.join(args)))
-        self.push(temp, VAR)
-
-    def __int(self, node):
-        args = self.emit_args(node)
-
-        temp = self.tempvar(INT)
-
-        self.emit('set /a {}={}'.format(temp.name, args[0]))
-        self.push(temp, VAR)
-
-    def __print(self, node):
-        args = self.emit_args(node)
-
-        self.emit('echo {}'.format(' '.join(args)))
-
-    def __str(self, node):
-        args = self.emit_args(node)
-
-        temp = self.tempvar(STR)
-
-        self.emit('set {}={}'.format(temp.name, args[0]))
-        self.push(temp, VAR)

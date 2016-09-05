@@ -91,6 +91,7 @@ LEXEME_MAP = {
 
     # User specified.
     '"[^"\n]*"?'             : STR,
+    '\'[^\'\n]*\'?'          : STR,
     '[0-9]+'                 : INT,
     '[_A-Za-z][_A-Za-z0-9]*' : IDENT,
 }

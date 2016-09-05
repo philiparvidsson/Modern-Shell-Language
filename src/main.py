@@ -11,12 +11,22 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-y = function (x) {
-    print(x())
+function main() {
+    filter = function(x) {
+        return (x/2)*2 == x
+    }
+
+    y = 1
+    while (y++ < 10) {
+        z=filter(y)
+        if (filter(y)) {
+            a=y
+            b=z
+        }
+    }
 }
 
-x = function () { return true }
-y(x)
+main()
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
@@ -26,6 +36,10 @@ y(x)
 
     batch = Batch(ast)
     code = batch.generate_code()
+
+    f = open('test.bat', 'w')
+    f.write(code)
+    f.close()
     print
     print
     print code

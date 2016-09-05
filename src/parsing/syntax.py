@@ -77,54 +77,6 @@ def parse_expr(parser):
         parser.read_token()
         expr = Node(SUBTRACT, children=[expr, parse_expr(parser)])
 
-    # <expr2> += <expr>
-    elif tok.category == lexemes.PLUS_EQ:
-        parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(ADD, children=[expr, parse_expr(parser)])
-        ])
-
-    # <expr2> -= <expr>
-    elif tok.category == lexemes.PLUS_EQ:
-        parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(SUBTRACT, children=[expr, parse_expr(parser)])
-        ])
-
-    # <expr2> *= <expr>
-    elif tok.category == lexemes.ASTERISK_EQ:
-        parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(MULTIPLY, children=[expr, parse_expr(parser)])
-        ])
-
-    # <expr2> /= <expr>
-    elif tok.category == lexemes.ASTERISK_EQ:
-        parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(DIVIDE, children=[expr, parse_expr(parser)])
-        ])
-
-    # <expr2>++
-    elif tok.category == lexemes.PLUS_PLUS:
-        parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(ADD, children=[expr, Node(INTEGER, 1, tok)])
-        ])
-
-    # <expr2>--
-    elif tok.category == lexemes.MINUS_MINUS:
-        parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(SUBTRACT, children=[expr, Node(INTEGER, 1, tok)])
-        ])
-
     # <expr2> == <expr>
     elif tok.category == lexemes.EQ_SIGN_2:
         parser.read_token()
@@ -185,6 +137,56 @@ def parse_expr2(parser):
         parser.read_token()
         expr = Node(DIVIDE, children=[expr, parse_expr2(parser)])
 
+
+    # <expr3> += <expr2>
+    elif tok.category == lexemes.PLUS_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(ADD, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> -= <expr2>
+    elif tok.category == lexemes.PLUS_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(SUBTRACT, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> *= <expr2>
+    elif tok.category == lexemes.ASTERISK_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(MULTIPLY, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> /= <expr2>
+    elif tok.category == lexemes.ASTERISK_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(DIVIDE, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3>++
+    elif tok.category == lexemes.PLUS_PLUS:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(ADD, children=[expr, Node(INTEGER, 1, tok)])
+        ])
+
+    # <expr3>--
+    elif tok.category == lexemes.MINUS_MINUS:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(SUBTRACT, children=[expr, Node(INTEGER, 1, tok)])
+        ])
+
+
     if expr:
         expr.token = tok
 
@@ -198,7 +200,7 @@ def parse_expr3(parser):
     # <expr4> (<expr>[, <expr> ...])
     if tok.category == lexemes.L_PAREN:
         parser.read_token()
-        args = []
+        args = [expr]
         while True:
             tok = parser.peek_token()
             if tok.category == lexemes.R_PAREN:
@@ -217,7 +219,7 @@ def parse_expr3(parser):
         if len(args) == 0:
             args = None
 
-        expr = Node(FUNC_CALL, expr.data, tok, args)
+        expr = Node(FUNC_CALL, token=tok, children=args)
 
     if expr:
         expr.token = tok
@@ -333,10 +335,21 @@ def parse_func(parser):
 def parse_ident(parser):
     tok = parser.expect(lexemes.IDENT)
 
+    ident = Node(IDENTIFIER, tok.lexeme, tok)
+
+    tok = parser.peek_token()
+    while tok.category == lexemes.PERIOD:
+        parser.read_token()
+        tok = parser.expect(lexemes.IDENT)
+
+        ident = Node(IDENTIFIER, tok.lexeme, tok, children=[ident])
+
+        tok = parser.peek_token()
+
     #if len(tok.lexeme) > 64:
     #    parser.warn("identifier unnecessarily long", tok)
 
-    return Node(IDENTIFIER, tok.lexeme, tok)
+    return ident
 
 def parse_if(parser):
     if_tok = parser.expect(lexemes.IF, lexemes.L_PAREN)
@@ -401,8 +414,9 @@ def parse_str(parser):
 
     value = str(tok.lexeme)
 
-    if not value.startswith('"') or not value.endswith('"'):
-        parser.error("unterminated string", token)
+    if ((not value.startswith('"') or not value.endswith('"')) and
+        (not value.startswith('\'') or not value.endswith('\''))):
+            parser.err("unterminated string", tok)
 
     value = value[1:-1]
 
