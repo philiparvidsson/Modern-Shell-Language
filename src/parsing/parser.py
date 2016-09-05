@@ -8,7 +8,7 @@ from .error  import Error
 from .node   import Node
 from .syntax import PROGRAM, parse_expr
 
-from lexing.lexemes import EOF, NEWLINE, SEMICOLON
+from lexing import lexemes
 
 #--------------------------------------------------
 # CONSTANTS
@@ -37,7 +37,7 @@ class Parser(object):
 
     def eat_whitespace(self):
         tok = self.peek_token()
-        while tok.category in (NEWLINE, SEMICOLON):
+        while tok.category in (lexemes.NEWLINE, lexemes.SEMICOLON):
             self.read_token()
             tok = self.peek_token()
 
@@ -72,7 +72,7 @@ class Parser(object):
 
     def parse_expression(self):
         tok = self.peek_token()
-        while tok.category == NEWLINE:
+        while tok.category == lexemes.NEWLINE:
             self.read_token()
             tok = self.peek_token()
 
@@ -82,7 +82,6 @@ class Parser(object):
         if not self.peeked_token:
             self.peeked_token = self.read_token()
 
-
         return self.peeked_token
 
     def read_token(self):
@@ -91,4 +90,15 @@ class Parser(object):
             self.peeked_token = None
             return token
 
-        return self.lexer.read_token()
+        tok = self.lexer.read_token()
+        if tok.category == lexemes.SLASH_2:
+            self.lexer.read_token()
+            while tok.category not in (lexemes.EOF, lexemes.NEWLINE):
+                tok = self.lexer.read_token()
+        elif tok.category == lexemes.SLASH_ASTERISK:
+            self.lexer.read_token()
+            while tok.category not in (lexemes.ASTERISK_SLASH, lexemes.EOF):
+                tok = self.lexer.read_token()
+            tok = self.lexer.read_token()
+
+        return tok

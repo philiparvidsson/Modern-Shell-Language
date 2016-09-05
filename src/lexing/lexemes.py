@@ -6,46 +6,48 @@
 EOF = '<eof>'
 
 # Special characters.
-ASTERISK    = 'asterisk'
-ASTERISK_EQ = 'asterisk equals'
-COMMA       = 'comma'
-EQ_SIGN     = 'equals sign'
-EQ_SIGN_2   = 'double equals sign'
-GREATER     = 'greater than'
-GREATER_EQ  = 'greater than or equal'
-LESS        = 'less than'
-LESS_EQ     = 'less than or equal'
-LOGIC_AND   = 'logical and'
-LOGIC_OR    = 'logical or'
-L_BRACE     = 'left brace'
-L_PAREN     = 'left parenthesis'
-MINUS_EQ    = 'minus equals'
-MINUS_MINUS = 'double minus sign'
-MINUS_SIGN  = 'minus sign'
-NEWLINE     = 'newline'
-NOT_EQ      = 'not equal'
-PERIOD      = 'period'
-PLUS_EQ     = 'plus equals'
-PLUS_PLUS   = 'double plus sign'
-PLUS_SIGN   = 'plus sign'
-R_BRACE     = 'right brace'
-R_PAREN     = 'right parenthesis'
-SEMICOLON   = 'semicolon'
-SLASH       = 'slash'
-SLASH_2     = 'double slash'
-SLASH_EQ    = 'slash equals'
-MODULO      = 'modulo'
-MODULO_EQ   = 'modulo equals'
-BIN_AND     = 'binary and'
-BIN_OR      = 'binary or'
-BIN_XOR     = 'binary xor'
-SHIFT_R     = 'shift right'
-SHIFT_L     = 'shift left'
-SHIFT_R_EQ  = 'shift right equals'
-SHIFT_L_EQ  = 'shift left equals'
+ASTERISK       = 'asterisk'
+ASTERISK_EQ    = 'asterisk equals'
+ASTERISK_SLASH = 'asterisk slash'
+BIN_AND        = 'binary and'
 BIN_AND_EQ     = 'binary and equals'
+BIN_OR         = 'binary or'
 BIN_OR_EQ      = 'binary or equals'
+BIN_XOR        = 'binary xor'
 BIN_XOR_EQ     = 'binary xor equals'
+COMMA          = 'comma'
+EQ_SIGN        = 'equals sign'
+EQ_SIGN_2      = 'double equals sign'
+GREATER        = 'greater than'
+GREATER_EQ     = 'greater than or equal'
+LESS           = 'less than'
+LESS_EQ        = 'less than or equal'
+LOGIC_AND      = 'logical and'
+LOGIC_OR       = 'logical or'
+L_BRACE        = 'left brace'
+L_PAREN        = 'left parenthesis'
+MINUS_EQ       = 'minus equals'
+MINUS_MINUS    = 'double minus sign'
+MINUS_SIGN     = 'minus sign'
+MODULO         = 'modulo'
+MODULO_EQ      = 'modulo equals'
+NEWLINE        = 'newline'
+NOT_EQ         = 'not equal'
+PERIOD         = 'period'
+PLUS_EQ        = 'plus equals'
+PLUS_PLUS      = 'double plus sign'
+PLUS_SIGN      = 'plus sign'
+R_BRACE        = 'right brace'
+R_PAREN        = 'right parenthesis'
+SEMICOLON      = 'semicolon'
+SHIFT_L        = 'shift left'
+SHIFT_L_EQ     = 'shift left equals'
+SHIFT_R        = 'shift right'
+SHIFT_R_EQ     = 'shift right equals'
+SLASH          = 'slash'
+SLASH_2        = 'double slash'
+SLASH_ASTERISK = 'slash asterisk'
+SLASH_EQ       = 'slash equals'
 
 # Keywords.
 ELSE   = 'else'
@@ -69,6 +71,7 @@ LEXEME_MAP = {
     '/'     : SLASH,
     '//'    : SLASH_2,
     '/='    : SLASH_EQ,
+    '/\*'   : SLASH_ASTERISK,
     '='     : EQ_SIGN,
     '=='    : EQ_SIGN_2,
     '\!='   : NOT_EQ,
@@ -80,6 +83,7 @@ LEXEME_MAP = {
     '\('    : L_PAREN,
     '\)'    : R_PAREN,
     '\*'    : ASTERISK,
+    '\*/'   : ASTERISK_SLASH,
     '\*='   : ASTERISK_EQ,
     '\+'    : PLUS_SIGN,
     '\+='   : PLUS_EQ,

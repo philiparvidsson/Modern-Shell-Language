@@ -12,8 +12,8 @@ if __name__ == '__main__':
     source = StringSource(
 """
 function main() {
-    a = 10
-    b = 10b
+    a = /*10*/25
+    //b = 10b
     c = 0x10
 }
 
