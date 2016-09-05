@@ -64,6 +64,7 @@ class Lexer(object):
         row    = self.row
         column = self.column
 
+        num_attempts = 0
         token = None
         while True:
             char = self.peek_char()
@@ -77,7 +78,12 @@ class Lexer(object):
             # Attempt to create a token from the lexeme.
             temp = self.create_token(lexeme)
             if not temp:
-                break
+                if not token:
+                    num_attempts += 1
+                    if num_attempts > 10:
+                        break
+                else:
+                    break
 
             token = temp
 

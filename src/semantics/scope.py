@@ -23,3 +23,6 @@ class Scope(object):
     def get_variable(self, name):
         if name in self.variables:
             return self.variables[name]
+
+        if self.parent_scope:
+            return self.parent_scope.get_variable(name)

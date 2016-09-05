@@ -37,6 +37,8 @@ STRING     = 'string'
 SUBTRACT   = 'subtract'
 THEN       = 'then'
 WHILE      = 'while'
+LOGIC_AND = 'logical and'
+LOGIC_OR  = 'logic or'
 
 #--------------------------------------------------
 # GLOBALS
@@ -153,6 +155,16 @@ def parse_expr(parser):
         parser.read_token()
         expr = Node(GREATER_EQ, children=[expr, parse_expr(parser)])
 
+    # <expr2> && <expr>
+    elif tok.category == lexemes.LOGIC_AND:
+        parser.read_token()
+        expr = Node(LOGIC_AND, children=[expr, parse_expr(parser)])
+
+    # <expr2> || <expr>
+    elif tok.category == lexemes.LOGIC_OR:
+        parser.read_token()
+        expr = Node(LOGIC_OR, children=[expr, parse_expr(parser)])
+
     if expr:
         expr.token = tok
 
@@ -267,7 +279,11 @@ def parse_expr4(parser):
 def parse_func(parser):
     func_tok = parser.expect(lexemes.FUNC)
 
-    name = parse_ident(parser).data
+    name = None
+
+    # We have a name unless it's an anonymous function.
+    if parser.peek_token().category == lexemes.IDENT:
+        name = parse_ident(parser).data
 
     parser.expect(lexemes.L_PAREN)
 

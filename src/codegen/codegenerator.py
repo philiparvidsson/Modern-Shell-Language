@@ -24,6 +24,7 @@ class CodeGenerator(object):
 
     def emit(self, code):
         self.code += code + '\n'
+        print code
 
     def generate_code(self, root=None):
         if not root:

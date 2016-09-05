@@ -76,6 +76,7 @@ class Batch(CodeGenerator):
         y.type_ = x[1]
 
         if y.type_ == VAR:
+            y.var = y.value
             y.type_ = y.value.type_
             if isinstance(y.value.name, int):
                 # Function parameters.
@@ -125,6 +126,7 @@ class Batch(CodeGenerator):
             switches.append('/a')
 
         self.emit('set {} {}={}'.format(' '.join(switches), ident.data, a.value))
+        #self.push(var, VAR)
 
     @code_emitter(syntax.DIVIDE)
     def __divide(self, node):
@@ -159,9 +161,15 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.FUNC)
     def __func(self, node):
+        func_name = node.data
+        if not func_name:
+            func_name = self.tempvar().name
+
+        self.scope.declare_variable(func_name, STR)
         self.enter_scope()
-        self.emit('goto :eof')
-        self.emit(':{}'.format(node.data))
+        self.emit('set {}={}'.format(func_name, func_name))
+        self.emit('goto :eof'),
+        self.emit(':{}'.format(func_name))
         self.emit('setlocal')
 
         params = node.children[0]
@@ -177,9 +185,12 @@ class Batch(CodeGenerator):
         for expr in body.children:
             self.generate_code(expr)
 
-        self.emit('endlocal & (set %1=0)')
-        self.emit('exit /b')
+        if not body.children or not body.children[-1].construct == syntax.RETURN:
+            self.emit('endlocal & (set %1=0)')
+            self.emit('exit /b')
         self.leave_scope()
+
+        self.push(func_name, STR)
 
     @code_emitter(syntax.FUNC_CALL)
     def __func_call(self, node):
@@ -194,7 +205,8 @@ class Batch(CodeGenerator):
         else:
             args = self.emit_args(node)
             temp = self.tempvar(STR) # FIXME: Don't assume str!
-            self.emit('call :{} {} {}'.format(node.data, temp.name, ' '.join(args)))
+            var = self.scope.get_variable(node.data)
+            self.emit('call :!{}! {} {}'.format(node.data, temp.name, ' '.join(args)))
             self.push(temp, VAR)
 
     @code_emitter(syntax.GREATER)
@@ -278,6 +290,35 @@ class Batch(CodeGenerator):
         self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
         self.push(temp, VAR)
 
+    @code_emitter(syntax.LOGIC_AND)
+    def __logic_and(self, node):
+        cond = node.children[0]
+        then_expr = node.children[1]
+
+        self.generate_code(cond)
+        self.emit('if {} neq 0 ('.format(self.pop().value))
+        self.generate_code(then_expr)
+        self.emit(')')
+
+    @code_emitter(syntax.LOGIC_OR)
+    def __logic_or(self, node):
+        cond = node.children[0]
+        then_expr = node.children[1]
+
+        temp = self.tempvar(INT)
+
+        self.generate_code(cond)
+        self.emit('set /a {}=0'.format(temp.name))
+        self.emit('if {} neq 0 ('.format(self.pop().value))
+        self.emit('set /a {}=1'.format(temp.name))
+        self.emit(') else (')
+        self.generate_code(then_expr)
+        self.emit('if {} neq 0 ('.format(self.pop().value))
+        self.emit('set /a {}=1'.format(temp.name))
+        self.emit(')')
+        self.emit(')')
+        self.push(temp, VAR)
+
     @code_emitter(syntax.MULTIPLY)
     def __multiply(self, node):
         lhs = node.children[0]
@@ -328,7 +369,13 @@ class Batch(CodeGenerator):
             s = 'set /a %1={}'
         else:
             s = 'set %1={}'
-        self.emit(s.format(a.value))
+
+        # FIXME: Clean this function up.
+
+        if hasattr(a, 'var'):
+            self.emit(s.format('%{}%'.format(a.var.name)))
+        else:
+            self.emit(s.format(a.value))
 
         self.emit(')')
         self.emit('exit /b')

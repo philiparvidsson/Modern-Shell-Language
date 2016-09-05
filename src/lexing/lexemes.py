@@ -31,6 +31,8 @@ SEMICOLON   = 'semicolon'
 SLASH       = 'slash'
 SLASH_2     = 'double slash'
 SLASH_EQ    = 'slash equals'
+LOGIC_AND = 'logical and'
+LOGIC_OR = 'logical or'
 
 # Keywords.
 ELSE   = 'else'
@@ -71,6 +73,8 @@ LEXEME_MAP = {
     '\>='  : GREATER_EQ,
     '\{'   : L_BRACE,
     '\}'   : R_BRACE,
+    '\&\&' : LOGIC_AND,
+    '\|\|' : LOGIC_OR,
 
     # Keywords.
     'else'     : ELSE,

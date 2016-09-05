@@ -11,17 +11,12 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-
-a = 1
-b = 100
-c = 1
-while (a <= b) {
-    print(a, b, c)
-    a *= 2
-    b += 10
-    c++
+y = function (x) {
+    print(x)
 }
 
+x = 5
+y(x)
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
