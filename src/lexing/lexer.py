@@ -57,7 +57,7 @@ class Lexer(object):
             char = self.peek_char()
 
         if newline:
-            print Token(NEWLINE, '\n')
+            #print Token(NEWLINE, '\n')
             return Token(NEWLINE, '\n')
 
         lexeme = ''
@@ -93,7 +93,7 @@ class Lexer(object):
         if token:
             token.row = row
             token.column = column
-            print token
+            #print token
             return token
 
         if len(lexeme) == 0:

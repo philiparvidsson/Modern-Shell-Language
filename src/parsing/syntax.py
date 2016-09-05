@@ -363,11 +363,12 @@ def parse_expr4(parser):
     #elif tok.category in (lexemes.EOF, lexemes.NEWLINE):
     #    pass
 
-    else:
+    elif tok.category != lexemes.EOF:
         parser.err("unexpected token: {}".format(tok.category), tok)
 
     if expr:
         expr.token = tok
+
     return expr
 
 def parse_func(parser):
@@ -490,7 +491,17 @@ def parse_int(parser):
     #if len(tok.lexeme) > 10:
     #    parser.warn("integer too large", tok)
 
-    return Node(INTEGER, int(tok.lexeme), tok)
+    value = tok.lexeme
+    if value.startswith("0x"):
+        if len(value) == 2:
+            parser.err("invalid hex value", tok)
+            value = 0
+        else:
+            value = int(value[2:], 16)
+    elif value.endswith("b"):
+        value = int(value[:-1], 2)
+
+    return Node(INTEGER, int(value), tok)
 
 def parse_str(parser):
     tok = parser.expect(lexemes.STR)

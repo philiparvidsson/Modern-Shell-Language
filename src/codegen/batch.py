@@ -34,7 +34,6 @@ class Batch(CodeGenerator):
             ('init', ''),
             ('decl', ''),
             ('code', '')
-
         ))
 
     def code(self):
@@ -140,8 +139,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.BIN_AND)
     def __bin_and(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}&{}"'
@@ -150,8 +149,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.BIN_OR)
     def __bin_or(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}|{}"'
@@ -160,8 +159,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.BIN_XOR)
     def __bin_xor(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}^{}"'
@@ -170,8 +169,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.DIVIDE)
     def __divide(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}/{}"'
@@ -200,7 +199,7 @@ class Batch(CodeGenerator):
         self.scope.declare_variable(func_name, STR)
         self.enter_scope()
         self.emit('set {}={}'.format(func_name, func_name), 'decl')
-        self.emit('goto :{}_skip'.format(func_name)),
+        self.emit('goto :__after_{}'.format(func_name)),
         self.emit(':{}'.format(func_name))
         self.emit('setlocal')
 
@@ -222,7 +221,7 @@ class Batch(CodeGenerator):
             self.emit('exit /b')
         self.leave_scope()
         self.push(func_name, STR)
-        self.emit(':{}_skip'.format(func_name))
+        self.emit(':__after_{}'.format(func_name))
 
     @code_emitter(syntax.FUNC_CALL)
     def __func_call(self, node):
@@ -353,8 +352,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.MODULO)
     def __modulo(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}%{}"'
@@ -363,8 +362,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.MULTIPLY)
     def __multiply(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}*{}"'
@@ -416,8 +415,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.SHIFT_L)
     def __shift_l(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}<<{}"'
@@ -426,8 +425,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.SHIFT_R)
     def __shift_r(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}>>{}"'
@@ -440,8 +439,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.SUBTRACT)
     def __subtract(self, node):
-        self._gen_code(node.children[0])
         self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}-{}"'

@@ -3,15 +3,14 @@ setlocal enabledelayedexpansion
 
 set main=main
 
-goto :main_skip
+goto :__after_main
 :main
 setlocal
-set /a a=2
-set /a "__1=2<<!a!"
-set /a a=!__1!
-echo !a!
+set /a a=10
+set /a b=2
+set /a c=16
 endlocal & (set %1=0)
 exit /b
-:main_skip
-call :!main! __2 
+:__after_main
+call :!main! __1 
 
