@@ -12,10 +12,10 @@ if __name__ == '__main__':
     source = StringSource(
 """
 y = function (x) {
-    print(x)
+    print(x())
 }
 
-x = 5
+x = function () { return true }
 y(x)
 """)
     lexer  = Lexer(source)

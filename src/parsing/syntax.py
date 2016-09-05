@@ -264,6 +264,15 @@ def parse_expr4(parser):
         parser.read_token()
         expr = Node(RETURN, token=tok, children=[parse_expr(parser)])
 
+    # true
+    elif tok.category == lexemes.TRUE:
+        parser.read_token()
+        expr = Node(INTEGER, 1)
+
+    # false
+    elif tok.category == lexemes.FALSE:
+        parser.read_token()
+        expr = Node(INTEGER, 0)
 
     # <eof> | <newline>
     #elif tok.category in (lexemes.EOF, lexemes.NEWLINE):

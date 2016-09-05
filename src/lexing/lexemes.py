@@ -15,6 +15,8 @@ GREATER     = 'greater than'
 GREATER_EQ  = 'greater than or equal'
 LESS        = 'less than'
 LESS_EQ     = 'less than or equal'
+LOGIC_AND   = 'logical and'
+LOGIC_OR    = 'logical or'
 L_BRACE     = 'left brace'
 L_PAREN     = 'left parenthesis'
 MINUS_EQ    = 'minus equals'
@@ -22,6 +24,7 @@ MINUS_MINUS = 'double minus sign'
 MINUS_SIGN  = 'minus sign'
 NEWLINE     = 'newline'
 NOT_EQ      = 'not equal'
+PERIOD      = 'period'
 PLUS_EQ     = 'plus equals'
 PLUS_PLUS   = 'double plus sign'
 PLUS_SIGN   = 'plus sign'
@@ -31,8 +34,6 @@ SEMICOLON   = 'semicolon'
 SLASH       = 'slash'
 SLASH_2     = 'double slash'
 SLASH_EQ    = 'slash equals'
-LOGIC_AND = 'logical and'
-LOGIC_OR = 'logical or'
 
 # Keywords.
 ELSE   = 'else'
@@ -40,6 +41,8 @@ FUNC   = 'function'
 IF     = 'if'
 WHILE  = 'while'
 RETURN = 'return'
+TRUE   = 'true'
+FALSE  = 'false'
 
 # User specified.
 IDENT = 'identifier'
@@ -57,6 +60,7 @@ LEXEME_MAP = {
     '='    : EQ_SIGN,
     '=='   : EQ_SIGN_2,
     '\!='  : NOT_EQ,
+    '\&\&' : LOGIC_AND,
     '\('   : L_PAREN,
     '\)'   : R_PAREN,
     '\*'   : ASTERISK,
@@ -66,15 +70,15 @@ LEXEME_MAP = {
     '\+\+' : PLUS_PLUS,
     '\-='  : MINUS_EQ,
     '\-\-' : MINUS_MINUS,
+    '\.'   : PERIOD,
     '\;'   : SEMICOLON,
     '\<'   : LESS,
     '\<='  : LESS_EQ,
     '\>'   : GREATER,
     '\>='  : GREATER_EQ,
     '\{'   : L_BRACE,
-    '\}'   : R_BRACE,
-    '\&\&' : LOGIC_AND,
     '\|\|' : LOGIC_OR,
+    '\}'   : R_BRACE,
 
     # Keywords.
     'else'     : ELSE,
@@ -82,6 +86,8 @@ LEXEME_MAP = {
     'if'       : IF,
     'return'   : RETURN,
     'while'    : WHILE,
+    'true'     : TRUE,
+    'false'    : FALSE,
 
     # User specified.
     '"[^"\n]*"?'             : STR,
