@@ -8,7 +8,7 @@ from .error  import Error
 from .node   import Node
 from .syntax import PROGRAM, parse_expr
 
-from lexing.lexemes import EOF, NEWLINE
+from lexing.lexemes import EOF, NEWLINE, SEMICOLON
 
 #--------------------------------------------------
 # CONSTANTS
@@ -37,7 +37,7 @@ class Parser(object):
 
     def eat_whitespace(self):
         tok = self.peek_token()
-        while tok.category == NEWLINE:
+        while tok.category in (NEWLINE, SEMICOLON):
             self.read_token()
             tok = self.peek_token()
 

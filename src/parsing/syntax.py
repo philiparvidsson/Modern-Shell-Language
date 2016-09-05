@@ -17,6 +17,7 @@ ASSIGN       = 'assignment'
 DIVIDE       = 'divide'
 ELSE         = 'else'
 END          = 'end'
+EQUAL        = 'equal'
 FUNC         = 'function'
 FUNC_CALL    = 'function call'
 FUNC_DECL    = 'function declaration'
@@ -26,6 +27,7 @@ IF           = 'if'
 INTEGER      = 'integer'
 MULTIPLY     = 'multiply'
 PROGRAM      = 'program'
+RETURN       = 'return'
 STRING       = 'string'
 SUBTRACT     = 'subtract'
 THEN         = 'then'
@@ -67,6 +69,10 @@ def parse_expr(parser):
         parser.read_token()
         expr = Node(SUBTRACT, children=[expr, parse_expr(parser)])
 
+    elif tok.category == lexemes.EQ_SIGN_2:
+        parser.read_token()
+        expr = Node(EQUAL, children=[expr, parse_expr(parser)])
+
     if expr:
         expr.token = tok
 
@@ -98,23 +104,23 @@ def parse_expr3(parser):
     tok = parser.peek_token()
 
     # <expr4> (<expr>[, <expr> ...])
-    if tok.category == lexemes.LEFT_PAREN:
+    if tok.category == lexemes.L_PAREN:
         parser.read_token()
         args = []
         while True:
             tok = parser.peek_token()
-            if tok.category == lexemes.RIGHT_PAREN:
+            if tok.category == lexemes.R_PAREN:
                 break
 
             args.append(parse_expr(parser))
 
             tok = parser.peek_token()
-            if tok.category == lexemes.RIGHT_PAREN:
+            if tok.category == lexemes.R_PAREN:
                 break
 
             parser.expect(lexemes.COMMA)
 
-        parser.expect(lexemes.RIGHT_PAREN)
+        parser.expect(lexemes.R_PAREN)
 
         if len(args) == 0:
             args = None
@@ -132,10 +138,10 @@ def parse_expr4(parser):
     tok = parser.peek_token()
 
     # (<expr>)
-    if tok.category == lexemes.LEFT_PAREN:
-        parser.expect(lexemes.LEFT_PAREN)
+    if tok.category == lexemes.L_PAREN:
+        parser.expect(lexemes.L_PAREN)
         expr = parse_expr(parser)
-        parser.expect(lexemes.RIGHT_PAREN)
+        parser.expect(lexemes.R_PAREN)
 
     # <identifier>
     elif tok.category == lexemes.IDENT:
@@ -153,9 +159,15 @@ def parse_expr4(parser):
     elif tok.category == lexemes.FUNC:
         expr = parse_func(parser)
 
-    # if <expression> [= <expression>]
+    # if <expr> [= <expr>]
     elif tok.category == lexemes.IF:
         expr = parse_if(parser)
+
+    # return <expr>
+    elif tok.category == lexemes.RETURN:
+        parser.read_token()
+        expr = Node(RETURN, token=tok, children=[parse_expr(parser)])
+
 
     # <eof> | <newline>
     #elif tok.category in (lexemes.EOF, lexemes.NEWLINE):
@@ -173,24 +185,26 @@ def parse_func(parser):
 
     name = parse_ident(parser).data
 
-    parser.expect(lexemes.LEFT_PAREN)
+    parser.expect(lexemes.L_PAREN)
 
     args = Node(FUNC_DECL, token=func_tok, children=[])
 
     while True:
         tok = parser.peek_token()
-        if tok.category == lexemes.RIGHT_PAREN:
+        if tok.category == lexemes.R_PAREN:
             break
 
         args.children.append(parse_ident(parser))
 
         tok = parser.peek_token()
-        if tok.category == lexemes.RIGHT_PAREN:
+        if tok.category == lexemes.R_PAREN:
             break
 
         parser.expect(lexemes.COMMA)
 
-    parser.expect(lexemes.RIGHT_PAREN)
+    parser.expect(lexemes.R_PAREN)
+    parser.eat_whitespace()
+    parser.expect(lexemes.L_BRACE)
 
     body = Node(FUNC_DEF, token=func_tok, children=[])
 
@@ -198,12 +212,12 @@ def parse_func(parser):
         parser.eat_whitespace()
 
         tok = parser.peek_token()
-        if tok.category in (lexemes.END, lexemes.EOF):
+        if tok.category in (lexemes.EOF, lexemes.R_BRACE):
             break
 
         body.children.append(parse_expr(parser))
 
-    parser.expect(lexemes.END)
+    parser.expect(lexemes.R_BRACE)
 
     return Node(FUNC, name, func_tok, [args, body])
 
@@ -216,29 +230,23 @@ def parse_ident(parser):
     return Node(IDENTIFIER, tok.lexeme, tok)
 
 def parse_if(parser):
-    if_tok = parser.expect(lexemes.IF)
+    if_tok = parser.expect(lexemes.IF, lexemes.L_PAREN)
 
     cond = parse_expr(parser)
 
+    parser.expect(lexemes.R_PAREN)
+    parser.eat_whitespace()
+
+    then_expr = Node(THEN, token=if_tok, children=[])
+
     tok = parser.peek_token()
-    if tok.category == lexemes.DOUBLE_EQ_SIGN:
+    if tok.category == lexemes.L_BRACE:
         parser.read_token()
-        comp = parse_expr(parser)
-    else:
-        comp = Node(INTEGER, 1, tok)
-
-    then_expr = Node(THEN, token=tok, children=[])
-
-    tok = parser.peek_token()
-    if tok.category == lexemes.NEWLINE:
         while True:
             parser.eat_whitespace()
 
             tok = parser.peek_token()
-            if tok.category == lexemes.ELSE:
-                break
-
-            if tok.category == lexemes.END:
+            if tok.category == lexemes.R_BRACE:
                 parser.read_token()
                 break
 
@@ -253,13 +261,14 @@ def parse_if(parser):
     tok = parser.peek_token()
     if tok.category == lexemes.ELSE:
         parser.read_token()
-        tok = parser.peek_token()
-        if tok.category == lexemes.NEWLINE:
+
+        if tok.category == lexemes.L_BRACE:
+            tok = parser.peek_token()
             while True:
                 parser.eat_whitespace()
 
                 tok = parser.peek_token()
-                if tok.category == lexemes.END:
+                if tok.category == lexemes.R_BRACE:
                     parser.read_token()
                     break
 
@@ -267,7 +276,8 @@ def parse_if(parser):
         else:
             else_expr.children.append(parse_expr(parser))
 
-    return Node(IF, token=if_tok, children=[cond, comp, then_expr, else_expr])
+
+    return Node(IF, token=if_tok, children=[cond, then_expr, else_expr])
 
 def parse_int(parser):
     tok = parser.expect(lexemes.INT)

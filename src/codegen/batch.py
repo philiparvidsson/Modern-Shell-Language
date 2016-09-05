@@ -73,7 +73,7 @@ class Batch(CodeGenerator):
             y.type_ = y.value.type_
             if isinstance(y.value.name, int):
                 # Function parameters.
-                y.value = '%~{}'.format(y.value.name)
+                y.value = '%{}'.format(y.value.name)
             else:
                 y.value = '!{}!'.format(y.value.name)
 
@@ -138,6 +138,19 @@ class Batch(CodeGenerator):
         self.emit('set /a {}={}/{}'.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
+    @code_emitter(syntax.EQUAL)
+    def __equal(self, node):
+        lhs = node.children[0]
+        rhs = node.children[1]
+
+        self.generate_code(rhs)
+        self.generate_code(lhs)
+
+        temp = self.tempvar(INT)
+        s = 'if {} equ {} (set /a {}=1) else (set /a {}=0)'
+        self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
+        self.push(temp, VAR)
+
     @code_emitter(syntax.FUNC)
     def __func(self, node):
         self.enter_scope()
@@ -147,10 +160,10 @@ class Batch(CodeGenerator):
         params = node.children[0]
         body = node.children[1]
 
-        param_counter = 1
+        param_counter = 2
         for param in params.children:
-            # TODO: Don't use str here. Be water, my friend!
-            var = self.scope.declare_parameter(param.data, STR)
+            # TODO: Don't assume str here. Be water, my friend!
+            var = self.scope.declare_variable(param.data, STR)
             var.name = param_counter
             param_counter += 1
 
@@ -173,7 +186,9 @@ class Batch(CodeGenerator):
             self.__str(node)
         else:
             args = self.emit_args(node)
-            self.emit('call :{} {}'.format(node.data, ' '.join(args)))
+            temp = self.tempvar(STR) # FIXME: Don't assume str!
+            self.emit('call :{} {} {}'.format(node.data, temp.name, ' '.join(args)))
+            self.push(temp, VAR)
 
     @code_emitter(syntax.IDENTIFIER)
     def __identifier(self, node):
@@ -182,14 +197,12 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.IF)
     def __if(self, node):
         cond = node.children[0]
-        comp = node.children[1]
-        then_expr = node.children[2]
-        else_expr = node.children[3]
+        then_expr = node.children[1]
+        else_expr = node.children[2]
 
-        self.generate_code(comp)
         self.generate_code(cond)
 
-        self.emit('if {} equ {} ('.format(self.pop().value, self.pop().value))
+        self.emit('if {} neq 0 ('.format(self.pop().value))
 
         for expr in then_expr.children:
             self.generate_code(expr)
@@ -201,14 +214,6 @@ class Batch(CodeGenerator):
                 self.generate_code(expr)
 
         self.emit(')')
-
-#setlocal EnableDelayedExpansion
-#setlocal EnableExtensions
-#
-#set a=asssi
-#if !a! EQU 1 (
-#  echo | set /p ^=ass
-        #)
 
     @code_emitter(syntax.INTEGER)
     def __integer(self, node):
@@ -238,6 +243,22 @@ class Batch(CodeGenerator):
 
         for child in node.children:
             self.generate_code(child)
+
+    @code_emitter(syntax.RETURN)
+    def __return(self, node):
+        expr = node.children[0]
+        self.generate_code(expr)
+        self.emit('endlocal & (')
+
+        a = self.pop()
+        if a.type_ == INT:
+            s = 'set /a %1={}'
+        else:
+            s = 'set %1={}'
+        self.emit(s.format(a.value))
+
+        self.emit(')')
+        self.emit('exit /b')
 
     @code_emitter(syntax.STRING)
     def __string(self, node):
