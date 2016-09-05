@@ -16,9 +16,6 @@ class Scope(object):
 
     def declare_variable(self, name, type_):
         var = Variable(name, type_)
-
-        print 'declared variable {} of type {}'.format(name, type_)
-
         self.variables[name] = var
 
         return var

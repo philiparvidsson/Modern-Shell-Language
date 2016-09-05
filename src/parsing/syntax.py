@@ -12,25 +12,31 @@ from lexing import lexemes
 # CONSTANTS
 #--------------------------------------------------
 
-ADD          = 'add'
-ASSIGN       = 'assignment'
-DIVIDE       = 'divide'
-ELSE         = 'else'
-END          = 'end'
-EQUAL        = 'equal'
-FUNC         = 'function'
-FUNC_CALL    = 'function call'
-FUNC_DECL    = 'function declaration'
-FUNC_DEF     = 'function definition'
-IDENTIFIER   = 'identifier'
-IF           = 'if'
-INTEGER      = 'integer'
-MULTIPLY     = 'multiply'
-PROGRAM      = 'program'
-RETURN       = 'return'
-STRING       = 'string'
-SUBTRACT     = 'subtract'
-THEN         = 'then'
+ADD        = 'add'
+ASSIGN     = 'assignment'
+DIVIDE     = 'divide'
+ELSE       = 'else'
+END        = 'end'
+EQUAL      = 'equal'
+FUNC       = 'function'
+FUNC_CALL  = 'function call'
+FUNC_DECL  = 'function declaration'
+FUNC_DEF   = 'function definition'
+GREATER    = 'greater than'
+GREATER_EQ = 'greater than or equal'
+IDENTIFIER = 'identifier'
+IF         = 'if'
+INTEGER    = 'integer'
+LESS       = 'less than'
+LESS_EQ    = 'less than or equal'
+MULTIPLY   = 'multiply'
+NOT_EQ     = 'not equal'
+PROGRAM    = 'program'
+RETURN     = 'return'
+STRING     = 'string'
+SUBTRACT   = 'subtract'
+THEN       = 'then'
+WHILE      = 'while'
 
 #--------------------------------------------------
 # GLOBALS
@@ -69,9 +75,83 @@ def parse_expr(parser):
         parser.read_token()
         expr = Node(SUBTRACT, children=[expr, parse_expr(parser)])
 
+    # <expr2> += <expr>
+    elif tok.category == lexemes.PLUS_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(ADD, children=[expr, parse_expr(parser)])
+        ])
+
+    # <expr2> -= <expr>
+    elif tok.category == lexemes.PLUS_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(SUBTRACT, children=[expr, parse_expr(parser)])
+        ])
+
+    # <expr2> *= <expr>
+    elif tok.category == lexemes.ASTERISK_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(MULTIPLY, children=[expr, parse_expr(parser)])
+        ])
+
+    # <expr2> /= <expr>
+    elif tok.category == lexemes.ASTERISK_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(DIVIDE, children=[expr, parse_expr(parser)])
+        ])
+
+    # <expr2>++
+    elif tok.category == lexemes.PLUS_PLUS:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(ADD, children=[expr, Node(INTEGER, 1, tok)])
+        ])
+
+    # <expr2>--
+    elif tok.category == lexemes.MINUS_MINUS:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(SUBTRACT, children=[expr, Node(INTEGER, 1, tok)])
+        ])
+
+    # <expr2> == <expr>
     elif tok.category == lexemes.EQ_SIGN_2:
         parser.read_token()
         expr = Node(EQUAL, children=[expr, parse_expr(parser)])
+
+    # <expr2> != <expr>
+    elif tok.category == lexemes.NOT_EQ:
+        parser.read_token()
+        expr = Node(NOT_EQUAL, children=[expr, parse_expr(parser)])
+
+    # <expr2> < <expr>
+    elif tok.category == lexemes.LESS:
+        parser.read_token()
+        expr = Node(LESS, children=[expr, parse_expr(parser)])
+
+    # <expr2> > <expr>
+    elif tok.category == lexemes.GREATER:
+        parser.read_token()
+        expr = Node(GREATER, children=[expr, parse_expr(parser)])
+
+    # <expr2> <= <expr>
+    elif tok.category == lexemes.LESS_EQ:
+        parser.read_token()
+        expr = Node(LESS_EQ, children=[expr, parse_expr(parser)])
+
+    # <expr2> >= <expr>
+    elif tok.category == lexemes.GREATER_EQ:
+        parser.read_token()
+        expr = Node(GREATER_EQ, children=[expr, parse_expr(parser)])
 
     if expr:
         expr.token = tok
@@ -159,9 +239,13 @@ def parse_expr4(parser):
     elif tok.category == lexemes.FUNC:
         expr = parse_func(parser)
 
-    # if <expr> [= <expr>]
+    # if (<expr>) ...
     elif tok.category == lexemes.IF:
         expr = parse_if(parser)
+
+    # while (<expr>) ...
+    elif tok.category == lexemes.WHILE:
+        expr = parse_while(parser)
 
     # return <expr>
     elif tok.category == lexemes.RETURN:
@@ -298,3 +382,32 @@ def parse_str(parser):
     value = value[1:-1]
 
     return Node(STRING, value, tok)
+
+def parse_while(parser):
+    while_tok = parser.expect(lexemes.WHILE, lexemes.L_PAREN)
+
+    cond = parse_expr(parser)
+
+    parser.expect(lexemes.R_PAREN)
+    parser.eat_whitespace()
+
+    node = Node(WHILE, token=while_tok, children=[cond])
+
+    tok = parser.peek_token()
+    if tok.category == lexemes.L_BRACE:
+        parser.read_token()
+        while True:
+            parser.eat_whitespace()
+
+            tok = parser.peek_token()
+            if tok.category == lexemes.R_BRACE:
+                parser.read_token()
+                break
+
+            node.children.append(parse_expr(parser))
+    else:
+        node.children.append(parse_expr(parser))
+
+    parser.eat_whitespace()
+
+    return node

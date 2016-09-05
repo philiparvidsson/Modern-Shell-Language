@@ -11,12 +11,15 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-function main(x) {
-    if (are_equal(1, 2)) print("sant") else print("falskt")
-}
 
-function are_equal(a, b) {
-    return a==b
+a = 1
+b = 100
+c = 1
+while (a <= b) {
+    print(a, b, c)
+    a *= 2
+    b += 10
+    c++
 }
 
 """)

@@ -1,22 +1,17 @@
-
+@echo off
 setlocal enabledelayedexpansion
-:main
-setlocal enabledelayedexpansion
-call :are_equal _1 42 42
-echo !_1!
+set /a a=1
+set /a b=100
+set /a c=1
+:lbl1
+if !a! leq !b! (set /a _1=1) else (set /a _1=0)
 if !_1! neq 0 (
-echo sant
-) else (
-echo falskt
+echo !a! !b! !c!
+set /a _2=!a!*2
+set /a a=!_2!
+set /a _3=!b!+10
+set /a b=!_3!
+set /a _4=!c!+1
+set /a c=!_4!
+goto :lbl1
 )
-endlocal
-exit /b
-:are_equal
-setlocal
-if %2 equ %3 (set /a _2=1) else (set /a _2=0)
-endlocal & (
-set %1=!_2!
-)
-exit /b
-endlocal
-exit /b
