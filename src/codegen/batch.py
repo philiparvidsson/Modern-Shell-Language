@@ -182,6 +182,36 @@ class Batch(CodeGenerator):
         self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
+
+    @code_emitter(syntax.ARRAY)
+    def __array(self, node):
+        temp = self.tempvar(STR)
+        self.emit('set "{}={}"'.format(temp.name, temp.name))
+
+        index = 0
+        for item in node.children:
+            self._gen_code(item)
+            self.emit('set "{}[{}]={}"'.format(temp.name, index, self.pop().value))
+            index += 1
+
+        self.push(temp, VAR)
+
+    @code_emitter(syntax.ARRAY_IDX)
+    def __array_idx(self, node):
+        array_expr = node.children[0]
+        index_expr = node.children[1]
+
+        self._gen_code(index_expr)
+        self._gen_code(array_expr)
+
+        a = self.pop().value
+        b = self.pop().value
+
+        # TODO: Do we have to default to str here?
+        temp = self.tempvar(STR)
+        self.emit('call set "{}=%%{}[{}]%%"'.format(temp.name, a, b))
+        self.push(temp, VAR)
+
     @code_emitter(syntax.ASSIGN)
     def __assign(self, node):
         ident = node.children[0]
@@ -198,7 +228,7 @@ class Batch(CodeGenerator):
         if a.type_ == INT:
             switches.append('/a')
 
-        self.emit('set {} {}={}'.format(' '.join(switches), ident.data, a.value))
+        self.emit('set {} "{}={}"'.format(' '.join(switches), ident.data, a.value))
         #self.push(var, VAR)
 
     @code_emitter(syntax.BIN_AND)
@@ -476,7 +506,7 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
-        s = 'set /a "{}={}%{}"'
+        s = 'set /a "{}={}%%{}"'
         self.emit(s.format(temp.name, self.pop().value, self.pop().value))
         self.push(temp, VAR)
 

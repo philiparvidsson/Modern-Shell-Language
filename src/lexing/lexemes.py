@@ -26,6 +26,7 @@ LESS_EQ        = 'less than or equal'
 LOGIC_AND      = 'logical and'
 LOGIC_OR       = 'logical or'
 L_BRACE        = 'left brace'
+L_BRACK        = 'left bracket'
 L_PAREN        = 'left parenthesis'
 MINUS_EQ       = 'minus equals'
 MINUS_MINUS    = 'double minus sign'
@@ -40,6 +41,7 @@ PLUS_PLUS      = 'double plus sign'
 PLUS_SIGN      = 'plus sign'
 Q_MARK         = 'question mark'
 R_BRACE        = 'right brace'
+R_BRACK        = 'right bracket'
 R_PAREN        = 'right parenthesis'
 SEMICOLON      = 'semicolon'
 SHIFT_L        = 'shift left'
@@ -104,6 +106,8 @@ LEXEME_MAP = {
     '\>\>'  : SHIFT_R,
     '\>\>=' : SHIFT_R_EQ,
     '\?'    : Q_MARK,
+    '\['    : L_BRACK,
+    '\]'    : R_BRACK,
     '\^'    : BIN_XOR,
     '\^='   : BIN_XOR_EQ,
     '\{'    : L_BRACE,

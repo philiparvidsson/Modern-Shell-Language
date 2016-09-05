@@ -17,8 +17,17 @@ function fac(x) {
                     : x*fac(x-1)
 }
 
+function ass(a, b, n) {
+aa=n*1 // needs cast.. =(
+return (a[b[aa+1]])[1]
+}
+
 function main() {
-    print(fac(5))
+    //fn = x => x+1
+    x = [1,2,3]
+    c = ['bosse', 'anita']
+    y = ['a', 'b', c]
+    print(ass(y, x, 0))
 }
 
 main()

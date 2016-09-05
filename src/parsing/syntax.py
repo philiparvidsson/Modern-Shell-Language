@@ -13,6 +13,8 @@ from lexing import lexemes
 #--------------------------------------------------
 
 ADD        = 'add'
+ARRAY      = 'array'
+ARRAY_IDX  = 'array index'
 ASSIGN     = 'assignment'
 BIN_AND    = 'binary and'
 BIN_OR     = 'binary or'
@@ -311,6 +313,12 @@ def parse_expr3(parser):
 
         expr = Node(FUNC_CALL, token=tok, children=args)
 
+    # <expr4>[<expr>]
+    elif tok.category == lexemes.L_BRACK:
+        parser.read_token()
+        expr = Node(ARRAY_IDX, token=tok, children=[expr, parse_expr(parser)])
+        parser.expect(lexemes.R_BRACK)
+
     if expr:
         expr.token = tok
 
@@ -326,6 +334,29 @@ def parse_expr4(parser):
         parser.expect(lexemes.L_PAREN)
         expr = parse_expr(parser)
         parser.expect(lexemes.R_PAREN)
+
+    # [<expr>[, <expr> ...]]
+    elif tok.category == lexemes.L_BRACK:
+        parser.expect(lexemes.L_BRACK)
+
+        items = []
+
+        while True:
+            tok = parser.peek_token()
+            if tok.category == lexemes.R_BRACK:
+                break
+
+            items.append(parse_expr(parser))
+
+            tok = parser.peek_token()
+            if tok.category == lexemes.R_BRACK:
+                break
+
+            parser.expect(lexemes.COMMA)
+
+        parser.expect(lexemes.R_BRACK)
+
+        expr = Node(ARRAY, token=tok, children=items)
 
     # <identifier>
     elif tok.category == lexemes.IDENT:
