@@ -425,7 +425,7 @@ class Batch(CodeGenerator):
         self.push(temp, VAR)
 
     @code_emitter(syntax.SHIFT_R)
-    def __shift_l(self, node):
+    def __shift_r(self, node):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 

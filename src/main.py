@@ -12,14 +12,8 @@ if __name__ == '__main__':
     source = StringSource(
 """
 function main() {
-    filter = function(x) {
-        return x & 3
-    }
-
-    y = 1
-    while (y++ < 10) {
-        if (filter(y)) (z=y)
-    }
+    a = 2
+    a <<= 2
 }
 
 main()

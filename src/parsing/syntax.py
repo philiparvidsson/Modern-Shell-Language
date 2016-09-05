@@ -238,7 +238,7 @@ def parse_expr2(parser):
         ])
 
     # <expr3> <<= <expr2>
-    elif tok.category == lexemes.SHIFT_L:
+    elif tok.category == lexemes.SHIFT_L_EQ:
         parser.read_token()
         expr = Node(ASSIGN, children=[
             expr,
@@ -246,7 +246,7 @@ def parse_expr2(parser):
         ])
 
     # <expr3> >>= <expr2>
-    elif tok.category == lexemes.SHIFT_R:
+    elif tok.category == lexemes.SHIFT_R_EQ:
         parser.read_token()
         expr = Node(ASSIGN, children=[
             expr,
