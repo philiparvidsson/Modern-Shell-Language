@@ -28,6 +28,8 @@ class Builtins(object):
     def check(self, parser, name):
         if name == 'print':
             self.print_(parser)
+        elif name == 'readline':
+            self.readline(parser)
 
     def print_(self, parser):
         if not hasattr(self, 'is_print_declared'):
@@ -54,6 +56,31 @@ exit /b
 ''', 'decl')
 
         parser.scope.declare_variable('print', VAR)
+
+    def readline(self, parser):
+        if not hasattr(self, 'is_readline_declared'):
+            self.is_readline_declared = True
+            parser.emit(
+'''
+set readline=readline
+goto __after_readline
+:readline
+setlocal
+set ret=%1
+set str=
+:__readline_next
+if "%2" equ "" (goto :__readline_done)
+set "str=%str%%2 "
+shift
+goto :__readline_next
+:__readline_done
+set /p tmp=%str%
+endlocal & (set %ret%=%tmp%)
+exit /b
+:__after_readline
+''', 'decl')
+
+        parser.scope.declare_variable('readline', VAR)
 
 
 class Batch(CodeGenerator):
@@ -357,6 +384,32 @@ class Batch(CodeGenerator):
                 self._gen_code(expr)
 
         self.emit(')')
+
+    @code_emitter(syntax.IF_TERNARY)
+    def __if_ternary(self, node):
+        cond = node.children[0]
+        then_expr = node.children[1]
+        else_expr = node.children[2]
+
+        self._gen_code(cond)
+
+        temp = self.tempvar(STR)
+        both_int = False
+
+        self.emit('if {} neq 0 ('.format(self.pop().value))
+        self._gen_code(then_expr)
+        a = self.pop()
+        self.emit('set "{}={}"'.format(temp.name, a.value))
+        self.emit(') else (')
+        self._gen_code(else_expr)
+        b = self.pop()
+        self.emit('set "{}={}"'.format(temp.name, b.value))
+        self.emit(')')
+
+        if a.type_ == INT and b.type_ == INT:
+            temp.type_ = INT
+
+        self.push(temp, VAR)
 
     @code_emitter(syntax.INTEGER)
     def __integer(self, node):

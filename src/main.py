@@ -18,8 +18,9 @@ function fac(x) {
 }
 
 function main() {
-    x = 5
-    while (x > 1) print(fac(x--))
+    b = 0
+    x = (b ? "noob" : "not oob")
+    print(b, x)
 }
 
 main()

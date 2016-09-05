@@ -15,6 +15,7 @@ BIN_OR         = 'binary or'
 BIN_OR_EQ      = 'binary or equals'
 BIN_XOR        = 'binary xor'
 BIN_XOR_EQ     = 'binary xor equals'
+COLON          = 'colon'
 COMMA          = 'comma'
 EQ_SIGN        = 'equals sign'
 EQ_SIGN_2      = 'double equals sign'
@@ -37,6 +38,7 @@ PERIOD         = 'period'
 PLUS_EQ        = 'plus equals'
 PLUS_PLUS      = 'double plus sign'
 PLUS_SIGN      = 'plus sign'
+Q_MARK         = 'question mark'
 R_BRACE        = 'right brace'
 R_PAREN        = 'right parenthesis'
 SEMICOLON      = 'semicolon'
@@ -91,6 +93,7 @@ LEXEME_MAP = {
     '\-='   : MINUS_EQ,
     '\-\-'  : MINUS_MINUS,
     '\.'    : PERIOD,
+    '\:'    : COLON,
     '\;'    : SEMICOLON,
     '\<'    : LESS,
     '\<='   : LESS_EQ,
@@ -100,6 +103,7 @@ LEXEME_MAP = {
     '\>='   : GREATER_EQ,
     '\>\>'  : SHIFT_R,
     '\>\>=' : SHIFT_R_EQ,
+    '\?'    : Q_MARK,
     '\^'    : BIN_XOR,
     '\^='   : BIN_XOR_EQ,
     '\{'    : L_BRACE,

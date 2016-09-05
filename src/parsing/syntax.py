@@ -30,6 +30,7 @@ GREATER    = 'greater than'
 GREATER_EQ = 'greater than or equal'
 IDENTIFIER = 'identifier'
 IF         = 'if'
+IF_TERNARY = 'if ternary'
 INC        = 'increment'
 INTEGER    = 'integer'
 LESS       = 'less than'
@@ -265,6 +266,13 @@ def parse_expr2(parser):
         parser.read_token()
         expr = Node(DEC, children=[expr])
 
+    # <expr3> ? <expr2> : <expr2>
+    elif tok.category == lexemes.Q_MARK:
+        parser.read_token()
+        then_expr = parse_expr2(parser)
+        parser.expect(lexemes.COLON)
+        else_expr = parse_expr2(parser)
+        expr = Node(IF_TERNARY, children=[expr, then_expr, else_expr])
 
     if expr:
         expr.token = tok

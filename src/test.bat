@@ -44,18 +44,16 @@ exit /b
 goto :__after_main
 :main
 setlocal
-set /a x=5
-:lbl1
-if !x! gtr 1 (set /a __5=1) else (set /a __5=0)
-if !__5! neq 0 (
-set /a "__6=!x!"
-set /a "x=!x!-1"
-call :!fac! __7 !__6!
-call :!print! __8 !__7!
-goto :lbl1
+set /a b=0
+if !b! neq 0 (
+set "__5=noob"
+) else (
+set "__5=not oob"
 )
+set  x=!__5!
+call :!print! __6 !b! !x!
 endlocal & (set %1=0)
 exit /b
 :__after_main
-call :!main! __9 
+call :!main! __7 
 
