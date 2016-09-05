@@ -13,16 +13,12 @@ if __name__ == '__main__':
 """
 function main() {
     filter = function(x) {
-        return (x/2)*2 == x
+        return x & 3
     }
 
     y = 1
     while (y++ < 10) {
-        z=filter(y)
-        if (filter(y)) {
-            a=y
-            b=z
-        }
+        if (filter(y)) (z=y)
     }
 }
 

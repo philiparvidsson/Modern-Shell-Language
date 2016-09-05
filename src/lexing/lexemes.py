@@ -34,6 +34,18 @@ SEMICOLON   = 'semicolon'
 SLASH       = 'slash'
 SLASH_2     = 'double slash'
 SLASH_EQ    = 'slash equals'
+MODULO      = 'modulo'
+MODULO_EQ   = 'modulo equals'
+BIN_AND     = 'binary and'
+BIN_OR      = 'binary or'
+BIN_XOR     = 'binary xor'
+SHIFT_R     = 'shift right'
+SHIFT_L     = 'shift left'
+SHIFT_R_EQ  = 'shift right equals'
+SHIFT_L_EQ  = 'shift left equals'
+BIN_AND_EQ     = 'binary and equals'
+BIN_OR_EQ      = 'binary or equals'
+BIN_XOR_EQ     = 'binary xor equals'
 
 # Keywords.
 ELSE   = 'else'
@@ -79,6 +91,18 @@ LEXEME_MAP = {
     '\{'   : L_BRACE,
     '\|\|' : LOGIC_OR,
     '\}'   : R_BRACE,
+    '\%'   : MODULO,
+    '\%='  : MODULO_EQ,
+    '\<\<' : SHIFT_L,
+    '\>\>' : SHIFT_R,
+    '\<\<=' : SHIFT_L_EQ,
+    '\>\>=' : SHIFT_R_EQ,
+    '\&' : BIN_AND,
+    '\|' : BIN_OR,
+    '\^' : BIN_XOR,
+    '\&=' : BIN_AND_EQ,
+    '\|=' : BIN_OR_EQ,
+    '\^=' : BIN_XOR_EQ,
 
     # Keywords.
     'else'     : ELSE,

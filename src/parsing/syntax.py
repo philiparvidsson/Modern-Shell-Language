@@ -29,6 +29,7 @@ IF         = 'if'
 INTEGER    = 'integer'
 LESS       = 'less than'
 LESS_EQ    = 'less than or equal'
+MODULO     = 'modulo'
 MULTIPLY   = 'multiply'
 NOT_EQ     = 'not equal'
 PROGRAM    = 'program'
@@ -39,6 +40,11 @@ THEN       = 'then'
 WHILE      = 'while'
 LOGIC_AND = 'logical and'
 LOGIC_OR  = 'logic or'
+SHIFT_L = 'shift left'
+SHIFT_R = 'shift right'
+BIN_AND = 'binary and'
+BIN_OR = 'binary or'
+BIN_XOR = 'binary xor'
 
 #--------------------------------------------------
 # GLOBALS
@@ -76,6 +82,21 @@ def parse_expr(parser):
     elif tok.category == lexemes.MINUS_SIGN:
         parser.read_token()
         expr = Node(SUBTRACT, children=[expr, parse_expr(parser)])
+
+    # <expr2> & <expr>
+    elif tok.category == lexemes.BIN_AND:
+        parser.read_token()
+        expr = Node(BIN_AND, children=[expr, parse_expr(parser)])
+
+    # <expr2> | <expr>
+    elif tok.category == lexemes.BIN_OR:
+        parser.read_token()
+        expr = Node(BIN_OR, children=[expr, parse_expr(parser)])
+
+    # <expr2> ^ <expr>
+    elif tok.category == lexemes.BIN_XOR:
+        parser.read_token()
+        expr = Node(BIN_XOR, children=[expr, parse_expr(parser)])
 
     # <expr2> == <expr>
     elif tok.category == lexemes.EQ_SIGN_2:
@@ -137,6 +158,20 @@ def parse_expr2(parser):
         parser.read_token()
         expr = Node(DIVIDE, children=[expr, parse_expr2(parser)])
 
+    # <expr3> % <expr2>
+    elif tok.category == lexemes.MODULO:
+        parser.read_token()
+        expr = Node(MODULO, children=[expr, parse_expr2(parser)])
+
+    # <expr3> << <expr2>
+    elif tok.category == lexemes.SHIFT_L:
+        parser.read_token()
+        expr = Node(SHIFT_L, children=[expr, parse_expr2(parser)])
+
+    # <expr3> >> <expr2>
+    elif tok.category == lexemes.SHIFT_R:
+        parser.read_token()
+        expr = Node(SHIFT_R, children=[expr, parse_expr2(parser)])
 
     # <expr3> += <expr2>
     elif tok.category == lexemes.PLUS_EQ:
@@ -147,7 +182,7 @@ def parse_expr2(parser):
         ])
 
     # <expr3> -= <expr2>
-    elif tok.category == lexemes.PLUS_EQ:
+    elif tok.category == lexemes.MINUS_EQ:
         parser.read_token()
         expr = Node(ASSIGN, children=[
             expr,
@@ -163,11 +198,59 @@ def parse_expr2(parser):
         ])
 
     # <expr3> /= <expr2>
-    elif tok.category == lexemes.ASTERISK_EQ:
+    elif tok.category == lexemes.SLASH_EQ:
         parser.read_token()
         expr = Node(ASSIGN, children=[
             expr,
             Node(DIVIDE, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> %= <expr2>
+    elif tok.category == lexemes.MODULO_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(MODULO, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> &= <expr2>
+    elif tok.category == lexemes.BIN_AND_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(BIN_AND, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> |= <expr2>
+    elif tok.category == lexemes.BIN_OR_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(BIN_OR, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> ^= <expr2>
+    elif tok.category == lexemes.BIN_XOR_EQ:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(BIN_XOR, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> <<= <expr2>
+    elif tok.category == lexemes.SHIFT_L:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(SHIFT_L, children=[expr, parse_expr2(parser)])
+        ])
+
+    # <expr3> >>= <expr2>
+    elif tok.category == lexemes.SHIFT_R:
+        parser.read_token()
+        expr = Node(ASSIGN, children=[
+            expr,
+            Node(SHIFT_R, children=[expr, parse_expr2(parser)])
         ])
 
     # <expr3>++

@@ -112,9 +112,9 @@ class Batch(CodeGenerator):
 
         # If all involved vars are integers, we do an arithmetic operation.
         if a.type_ == INT and b.type_ == INT:
-            s = 'set /a {}={}+{}'
+            s = 'set /a "{}={}+{}"'
         else:
-            s = 'set {}={}{}'
+            s = 'set "{}={}{}"'
 
         self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
@@ -138,22 +138,44 @@ class Batch(CodeGenerator):
         self.emit('set {} {}={}'.format(' '.join(switches), ident.data, a.value))
         #self.push(var, VAR)
 
-    @code_emitter(syntax.DIVIDE)
-    def __divide(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
-
-        a = self.pop()
-        b = self.pop()
+    @code_emitter(syntax.BIN_AND)
+    def __bin_and(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
         temp = self.tempvar(INT)
+        s = 'set /a "{}={}&{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.push(temp, VAR)
 
-        # All divisions are arithmetic.  We have to trust the semantic analyzer
-        # to have solved this for us.
-        self.emit('set /a {}={}/{}'.format(temp.name, a.value, b.value))
+    @code_emitter(syntax.BIN_OR)
+    def __bin_or(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        temp = self.tempvar(INT)
+        s = 'set /a "{}={}|{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.push(temp, VAR)
+
+    @code_emitter(syntax.BIN_XOR)
+    def __bin_xor(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        temp = self.tempvar(INT)
+        s = 'set /a "{}={}^{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.push(temp, VAR)
+
+    @code_emitter(syntax.DIVIDE)
+    def __divide(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        temp = self.tempvar(INT)
+        s = 'set /a "{}={}/{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.EQUAL)
@@ -329,22 +351,24 @@ class Batch(CodeGenerator):
         self.emit(')')
         self.push(temp, VAR)
 
-    @code_emitter(syntax.MULTIPLY)
-    def __multiply(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
-
-        a = self.pop()
-        b = self.pop()
+    @code_emitter(syntax.MODULO)
+    def __modulo(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
         temp = self.tempvar(INT)
+        s = 'set /a "{}={}%{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.push(temp, VAR)
 
-        # All multiplications are arithmetic.  We have to trust the semantic
-        # analyzer to have solved this for us.
-        self.emit('set /a {}={}*{}'.format(temp.name, a.value, b.value))
+    @code_emitter(syntax.MULTIPLY)
+    def __multiply(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        temp = self.tempvar(INT)
+        s = 'set /a "{}={}*{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.NOT_EQ)
@@ -390,26 +414,38 @@ class Batch(CodeGenerator):
         self.emit(')')
         self.emit('exit /b')
 
+    @code_emitter(syntax.SHIFT_L)
+    def __shift_l(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        temp = self.tempvar(INT)
+        s = 'set /a "{}={}<<{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.push(temp, VAR)
+
+    @code_emitter(syntax.SHIFT_R)
+    def __shift_l(self, node):
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        temp = self.tempvar(INT)
+        s = 'set /a "{}={}>>{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.push(temp, VAR)
+
     @code_emitter(syntax.STRING)
     def __string(self, node):
         self.push('{}'.format(node.data), STR)
 
     @code_emitter(syntax.SUBTRACT)
     def __subtract(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
-
-        a = self.pop()
-        b = self.pop()
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
         temp = self.tempvar(INT)
-
-        # All subtractions are arithmetic.  We have to trust the semantic
-        # analyzer to have solved this for us.
-        self.emit('set /a {}={}-{}'.format(temp.name, a.value, b.value))
+        s = 'set /a "{}={}-{}"'
+        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.WHILE)
