@@ -14,6 +14,10 @@ from lexing import lexemes
 
 ADD        = 'add'
 ASSIGN     = 'assignment'
+BIN_AND    = 'binary and'
+BIN_OR     = 'binary or'
+BIN_XOR    = 'binary xor'
+DEC        = 'decrement'
 DIVIDE     = 'divide'
 ELSE       = 'else'
 END        = 'end'
@@ -26,25 +30,23 @@ GREATER    = 'greater than'
 GREATER_EQ = 'greater than or equal'
 IDENTIFIER = 'identifier'
 IF         = 'if'
+INC        = 'increment'
 INTEGER    = 'integer'
 LESS       = 'less than'
 LESS_EQ    = 'less than or equal'
+LOGIC_AND  = 'logical and'
+LOGIC_OR   = 'logic or'
 MODULO     = 'modulo'
 MULTIPLY   = 'multiply'
 NOT_EQ     = 'not equal'
 PROGRAM    = 'program'
 RETURN     = 'return'
+SHIFT_L    = 'shift left'
+SHIFT_R    = 'shift right'
 STRING     = 'string'
 SUBTRACT   = 'subtract'
 THEN       = 'then'
 WHILE      = 'while'
-LOGIC_AND = 'logical and'
-LOGIC_OR  = 'logic or'
-SHIFT_L = 'shift left'
-SHIFT_R = 'shift right'
-BIN_AND = 'binary and'
-BIN_OR = 'binary or'
-BIN_XOR = 'binary xor'
 
 #--------------------------------------------------
 # GLOBALS
@@ -256,18 +258,12 @@ def parse_expr2(parser):
     # <expr3>++
     elif tok.category == lexemes.PLUS_PLUS:
         parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(ADD, children=[expr, Node(INTEGER, 1, tok)])
-        ])
+        expr = Node(INC, children=[expr])
 
     # <expr3>--
     elif tok.category == lexemes.MINUS_MINUS:
         parser.read_token()
-        expr = Node(ASSIGN, children=[
-            expr,
-            Node(SUBTRACT, children=[expr, Node(INTEGER, 1, tok)])
-        ])
+        expr = Node(DEC, children=[expr])
 
 
     if expr:

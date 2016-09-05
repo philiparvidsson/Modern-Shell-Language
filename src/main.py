@@ -11,8 +11,15 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
+
+function fac(x) {
+    if (x <= 1) return 1
+    return x * fac(x-1)
+}
+
 function main() {
-    print(0x10, 10b, 3)
+    x = 5
+    while (x > 1) print(fac(x--))
 }
 
 main()

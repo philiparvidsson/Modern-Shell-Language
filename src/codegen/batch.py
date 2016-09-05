@@ -204,6 +204,17 @@ class Batch(CodeGenerator):
         self.emit(s.format(temp.name, self.pop().value, self.pop().value))
         self.push(temp, VAR)
 
+    @code_emitter(syntax.DEC)
+    def __dec(self, node):
+        self._gen_code(node.children[0])
+
+        a = self.pop()
+
+        temp = self.tempvar(INT)
+        self.emit('set /a "{}={}"'.format(temp.name, a.value))
+        self.emit('set /a "{}={}-1"'.format(a.var.name, a.value))
+        self.push(temp, VAR)
+
     @code_emitter(syntax.DIVIDE)
     def __divide(self, node):
         self._gen_code(node.children[1])
@@ -314,6 +325,17 @@ class Batch(CodeGenerator):
             self.builtins.check(self, ident)
             var = self.scope.get_variable(ident)
         self.push(var, VAR)
+
+    @code_emitter(syntax.INC)
+    def __inc(self, node):
+        self._gen_code(node.children[0])
+
+        a = self.pop()
+
+        temp = self.tempvar(INT)
+        self.emit('set /a "{}={}"'.format(temp.name, a.value))
+        self.emit('set /a "{}={}+1"'.format(a.var.name, a.value))
+        self.push(temp, VAR)
 
     @code_emitter(syntax.IF)
     def __if(self, node):
