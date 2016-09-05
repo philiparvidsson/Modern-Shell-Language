@@ -21,9 +21,46 @@ VAR = 'variable'
 # CLASSES
 #--------------------------------------------------
 
+class Builtins(object):
+    def __init__(self):
+        pass
+
+    def check(self, parser, name):
+        if name == 'print':
+            self.print_(parser)
+
+    def print_(self, parser):
+        if not hasattr(self, 'is_print_declared'):
+            self.is_print_declared = True
+            parser.emit(
+'''
+rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
+set print=print
+goto __after_print
+:print
+setlocal
+set ret=%1
+set str=
+:__print_next
+if "%2" equ "" (goto :__print_done)
+set "str=%str%%2 "
+shift
+goto :__print_next
+:__print_done
+if "%str%" neq "" (echo %str%)
+endlocal & (set %ret%=0)
+exit /b
+:__after_print
+''', 'decl')
+
+        parser.scope.declare_variable('print', VAR)
+
+
 class Batch(CodeGenerator):
     def __init__(self, ast):
         super(Batch, self).__init__(ast)
+
+        self.builtins = Builtins()
 
         self.label_counter = 0
         self.tempvar_counter = 0
@@ -230,13 +267,17 @@ class Batch(CodeGenerator):
         for arg in reversed(node.children):
             self._gen_code(arg)
 
+        func_name = self.pop().value
+
         num_args = len(node.children)
-        for i in range(num_args):
+        for i in range(1, num_args):
             args.append(self.pop().value)
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
-        var = self.scope.get_variable(args[0])
-        self.emit('call :{} {} {}'.format(args[0], temp.name, ' '.join(args[1:])))
+        var = self.scope.get_variable(func_name)
+
+        s = 'call :{} {} {}'
+        self.emit(s.format(func_name, temp.name, ' '.join(args)))
         self.push(temp, VAR)
 
     @code_emitter(syntax.GREATER)
@@ -268,7 +309,11 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.IDENTIFIER)
     def __identifier(self, node):
         ident = node.data
-        self.push(self.scope.get_variable(node.data), VAR)
+        var = self.scope.get_variable(ident)
+        if not var:
+            self.builtins.check(self, ident)
+            var = self.scope.get_variable(ident)
+        self.push(var, VAR)
 
     @code_emitter(syntax.IF)
     def __if(self, node):

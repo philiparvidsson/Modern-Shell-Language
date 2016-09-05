@@ -12,9 +12,7 @@ if __name__ == '__main__':
     source = StringSource(
 """
 function main() {
-    a = /*10*/25
-    //b = 10b
-    c = 0x10
+    print(0x10, 10b, 3)
 }
 
 main()

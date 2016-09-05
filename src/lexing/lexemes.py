@@ -120,7 +120,7 @@ LEXEME_MAP = {
     # User specified.
     '0x[0-9A-Fa-f]*'         : INT,
     '[0-1]+b'                : INT,
-    '0|([1-9][0-9]+)'        : INT,
+    '[0-9]+'                 : INT,
     '"[^"\n]*"?'             : STR,
     '\'[^\'\n]*\'?'          : STR,
     '[_A-Za-z][_A-Za-z0-9]*' : IDENT,
