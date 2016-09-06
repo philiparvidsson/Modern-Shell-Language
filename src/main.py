@@ -12,14 +12,7 @@ if __name__ == '__main__':
     source = StringSource(
 """
 
-a=[['hej']]
-a[0][0] = 'ass'
 
-b=(a[0])[0]
-
-d=a[0][0]
-
-print(b, d)
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)

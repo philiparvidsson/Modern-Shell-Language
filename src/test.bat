@@ -1,6 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
+set a=a
+set __1=__1
 
 rem ----------------------------------------------
 rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
@@ -23,21 +25,26 @@ exit /b
 rem ----------------------------------------------
 
 
-set "__1=__1"
-set "__2=__2"
-set "__2[0]=hej"
-set "__2[__length__]=1"
-set "__1[0]=!__2!"
-set "__1[__length__]=1"
-set  "a=!__1!"
-call set "__3=%%!a![0]%%"
-call set "__4=%%!a![0]%%"
-set  "!__3![0]=ass"
-call set "__5=%%!a![0]%%"
-call set "__6=%%!__5![0]%%"
-set  "b=!__6!"
-call set "__7=%%!a![0]%%"
-call set "__8=%%!__7![0]%%"
-set  "d=!__8!"
-call :!print! __9 !b! !d!
+goto :__after_a
+:a
+setlocal
+goto :__after___1
+:__1
+setlocal
+set "__2=%2%2"
+set "__3=hej!__2!"
+call :!print! __4 !__3!
+endlocal & (set %1=0)
+exit /b
+:__after___1
+endlocal & (
+set %1=__1
+)
+exit /b
+:__after_a
+call :!a! __5 
+set  "c=!__5!"
+call :!c! __6 
+call :!a! __7 qq
+call :!__7! __8 lol
 

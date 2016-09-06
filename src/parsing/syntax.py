@@ -292,27 +292,32 @@ def parse_expr3(parser):
 
     # <expr3> (<expr>[, <expr> ...])
     if tok.category == lexemes.L_PAREN:
-        parser.read_token()
-        args = [expr]
         while True:
+            parser.expect(lexemes.L_PAREN)
+            args = [expr]
+            while True:
+                tok = parser.peek_token()
+                if tok.category == lexemes.R_PAREN:
+                    break
+
+                args.append(parse_expr(parser))
+
+                tok = parser.peek_token()
+                if tok.category == lexemes.R_PAREN:
+                    break
+
+                parser.expect(lexemes.COMMA)
+
+            parser.expect(lexemes.R_PAREN)
+
+            if len(args) == 0:
+                args = None
+
+            expr = Node(FUNC_CALL, token=tok, children=args)
+
             tok = parser.peek_token()
-            if tok.category == lexemes.R_PAREN:
+            if tok.category != lexemes.L_PAREN:
                 break
-
-            args.append(parse_expr(parser))
-
-            tok = parser.peek_token()
-            if tok.category == lexemes.R_PAREN:
-                break
-
-            parser.expect(lexemes.COMMA)
-
-        parser.expect(lexemes.R_PAREN)
-
-        if len(args) == 0:
-            args = None
-
-        expr = Node(FUNC_CALL, token=tok, children=args)
 
     # <expr3>[<expr>]
     elif tok.category == lexemes.L_BRACK:
