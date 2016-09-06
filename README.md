@@ -110,6 +110,10 @@ fruit = [] // Array declarations can be used as objects!
 fruit.name = 'apple'
 fruit.taste = 'sweet'
 
+// Objects can have functions!
+fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
+fruit.eat('crunchy')
+
 show_fruit_info(fruit)
 ```
 
