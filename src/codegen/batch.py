@@ -557,7 +557,7 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}*{}"'
-        self.emit(s.format(temp.name, a, b.value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.NOT_EQ)

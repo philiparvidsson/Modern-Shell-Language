@@ -27,12 +27,12 @@ rem ----------------------------------------------
 goto :__after_lewl
 :lewl
 setlocal
-set /a "__1=<function <lambda> at 0x02D53370>*1"
+set /a "__1=%2*1"
 set /a "a=!__1!"
-set /a "__2=<function <lambda> at 0x02D532F0>*1"
+set /a "__2=%3*1"
 set /a "b=!__2!"
-set /a "__3=<function <lambda> at 0x02D53370>*%2"
-set /a "__4=<function <lambda> at 0x02D532F0>*%3"
+set /a "__3=1*%2"
+set /a "__4=1*%3"
 set /a "__5=!__3!+!__4!"
 set "__6=heylo!__5!"
 endlocal & (
