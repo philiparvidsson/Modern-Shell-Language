@@ -1,14 +1,11 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set a=a
-set __1=__1
 
-rem ----------------------------------------------
-rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
-set print=print
+set __3=__3
+set __3[log]=__3[log]
 goto __after_print
-:print
+:__3[log]
 setlocal
 set ret=%1
 set str=
@@ -22,29 +19,16 @@ if "%str%" neq "" (echo %str%)
 endlocal & (set %ret%=0)
 exit /b
 :__after_print
-rem ----------------------------------------------
 
 
-goto :__after_a
-:a
-setlocal
-goto :__after___1
-:__1
-setlocal
-set "__2=%2%2"
-set "__3=hej!__2!"
-call :!print! __4 !__3!
-endlocal & (set %1=0)
-exit /b
-:__after___1
-endlocal & (
-set %1=__1
+set /a "a=0"
+:lbl1
+set /a "__1=!a!"
+set /a "a=!a!+1"
+if !__1! lss 10 (set /a __2=1) else (set /a __2=0)
+if !__2! neq 0 (
+call set "__4=%%!__3![log]%%"
+call :!__4! __5 !a!
+goto :lbl1
 )
-exit /b
-:__after_a
-call :!a! __5 
-set  "c=!__5!"
-call :!c! __6 
-call :!a! __7 qq
-call :!__7! __8 lol
 

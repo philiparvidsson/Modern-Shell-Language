@@ -11,8 +11,10 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-
-
+a = 0
+while ((a++) < 10) {
+    console.log(a)
+}
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)

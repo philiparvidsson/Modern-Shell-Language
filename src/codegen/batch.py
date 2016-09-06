@@ -27,21 +27,23 @@ class Builtins(object):
         pass
 
     def check(self, parser, name):
-        if name == 'print':
-            self.print_(parser)
+        if name == 'console':
+            self.console_(parser)
         elif name == 'readline':
             self.readline(parser)
 
-    def print_(self, parser):
-        if not hasattr(self, 'is_print_declared'):
-            self.is_print_declared = True
+    def console_(self, parser):
+        if not hasattr(self, 'console_var_'):
+            temp = parser.tempvar()
+            parser.scope.declare_variable('console', VAR).name = temp.name
+            self.console_var_ = temp
+
             parser.emit(
 '''
-rem ----------------------------------------------
-rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
-set print=print
+set {0}={0}
+set {0}[log]={0}[log]
 goto __after_print
-:print
+:{0}[log]
 setlocal
 set ret=%1
 set str=
@@ -55,10 +57,10 @@ if "%str%" neq "" (echo %str%)
 endlocal & (set %ret%=0)
 exit /b
 :__after_print
-rem ----------------------------------------------
-''', 'decl')
+'''.format(self.console_var_.name), 'decl')
 
-        parser.scope.declare_variable('print', VAR)
+        parser.scope.declare_variable('console', VAR).name = self.console_var_.name
+
 
     def readline(self, parser):
         if not hasattr(self, 'is_readline_declared'):

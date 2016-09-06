@@ -471,13 +471,16 @@ def parse_ident(parser):
     ident = Node(IDENTIFIER, tok.lexeme, tok)
 
     tok = parser.peek_token()
-    while tok.category == lexemes.PERIOD:
-        parser.read_token()
-        tok = parser.expect(lexemes.IDENT)
+    if tok.category == lexemes.PERIOD:
+        while True:
+            parser.expect(lexemes.PERIOD)
 
-        ident = Node(IDENTIFIER, tok.lexeme, tok, children=[ident])
+            tok = parser.expect(lexemes.IDENT)
+            ident = Node(ARRAY_IDX, token=tok, children=[ident, Node(STRING, tok.lexeme, tok)])
 
-        tok = parser.peek_token()
+            tok = parser.peek_token()
+            if tok.category != lexemes.PERIOD:
+                break
 
     #if len(tok.lexeme) > 64:
     #    parser.warn("identifier unnecessarily long", tok)
