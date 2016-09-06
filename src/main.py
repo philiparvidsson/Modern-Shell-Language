@@ -14,12 +14,17 @@ if __name__ == '__main__':
 
 function len(a) {
 b=a
+print(b['__length__'])
     return b['__length__']
 }
 
 a = ['a', ['x', ['anita', 'bosse', 'carl'], 'z'], 'c']
 
-print(len(a))
+((a[1])[1])[1] = 'dashit'
+
+print('length of a is', len(a))
+print('first element of is', a[0])
+print('second element of second element of second element of a is', ((a[1])[1])[1])
 }
 
 

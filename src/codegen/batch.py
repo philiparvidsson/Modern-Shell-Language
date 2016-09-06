@@ -581,9 +581,10 @@ class Batch(CodeGenerator):
     def __return(self, node):
         expr = node.children[0]
         self._gen_code(expr)
-        self.emit('endlocal & (')
 
         a = self.deref(self.pop())
+
+        self.emit('endlocal & (')
         if a.type_ == INT:
             s = 'set /a %1={}'
         else:
