@@ -11,10 +11,17 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-a = 0
-while ((a++) < 10) {
-    console.log(a)
+function show_fruit_info(f) {
+    console.log('the', f.name, 'is', f.taste)
 }
+
+fruit = [] // Array declarations can be used as objects!
+fruit.name = 'apple'
+fruit.taste = 'sweet'
+
+// Objects can have functions!
+fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
+fruit.eat('crunchy')
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)

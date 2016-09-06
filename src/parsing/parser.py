@@ -86,19 +86,23 @@ class Parser(object):
 
     def read_token(self):
         if self.peeked_token:
-            token = self.peeked_token
+            tok = self.peeked_token
             self.peeked_token = None
-            return token
+            print tok
+            return tok
 
         tok = self.lexer.read_token()
-        if tok.category == lexemes.SLASH_2:
-            self.lexer.read_token()
-            while tok.category not in (lexemes.EOF, lexemes.NEWLINE):
-                tok = self.lexer.read_token()
-        elif tok.category == lexemes.SLASH_ASTERISK:
-            self.lexer.read_token()
-            while tok.category not in (lexemes.ASTERISK_SLASH, lexemes.EOF):
-                tok = self.lexer.read_token()
+        while tok.category == lexemes.COMMENT:
             tok = self.lexer.read_token()
+        #if tok.category == lexemes.SLASH_2:
+        #    self.lexer.read_token()
+        #    while tok.category not in (lexemes.EOF, lexemes.NEWLINE):
+        #        tok = self.lexer.read_token()
+        #elif tok.category == lexemes.SLASH_ASTERISK:
+        #    self.lexer.read_token()
+        #    while tok.category not in (lexemes.ASTERISK_SLASH, lexemes.EOF):
+        #        tok = self.lexer.read_token()
+        #    tok = self.lexer.read_token()
 
+        print tok
         return tok

@@ -48,8 +48,8 @@ setlocal
 set ret=%1
 set str=
 :__print_next
-if "%2" equ "" (goto :__print_done)
-set "str=%str%%2 "
+if "%~2" equ "" (goto :__print_done)
+set "str=%str%%~2 "
 shift
 goto :__print_next
 :__print_done
@@ -158,7 +158,7 @@ class Batch(CodeGenerator):
             y.type_ = y.var.type_
             if isinstance(y.value.name, int):
                 # Function parameters.
-                y.value = '%{}'.format(y.value.name)
+                y.value = '%~{}'.format(y.value.name)
             else:
                 y.value = '!{}!'.format(y.value.name)
 
@@ -386,7 +386,10 @@ class Batch(CodeGenerator):
         num_args = len(node.children)
         for i in range(1, num_args):
             a = self.pop_deref()
-            args.append(a.value)
+            if a.type_ == STR:
+                args.append('"{}"'.format(a.value))
+            else:
+                args.append(a.value)
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
         var = self.scope.get_variable(func_name)
