@@ -19,7 +19,7 @@ x = "a string"
 y = 'another string'
 ```
 
-## Integer operations
+## Integer Operations
 ```javascript
 a = 7
 b = 5
@@ -42,7 +42,7 @@ j = a<<b // Left-shift
 k = a>>b // Right-shift
 ```
 
-## String operations
+## String Operations
 ```javascript
 a = "foo"
 b = "bar"
@@ -112,3 +112,4 @@ fruit.taste = 'sweet'
 
 show_fruit_info(fruit)
 ```
+
