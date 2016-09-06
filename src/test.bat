@@ -24,22 +24,21 @@ rem ----------------------------------------------
 
 
 set "__1=__1"
-set "__1[0]=a"
+set "__1[0]=1"
 set "__1[1]=b"
 set "__1[2]=c"
 set "__1[__length__]=3"
 set  "a=!__1!"
 set /a "i=1"
-set  "!a![1]=hej"
 set /a "i=0"
 :lbl1
-call set "__3=%%!a![__length__]%%"
-if !i! lss !__3! (set /a __2=1) else (set /a __2=0)
-if !__2! neq 0 (
-call set "__4=%%!a![!i!]%%"
-call :!print! __5 a[ !i! ] is  !__4!
-set /a "__6=!i!"
+set /a "__2=!i!"
 set /a "i=!i!+1"
+call set "__4=%%!a![__length__]%%"
+if !__2! lss !__4! (set /a __3=1) else (set /a __3=0)
+if !__3! neq 0 (
+call set "__5=%%!a![!i!]%%"
+call :!print! __6 a[ !i! ] is  !__5!
 goto :lbl1
 )
 

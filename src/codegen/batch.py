@@ -164,8 +164,9 @@ class Batch(CodeGenerator):
         return y
 
     def pop_deref(self):
-        a = self.pop()
+        return self.deref(self.pop())
 
+    def deref(self, a):
         if a.type_ == REF:
             print 'its a ref!', a.value, a.type_
 
@@ -188,8 +189,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(a.type_, b.type_)
 
@@ -267,8 +268,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}&{}"'
@@ -280,8 +281,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}|{}"'
@@ -293,8 +294,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}^{}"'
@@ -317,8 +318,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}/{}"'
@@ -426,10 +427,11 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
 
         a = self.pop()
+        b = self.deref(a)
 
         temp = self.tempvar(INT)
-        self.emit('set /a "{}={}"'.format(temp.name, a.value))
-        self.emit('set /a "{}={}+1"'.format(a.var.name, a.value))
+        self.emit('set /a "{}={}"'.format(temp.name, b.value))
+        self.emit('set /a "{}={}+1"'.format(a.var.name, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.IF)
@@ -537,8 +539,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}%%{}"'
@@ -550,8 +552,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}*{}"'
@@ -604,8 +606,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}<<{}"'
@@ -617,8 +619,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}>>{}"'
@@ -634,8 +636,8 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
-        b = self.pop()
-        a = self.pop()
+        b = self.pop_deref()
+        a = self.pop_deref()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}-{}"'

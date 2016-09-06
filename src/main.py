@@ -11,15 +11,14 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-a = ['a', 'b', 'c']
+a = [1, 'b', 'c']
 i = 1
 
-a[1] = 'hej'
+
 
 i = 0
-while (i < (a['__length__'])) {
-print('a[', i, '] is ', a[i])
-i++
+while ((i++) < (a['__length__'])) {
+    print('a[', i, '] is ', a[i])
 }
 
 
