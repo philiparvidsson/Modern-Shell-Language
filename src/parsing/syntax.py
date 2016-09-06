@@ -290,7 +290,7 @@ def parse_expr3(parser):
 
     tok = parser.peek_token()
 
-    # <expr4> (<expr>[, <expr> ...])
+    # <expr3> (<expr>[, <expr> ...])
     if tok.category == lexemes.L_PAREN:
         parser.read_token()
         args = [expr]
@@ -314,11 +314,16 @@ def parse_expr3(parser):
 
         expr = Node(FUNC_CALL, token=tok, children=args)
 
-    # <expr4>[<expr>]
+    # <expr3>[<expr>]
     elif tok.category == lexemes.L_BRACK:
-        parser.read_token()
-        expr = Node(ARRAY_IDX, token=tok, children=[expr, parse_expr(parser)])
-        parser.expect(lexemes.R_BRACK)
+        while True:
+            parser.expect(lexemes.L_BRACK)
+            expr = Node(ARRAY_IDX, token=tok, children=[expr, parse_expr(parser)])
+            parser.expect(lexemes.R_BRACK)
+
+            tok = parser.peek_token()
+            if tok.category != lexemes.L_BRACK:
+                break
 
     if expr:
         expr.token = tok

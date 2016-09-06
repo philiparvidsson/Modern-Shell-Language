@@ -12,16 +12,14 @@ if __name__ == '__main__':
     source = StringSource(
 """
 
-function lewl(a, b) {
-    a=a*1
-    b=b*1
-    return "heylo" + ((1*a)+(1*b))
-}
+a=[['hej']]
+a[0][0] = 'ass'
 
-a = []
-a['lol'] = lewl
-print((a['lol'])(5, 9))
+b=(a[0])[0]
 
+d=a[0][0]
+
+print(b, d)
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
