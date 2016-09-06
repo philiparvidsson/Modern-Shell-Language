@@ -76,11 +76,11 @@ function my_func(s) {
     console.log(s)
 }
 
-my_func('hello world!')
+my_func('hello world')
 
 // Anonymous functions are supported too!
 log_fn = function (s) { console.log(s) }
-log_fn('hello again!')
+log_fn('hello again')
 ```
 
 ## Arrays
