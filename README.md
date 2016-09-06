@@ -65,6 +65,7 @@ while ((a++) < 10) {
 
 // For-loops:
 // NOT YET SUPPORTED!
+```
 
 ## Functions
 Crutch naturally supports functions.
