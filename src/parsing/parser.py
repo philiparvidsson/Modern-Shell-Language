@@ -88,7 +88,6 @@ class Parser(object):
         if self.peeked_token:
             tok = self.peeked_token
             self.peeked_token = None
-            print tok
             return tok
 
         tok = self.lexer.read_token()
@@ -104,5 +103,4 @@ class Parser(object):
         #        tok = self.lexer.read_token()
         #    tok = self.lexer.read_token()
 
-        print tok
         return tok

@@ -52,21 +52,8 @@ THEN       = 'then'
 WHILE      = 'while'
 
 #--------------------------------------------------
-# GLOBALS
-#--------------------------------------------------
-
-rules = dict()
-
-#--------------------------------------------------
 # FUNCTIONS
 #--------------------------------------------------
-
-def rule(*args):
-    def decorator(func):
-        rules[args] = func
-        return func
-
-    return decorator
 
 def parse_expr(parser):
     expr = parse_expr2(parser)

@@ -170,8 +170,6 @@ class Batch(CodeGenerator):
 
     def deref(self, a):
         if a.type_ == REF:
-            print 'its a ref!', a.value, a.type_
-
             temp = self.tempvar(STR)
             self.emit('call set "{}=%%{}%%"'.format(temp.name, a.value))
 
@@ -349,6 +347,7 @@ class Batch(CodeGenerator):
 
         self.scope.declare_variable(func_name, STR)
         self.enter_scope()
+        self.scope.declare_variable('this', STR)
         self.emit('set {}={}'.format(func_name, func_name), 'decl')
         self.emit('goto :__after_{}'.format(func_name)),
         self.emit(':{}'.format(func_name))
@@ -381,7 +380,9 @@ class Batch(CodeGenerator):
         for arg in reversed(node.children):
             self._gen_code(arg)
 
-        func_name = self.pop_deref().value
+        q = self.pop()
+        self.emit('set this={}'.format(q.value))
+        func_name = self.deref(q).value
 
         num_args = len(node.children)
         for i in range(1, num_args):
