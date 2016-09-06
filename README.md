@@ -24,17 +24,17 @@ y = 'another string'
 a = 7
 b = 5
 
-// Basic
+/* Basic */
 a++ // Increment
 b-- // Decrement
 
-// Arithmetic
+/* Arithmetic */
 c = a+b // Addition
 d = a-b // Subtraction
 e = a*b // Multiplication
 f = a/b // Division 
 
-// Binary
+/* Binary */
 g = a&b  // And
 h = a|b  // Or
 i = a^b  // Xor
@@ -59,13 +59,13 @@ console.log(a) // Print the input back to the console.
 
 ## Loops
 ```javascript
-// While-loops:
+/* While-loop */
 a = 0
 while ((a++) < 10) {
     console.log(a) // Prints 1 through 10.
 }
 
-// For-loops:
+/* For-loop */
 // NOT YET SUPPORTED!
 ```
 
