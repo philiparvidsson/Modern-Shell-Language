@@ -13,7 +13,7 @@ if __name__ == '__main__':
 """
 a=[]
 a.q = 'ass'
-a.lol = function () { console.log('ass', this.q) }
+a.lol = function () { return this.q }
 a.lol()
 """)
     lexer  = Lexer(source)

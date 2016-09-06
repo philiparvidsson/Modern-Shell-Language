@@ -377,12 +377,13 @@ class Batch(CodeGenerator):
     def __func_call(self, node):
         args = []
 
-        for arg in reversed(node.children):
-            self._gen_code(arg)
+        self._gen_code(node.children[0])
 
-        q = self.pop()
-        self.emit('set this={}'.format(q.value))
-        func_name = self.deref(q).value
+        func_name = self.pop_deref().value
+        self.emit('set this={}'.format(func_name))
+
+        for arg in node.children[1:]:
+            self._gen_code(arg)
 
         num_args = len(node.children)
         for i in range(1, num_args):
@@ -391,6 +392,8 @@ class Batch(CodeGenerator):
                 args.append('"{}"'.format(a.value))
             else:
                 args.append(a.value)
+
+        args.reverse()
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
         var = self.scope.get_variable(func_name)
