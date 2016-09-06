@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
+set lewl=lewl
 
 rem ----------------------------------------------
 rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
@@ -23,22 +24,27 @@ exit /b
 rem ----------------------------------------------
 
 
-set "__1=__1"
-set "__1[0]=1"
-set "__1[1]=b"
-set "__1[2]=c"
-set "__1[__length__]=3"
-set  "a=!__1!"
-set /a "i=1"
-set /a "i=0"
-:lbl1
-set /a "__2=!i!"
-set /a "i=!i!+1"
-call set "__4=%%!a![__length__]%%"
-if !__2! lss !__4! (set /a __3=1) else (set /a __3=0)
-if !__3! neq 0 (
-call set "__5=%%!a![!i!]%%"
-call :!print! __6 a[ !i! ] is  !__5!
-goto :lbl1
+goto :__after_lewl
+:lewl
+setlocal
+set /a "__1=%2*1"
+set /a "a=!__1!"
+set /a "__2=%3*1"
+set /a "b=!__2!"
+set /a "__3=1*%2"
+set /a "__4=1*%3"
+set /a "__5=!__3!+!__4!"
+set "__6=heylo!__5!"
+endlocal & (
+set %1=%__6%
 )
+exit /b
+:__after_lewl
+set "__7=__7"
+set "__7[__length__]=0"
+set  "a=!__7!"
+set  "!a![lol]=!lewl!"
+call set "__8=%%!a![lol]%%"
+call :!__8! __9 5 9
+call :!print! __10 !__9!
 

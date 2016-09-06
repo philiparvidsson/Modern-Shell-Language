@@ -11,16 +11,16 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-a = [1, 'b', 'c']
-i = 1
 
-
-
-i = 0
-while ((i++) < (a['__length__'])) {
-    print('a[', i, '] is ', a[i])
+function lewl(a, b) {
+    a=a*1
+    b=b*1
+    return "heylo" + ((1*a)+(1*b))
 }
 
+a = []
+a['lol'] = lewl
+print((a['lol'])(5, 9))
 
 """)
     lexer  = Lexer(source)

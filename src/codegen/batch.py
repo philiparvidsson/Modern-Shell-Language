@@ -379,7 +379,7 @@ class Batch(CodeGenerator):
         for arg in reversed(node.children):
             self._gen_code(arg)
 
-        func_name = self.pop().value
+        func_name = self.pop_deref().value
 
         num_args = len(node.children)
         for i in range(1, num_args):
@@ -557,7 +557,7 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}*{}"'
-        self.emit(s.format(temp.name, a, b.value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.NOT_EQ)
