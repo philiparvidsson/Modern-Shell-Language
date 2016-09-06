@@ -12,12 +12,17 @@ if __name__ == '__main__':
     source = StringSource(
 """
 
-a = ['a', 'b', 'c']
-i = 1
+function len(a) {
+b=a
+    return b['__length__']
+}
 
-a[1] = 'hej'
+a = ['a', ['x', ['anita', 'bosse', 'carl'], 'z'], 'c']
 
-print('a[', i, '] is ', a[i])
+print(len(a))
+}
+
+
 
 """)
     lexer  = Lexer(source)

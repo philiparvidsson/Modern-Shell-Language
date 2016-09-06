@@ -1,7 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
 
+set len=len
 
+rem ----------------------------------------------
 rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
 set print=print
 goto __after_print
@@ -19,16 +21,35 @@ if "%str%" neq "" (echo %str%)
 endlocal & (set %ret%=0)
 exit /b
 :__after_print
+rem ----------------------------------------------
 
 
-set "__1=__1"
-set "__1[0]=a"
-set "__1[1]=b"
-set "__1[2]=c"
-set  "a=!__1!"
-set /a "i=1"
-call set "__2=%%!a![1]%%"
-set  "None=hej"
-call set "__3=%%!a![!i!]%%"
-call :!print! __4 a[ !i! ] is  !__3!
+goto :__after_len
+:len
+setlocal
+set  "b=%2"
+endlocal & (
+call set "__1=%%!b![__length__]%%"
+set %1=!__1!
+)
+exit /b
+:__after_len
+set "__2=__2"
+set "__2[0]=a"
+set "__3=__3"
+set "__3[0]=x"
+set "__4=__4"
+set "__4[0]=anita"
+set "__4[1]=bosse"
+set "__4[2]=carl"
+set "__4[__length__]=3"
+set "__3[1]=!__4!"
+set "__3[2]=z"
+set "__3[__length__]=3"
+set "__2[1]=!__3!"
+set "__2[2]=c"
+set "__2[__length__]=3"
+set  "a=!__2!"
+call :!len! __5 !a!
+call :!print! __6 !__5!
 

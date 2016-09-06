@@ -15,6 +15,7 @@ from semantics.variable import INT, STR, Variable
 # CONSTANTS
 #--------------------------------------------------
 
+REF = 'reference'
 VAR = 'variable'
 
 #--------------------------------------------------
@@ -36,6 +37,7 @@ class Builtins(object):
             self.is_print_declared = True
             parser.emit(
 '''
+rem ----------------------------------------------
 rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
 set print=print
 goto __after_print
@@ -53,6 +55,7 @@ if "%str%" neq "" (echo %str%)
 endlocal & (set %ret%=0)
 exit /b
 :__after_print
+rem ----------------------------------------------
 ''', 'decl')
 
         parser.scope.declare_variable('print', VAR)
@@ -150,7 +153,7 @@ class Batch(CodeGenerator):
 
         if y.type_ == VAR:
             y.var = y.value
-            y.type_ = y.value.type_
+            y.type_ = y.var.type_
             if isinstance(y.value.name, int):
                 # Function parameters.
                 y.value = '%{}'.format(y.value.name)
@@ -159,6 +162,24 @@ class Batch(CodeGenerator):
 
         y.value = str(y.value)
         return y
+
+    def deref(self, a):
+        if a.type_ == REF:
+            print 'its a ref!', a.value, a.type_
+
+            temp = self.tempvar(STR)
+            self.emit('call set "{}=%%{}%%"'.format(temp.name, a.value))
+
+            y = lambda: None
+            y.var = temp
+            y.type_ = temp.type_
+            y.value = '!{}!'.format(temp.name)
+
+            y.value = str(y.value)
+
+            return y
+
+        return a
 
     @code_emitter(syntax.ADD)
     def __add(self, node):
@@ -191,6 +212,8 @@ class Batch(CodeGenerator):
             self.emit('set "{}[{}]={}"'.format(temp.name, index, self.pop().value))
             index += 1
 
+        self.emit('set "{}[__length__]={}"'.format(temp.name, index))
+
         self.push(temp, VAR)
 
     @code_emitter(syntax.ARRAY_IDX)
@@ -199,12 +222,13 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[1])
 
         b = self.pop().value
-        a = self.pop().value
+        a = self.deref(self.pop()).value
 
         # TODO: Do we have to default to str here?
-        temp = self.tempvar(STR)
-        self.emit('call set "{}=%%{}[{}]%%"'.format(temp.name, a, b))
-        self.push(temp, VAR)
+        #temp = self.tempvar(STR)
+        #self.emit('call set "{}=%%{}[{}]%%"'.format(temp.name, a, b))
+        #self.push(temp, VAR)
+        self.push('{}[{}]'.format(a, b), REF)
 
     @code_emitter(syntax.ASSIGN)
     def __assign(self, node):
@@ -213,16 +237,27 @@ class Batch(CodeGenerator):
 
         self._gen_code(expr)
 
-        a = self.pop()
-        var = self.scope.declare_variable(ident.data, a.type_)
+        b = self.deref(self.pop())
+
+        # TODO: Is this sane?
+        if ident.construct == syntax.IDENTIFIER:
+            a = ident.data
+            if not self.scope.is_declared(ident.data):
+                type_ = b.type_
+                if type_ == REF:
+                    type_ = VAR
+                self.scope.declare_variable(ident.data, type_)
+        else:
+            self._gen_code(ident)
+            a = self.pop().value
 
         self._gen_code(ident)
         switches = []
 
-        if a.type_ == INT:
+        if b.type_ == INT:
             switches.append('/a')
 
-        self.emit('set {} "{}={}"'.format(' '.join(switches), ident.data, a.value))
+        self.emit('set {} "{}={}"'.format(' '.join(switches), a, b.value))
         #self.push(var, VAR)
 
     @code_emitter(syntax.BIN_AND)
@@ -345,7 +380,8 @@ class Batch(CodeGenerator):
 
         num_args = len(node.children)
         for i in range(1, num_args):
-            args.append(self.pop().value)
+            a = self.deref(self.pop())
+            args.append(a.value)
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
         var = self.scope.get_variable(func_name)
@@ -547,7 +583,7 @@ class Batch(CodeGenerator):
         self._gen_code(expr)
         self.emit('endlocal & (')
 
-        a = self.pop()
+        a = self.deref(self.pop())
         if a.type_ == INT:
             s = 'set /a %1={}'
         else:
@@ -618,3 +654,7 @@ class Batch(CodeGenerator):
 
         self.emit('goto :{}'.format(label))
         self.emit(')')
+
+#--------------------------------------------------
+# FUNCTIONS
+#--------------------------------------------------
