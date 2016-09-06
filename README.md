@@ -50,7 +50,7 @@ b = "bar"
 c=a+b // Concatenation
 ```
 
-## Input/output
+## Input/Output
 ```javascript
 
 a = readline("What's your name?") // Ask user for input
