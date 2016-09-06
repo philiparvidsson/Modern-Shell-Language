@@ -33,9 +33,9 @@ e = a*b // Multiplication
 f = a/b // Division 
 
 // Binary
-g = a&b // And
-h = a|b // Or
-i = a^b // Xor
+g = a&b  // And
+h = a|b  // Or
+i = a^b  // Xor
 j = a<<b // Left-shift
 k = a>>b // Right-shift
 ```
