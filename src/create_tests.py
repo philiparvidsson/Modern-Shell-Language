@@ -28,7 +28,14 @@ if __name__ == '__main__':
 
     # use runtests.cmd to exec all tests
     f = open('.\\tests\\runtests.cmd', 'w')
-    f.write('@echo off')
-    f.write('\nfor %%i in (*.bat) do (echo RUNNING TEST & echo name: %%i & echo. & %%i)')
-    f.write('\ndel *.bat')
+    f.write("""
+@echo off
+echo RUNNING TESTS
+for %%i in (*.bat) do (
+  echo.
+  echo test: %%i
+  call %%i
+  del %%i
+) & del runtests.cmd
+""")
     f.close()
