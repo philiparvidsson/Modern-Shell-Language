@@ -198,11 +198,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.ARRAY_IDX)
     def __array_idx(self, node):
-        array_expr = node.children[0]
-        index_expr = node.children[1]
-
-        self._gen_code(index_expr)
-        self._gen_code(array_expr)
+        self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         a = self.pop().value
         b = self.pop().value

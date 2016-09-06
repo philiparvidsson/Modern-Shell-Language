@@ -103,36 +103,6 @@ def parse_expr(parser):
         parser.read_token()
         expr = Node(BIN_XOR, children=[expr, parse_expr(parser)])
 
-    # <expr2> == <expr>
-    elif tok.category == lexemes.EQ_SIGN_2:
-        parser.read_token()
-        expr = Node(EQUAL, children=[expr, parse_expr(parser)])
-
-    # <expr2> != <expr>
-    elif tok.category == lexemes.NOT_EQ:
-        parser.read_token()
-        expr = Node(NOT_EQUAL, children=[expr, parse_expr(parser)])
-
-    # <expr2> < <expr>
-    elif tok.category == lexemes.LESS:
-        parser.read_token()
-        expr = Node(LESS, children=[expr, parse_expr(parser)])
-
-    # <expr2> > <expr>
-    elif tok.category == lexemes.GREATER:
-        parser.read_token()
-        expr = Node(GREATER, children=[expr, parse_expr(parser)])
-
-    # <expr2> <= <expr>
-    elif tok.category == lexemes.LESS_EQ:
-        parser.read_token()
-        expr = Node(LESS_EQ, children=[expr, parse_expr(parser)])
-
-    # <expr2> >= <expr>
-    elif tok.category == lexemes.GREATER_EQ:
-        parser.read_token()
-        expr = Node(GREATER_EQ, children=[expr, parse_expr(parser)])
-
     # <expr2> && <expr>
     elif tok.category == lexemes.LOGIC_AND:
         parser.read_token()
@@ -142,6 +112,18 @@ def parse_expr(parser):
     elif tok.category == lexemes.LOGIC_OR:
         parser.read_token()
         expr = Node(LOGIC_OR, children=[expr, parse_expr(parser)])
+
+    # <expr2> ? <expr> : <expr>
+    elif tok.category == lexemes.Q_MARK:
+        parser.read_token()
+        parser.eat_whitespace()
+        then_expr = parse_expr(parser)
+        parser.eat_whitespace()
+        parser.expect(lexemes.COLON)
+        parser.eat_whitespace()
+        else_expr = parse_expr(parser)
+        expr = Node(IF_TERNARY, children=[expr, then_expr, else_expr])
+
 
     if expr:
         expr.token = tok
@@ -263,21 +245,40 @@ def parse_expr2(parser):
         parser.read_token()
         expr = Node(INC, children=[expr])
 
+    # <expr3> == <expr>
+    elif tok.category == lexemes.EQ_SIGN_2:
+        parser.read_token()
+        expr = Node(EQUAL, children=[expr, parse_expr3(parser)])
+
+    # <expr3> != <expr>
+    elif tok.category == lexemes.NOT_EQ:
+        parser.read_token()
+        expr = Node(NOT_EQUAL, children=[expr, parse_expr3(parser)])
+
+    # <expr3> < <expr>
+    elif tok.category == lexemes.LESS:
+        parser.read_token()
+        expr = Node(LESS, children=[expr, parse_expr3(parser)])
+
+    # <expr3> > <expr>
+    elif tok.category == lexemes.GREATER:
+        parser.read_token()
+        expr = Node(GREATER, children=[expr, parse_expr3(parser)])
+
+    # <expr3> <= <expr>
+    elif tok.category == lexemes.LESS_EQ:
+        parser.read_token()
+        expr = Node(LESS_EQ, children=[expr, parse_expr3(parser)])
+
+    # <expr3> >= <expr>
+    elif tok.category == lexemes.GREATER_EQ:
+        parser.read_token()
+        expr = Node(GREATER_EQ, children=[expr, parse_expr3(parser)])
+
     # <expr3>--
     elif tok.category == lexemes.MINUS_MINUS:
         parser.read_token()
         expr = Node(DEC, children=[expr])
-
-    # <expr3> ? <expr2> : <expr2>
-    elif tok.category == lexemes.Q_MARK:
-        parser.read_token()
-        parser.eat_whitespace()
-        then_expr = parse_expr2(parser)
-        parser.eat_whitespace()
-        parser.expect(lexemes.COLON)
-        parser.eat_whitespace()
-        else_expr = parse_expr2(parser)
-        expr = Node(IF_TERNARY, children=[expr, then_expr, else_expr])
 
     if expr:
         expr.token = tok

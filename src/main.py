@@ -13,24 +13,11 @@ if __name__ == '__main__':
 """
 
 function fac(x) {
-    return (x <= 1) ? 1
+    return x <= 1 ? 1
                     : x*fac(x-1)
 }
 
-function ass(a, b, n) {
-aa=n*1 // needs cast.. =(
-return (a[b[aa+1]])[1]
-}
-
-function main() {
-    //fn = x => x+1
-    x = [1,2,3]
-    c = ['bosse', 'anita']
-    y = ['a', 'b', c]
-    print(ass(y, x, 0))
-}
-
-main()
+print(fac(3))
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
