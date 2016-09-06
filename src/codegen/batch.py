@@ -163,7 +163,9 @@ class Batch(CodeGenerator):
         y.value = str(y.value)
         return y
 
-    def deref(self, a):
+    def pop_deref(self):
+        a = self.pop()
+
         if a.type_ == REF:
             print 'its a ref!', a.value, a.type_
 
@@ -222,7 +224,7 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[1])
 
         b = self.pop().value
-        a = self.deref(self.pop()).value
+        a = self.pop_deref().value
 
         # TODO: Do we have to default to str here?
         #temp = self.tempvar(STR)
@@ -237,7 +239,7 @@ class Batch(CodeGenerator):
 
         self._gen_code(expr)
 
-        b = self.deref(self.pop())
+        b = self.pop_deref()
 
         # TODO: Is this sane?
         if ident.construct == syntax.IDENTIFIER:
@@ -333,7 +335,7 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
         s = 'if {} equ {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
+        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.FUNC)
@@ -380,7 +382,7 @@ class Batch(CodeGenerator):
 
         num_args = len(node.children)
         for i in range(1, num_args):
-            a = self.deref(self.pop())
+            a = self.pop_deref()
             args.append(a.value)
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
@@ -397,7 +399,7 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
         s = 'if {} gtr {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
+        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.GREATER_EQ)
@@ -407,7 +409,7 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
         s = 'if {} geq {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
+        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.IDENTIFIER)
@@ -483,15 +485,12 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.LESS)
     def __less(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
+        self._gen_code(node.children[1])
+        self._gen_code(node.children[0])
 
         temp = self.tempvar(INT)
         s = 'if {} lss {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
+        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.LESS_EQ)
@@ -501,7 +500,7 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
         s = 'if {} leq {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
+        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.LOGIC_AND)
@@ -566,7 +565,7 @@ class Batch(CodeGenerator):
 
         temp = self.tempvar(INT)
         s = 'if {} neq {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop().value, self.pop().value, temp.name, temp.name))
+        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.PROGRAM)
@@ -582,7 +581,7 @@ class Batch(CodeGenerator):
         expr = node.children[0]
         self._gen_code(expr)
 
-        a = self.deref(self.pop())
+        a = self.pop_deref()
 
         self.emit('endlocal & (')
         if a.type_ == INT:

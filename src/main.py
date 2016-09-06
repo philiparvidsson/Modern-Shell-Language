@@ -11,22 +11,16 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
+a = ['a', 'b', 'c']
+i = 1
 
-function len(a) {
-b=a
-print(b['__length__'])
-    return b['__length__']
+a[1] = 'hej'
+
+i = 0
+while (i < (a['__length__'])) {
+print('a[', i, '] is ', a[i])
+i++
 }
-
-a = ['a', ['x', ['anita', 'bosse', 'carl'], 'z'], 'c']
-
-((a[1])[1])[1] = 'dashit'
-
-print('length of a is', len(a))
-print('first element of is', a[0])
-print('second element of second element of second element of a is', ((a[1])[1])[1])
-}
-
 
 
 """)
