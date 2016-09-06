@@ -1,5 +1,14 @@
-a = 2*3 + 4
-b = 4 + 2*3
+function assert(evaluated, expected) {
+    return evaluated==expected
+}
 
-print(a)
-print(b)
+print("2*3 + 4 ?= 4 + 3*2")
+a = 2*3 + 4
+b = 4 + 3*2
+
+bool = assert(a,10)
+bool = bool * assert(b,10)
+
+result="failed"
+if (bool) result="passed"
+print("result: ", result)
