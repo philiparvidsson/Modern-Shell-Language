@@ -2,9 +2,11 @@
 Crutch is a compiler for a JavaScript-like language. It compiles to Windows Batch (more targets will be provided in the future!) files. This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows without requiring the end user to install any piece of software.
 
 # Syntax
-The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and stick to a simple syntax that is easy for anyone to understand.
+The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
 
 ## Assignment
+The most basic operations are variable assignments. Crutch tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in Crutch.
+
 ```javascript
 
 /* Numbers */
