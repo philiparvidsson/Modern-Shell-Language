@@ -379,7 +379,7 @@ class Batch(CodeGenerator):
         for arg in reversed(node.children):
             self._gen_code(arg)
 
-        func_name = self.pop().value
+        func_name = self.pop_deref().value
 
         num_args = len(node.children)
         for i in range(1, num_args):
