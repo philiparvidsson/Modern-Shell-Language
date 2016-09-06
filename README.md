@@ -2,9 +2,11 @@
 Crutch is a compiler for a JavaScript-like language. It compiles to Windows Batch (more targets will be provided in the future!) files. This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows without requiring the end user to install any piece of software.
 
 # Syntax
-The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and stick to a simple syntax that is easy for anyone to understand.
+The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
 
 ## Assignment
+The most basic operations are variable assignments. Crutch tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in Crutch.
+
 ```javascript
 
 /* Numbers */
@@ -17,22 +19,22 @@ x = "a string"
 y = 'another string'
 ```
 
-## Integer operations
+## Integer Operations
 ```javascript
 a = 7
 b = 5
 
-// Basic
+/* Basic */
 a++ // Increment
 b-- // Decrement
 
-// Arithmetic
+/* Arithmetic */
 c = a+b // Addition
 d = a-b // Subtraction
 e = a*b // Multiplication
 f = a/b // Division 
 
-// Binary
+/* Binary */
 g = a&b  // And
 h = a|b  // Or
 i = a^b  // Xor
@@ -40,7 +42,7 @@ j = a<<b // Left-shift
 k = a>>b // Right-shift
 ```
 
-## String operations
+## String Operations
 ```javascript
 a = "foo"
 b = "bar"
@@ -48,7 +50,7 @@ b = "bar"
 c=a+b // Concatenation
 ```
 
-## Input/output
+## Input/Output
 ```javascript
 
 a = readline("What's your name?") // Ask user for input
@@ -57,13 +59,13 @@ console.log(a) // Print the input back to the console.
 
 ## Loops
 ```javascript
-// While-loops:
+/* While-loop */
 a = 0
 while ((a++) < 10) {
     console.log(a) // Prints 1 through 10.
 }
 
-// For-loops:
+/* For-loop */
 // NOT YET SUPPORTED!
 ```
 
@@ -74,11 +76,11 @@ function my_func(s) {
     console.log(s)
 }
 
-my_func('hello world!')
+my_func('hello world')
 
 // Anonymous functions are supported too!
 log_fn = function (s) { console.log(s) }
-log_fn('hello again!')
+log_fn('hello again')
 ```
 
 ## Arrays
@@ -109,4 +111,9 @@ fruit.name = 'apple'
 fruit.taste = 'sweet'
 
 show_fruit_info(fruit)
+
+// Objects can have functions!
+fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
+fruit.eat('crunchy')
 ```
+
