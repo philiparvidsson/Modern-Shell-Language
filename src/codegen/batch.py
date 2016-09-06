@@ -162,14 +162,11 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.ADD)
     def __add(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
-        self._gen_code(rhs)
-        self._gen_code(lhs)
-
-        a = self.pop()
         b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(a.type_, b.type_)
 
@@ -198,11 +195,11 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.ARRAY_IDX)
     def __array_idx(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
-        a = self.pop().value
         b = self.pop().value
+        a = self.pop().value
 
         # TODO: Do we have to default to str here?
         temp = self.tempvar(STR)
@@ -230,32 +227,41 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.BIN_AND)
     def __bin_and(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}&{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.BIN_OR)
     def __bin_or(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}|{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.BIN_XOR)
     def __bin_xor(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}^{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.DEC)
@@ -271,12 +277,15 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.DIVIDE)
     def __divide(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}/{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.EQUAL)
@@ -347,11 +356,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.GREATER)
     def __greater(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
         temp = self.tempvar(INT)
         s = 'if {} gtr {} (set /a {}=1) else (set /a {}=0)'
@@ -360,11 +366,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.GREATER_EQ)
     def __greater_eq(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
         temp = self.tempvar(INT)
         s = 'if {} geq {} (set /a {}=1) else (set /a {}=0)'
@@ -457,11 +460,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.LESS_EQ)
     def __less_eq(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
         temp = self.tempvar(INT)
         s = 'if {} leq {} (set /a {}=1) else (set /a {}=0)'
@@ -499,31 +499,34 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.MODULO)
     def __modulo(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}%%{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.MULTIPLY)
     def __multiply(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}*{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.NOT_EQ)
     def __not_eq(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
-
-        self._gen_code(rhs)
-        self._gen_code(lhs)
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
         temp = self.tempvar(INT)
         s = 'if {} neq {} (set /a {}=1) else (set /a {}=0)'
@@ -562,22 +565,28 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.SHIFT_L)
     def __shift_l(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}<<{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.SHIFT_R)
     def __shift_r(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}>>{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.STRING)
@@ -586,12 +595,15 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.SUBTRACT)
     def __subtract(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop()
+        a = self.pop()
 
         temp = self.tempvar(INT)
         s = 'set /a "{}={}-{}"'
-        self.emit(s.format(temp.name, self.pop().value, self.pop().value))
+        self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.WHILE)

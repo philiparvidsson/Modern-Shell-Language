@@ -12,12 +12,13 @@ if __name__ == '__main__':
     source = StringSource(
 """
 
-function fac(x) {
-    return x <= 1 ? 1
-                    : x*fac(x-1)
-}
+a = ['a', 'b', 'c']
+i = 1
 
-print(fac(3))
+a[1] = 'hej'
+
+print('a[', i, '] is ', a[i])
+
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
