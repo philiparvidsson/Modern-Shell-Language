@@ -30,6 +30,8 @@ set "errorlevel=%~2"
 goto :eof
 :__after_exit
 
+set ass=ass
+set __11=__11
 
 goto :__after_assert
 :assert
@@ -46,5 +48,23 @@ set /a %1=1
 )
 exit /b
 :__after_assert
-call :!assert! __8 0 1 "ass"
+goto :__after_ass
+:ass
+setlocal
+call set "__8=%%!__2![log]%%"
+call :%~2 __9 2
+call :!__8! __10 "!__9!"
+endlocal & (set %1=0)
+exit /b
+:__after_ass
+goto :__after___11
+:__11
+setlocal
+set /a "__12=%~2*4"
+endlocal & (
+set /a %1=%__12%
+)
+exit /b
+:__after___11
+call :!ass! __13 "__11"
 

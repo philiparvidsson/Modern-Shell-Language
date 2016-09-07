@@ -1,4 +1,4 @@
-from codegen.batch import Batch
+from codegen.batch.batchgen import Batch
 
 from lexing.lexer  import Lexer
 from lexing.source import StringSource
@@ -20,7 +20,13 @@ function assert(a, b, s) {
     return true
 }
 
-assert(false, true, 'ass')
+//assert(false, true, 'ass')
+
+function ass(a) {
+console.log(a(2))
+}
+
+ass(function (q) { return q*4 })
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
