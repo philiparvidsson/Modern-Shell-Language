@@ -47,7 +47,7 @@ k = a>>b // Right-shift
 a = "foo"
 b = "bar"
 
-c=a+b // Concatenation
+c = a+b // Concatenation
 ```
 
 ## Boolean Operations
