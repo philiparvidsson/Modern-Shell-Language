@@ -380,7 +380,7 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
 
         func_name = self.pop_deref().value
-        self.emit('set this={}'.format(func_name))
+        #self.emit('set this={}'.format(func_name))
 
         for arg in node.children[1:]:
             self._gen_code(arg)

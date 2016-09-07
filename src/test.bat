@@ -18,6 +18,5 @@ exit /b
 :__after___2
 set  "!a![lol]=__2"
 call set "__4=%%!a![lol]%%"
-set this=!__4!
 call :!__4! __5 
 
