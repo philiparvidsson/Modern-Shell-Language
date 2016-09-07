@@ -159,3 +159,14 @@ fruit.eat('crunchy')
  process.exit(1) // Exit with code one.
  ```
  
+ ### readline()
+ ```javascript
+ /**
+  * readline(s) - Reads a line form the console.
+  *
+  * Examples:
+  */
+  s = readline('Enter name') // Asks the user to input his or her name.
+  s = readline()             // Reads a line from the user without displaying a prompt.
+  ```
+ 
