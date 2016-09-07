@@ -9,21 +9,27 @@ var = None
 #-------------------------------------------------
 
 def emit_code(parser):
-    global var
     if not var:
         var = parser.tempvar('string')
         code = (
 '''
-set {0}={0}
-
-set {0}[exit]={0}[exit]
-goto {0}[exit]_
-:{0}[exit]
-goto :eof
-:{0}[exit]_
-
-set {0}[exitCode]=0
+set readline=readline
+goto __after_readline
+:readline
+setlocal
+set ret=%1
+set str=
+:__readline_next
+if "%2" equ "" (goto :__readline_done)
+set "str=%str%%2 "
+shift
+goto :__readline_next
+:__readline_done
+set /p tmp=%str%
+endlocal & (set %ret%=%tmp%)
+exit /b
+:__after_readline
 '''.format(var.name))
         parser.emit(code, 'decl')
 
-    parser.scope.declare_variable('process', 'variable').name = var.name
+    parser.scope.declare_variable('readline', 'variable').name = var.name

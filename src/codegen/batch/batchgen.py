@@ -22,99 +22,9 @@ VAR = 'variable'
 # CLASSES
 #--------------------------------------------------
 
-class Builtins(object):
-    def __init__(self):
-        pass
-
-    def check(self, parser, name):
-        if name == 'console':
-            self.console(parser)
-        elif name == 'process':
-            self.process(parser)
-        elif name == 'readline':
-            self.readline(parser)
-
-    def console(self, parser):
-        if not hasattr(self, 'console_var_'):
-            temp = parser.tempvar()
-            parser.scope.declare_variable('console', VAR).name = temp.name
-            self.console_var_ = temp
-
-            parser.emit(
-'''
-set {0}={0}
-set {0}[log]={0}[log]
-goto __after_print
-:{0}[log]
-setlocal
-set ret=%1
-set str=
-:__print_next
-if "%~2" equ "" (goto :__print_done)
-set "str=%str%%~2 "
-shift
-goto :__print_next
-:__print_done
-if "%str%" neq "" (echo %str%)
-endlocal & (set %ret%=0)
-exit /b
-:__after_print
-'''.format(self.console_var_.name), 'decl')
-
-        parser.scope.declare_variable('console', VAR).name = self.console_var_.name
-
-
-    def process(self, parser):
-        if not hasattr(self, 'process_var_'):
-            temp = parser.tempvar()
-            parser.scope.declare_variable('process', VAR).name = temp.name
-            self.process_var_ = temp
-
-            parser.emit(
-'''
-set {0}={0}
-set {0}[exit]={0}[exit]
-goto __after_exit
-:{0}[exit]
-set "errorlevel=%~2"
-goto :eof
-:__after_exit
-'''.format(self.process_var_.name), 'decl')
-
-        parser.scope.declare_variable('process', VAR).name = self.process_var_.name
-
-
-    def readline(self, parser):
-        if not hasattr(self, 'is_readline_declared'):
-            self.is_readline_declared = True
-            parser.emit(
-'''
-set readline=readline
-goto __after_readline
-:readline
-setlocal
-set ret=%1
-set str=
-:__readline_next
-if "%2" equ "" (goto :__readline_done)
-set "str=%str%%2 "
-shift
-goto :__readline_next
-:__readline_done
-set /p tmp=%str%
-endlocal & (set %ret%=%tmp%)
-exit /b
-:__after_readline
-''', 'decl')
-
-        parser.scope.declare_variable('readline', VAR)
-
-
 class Batch(CodeGenerator):
     def __init__(self, ast):
         super(Batch, self).__init__(ast)
-
-        self.builtins = Builtins()
 
         self.label_counter = 0
         self.tempvar_counter = 0
@@ -126,6 +36,16 @@ class Batch(CodeGenerator):
             ('decl', ''),
             ('code', '')
         ))
+
+    def check_builtin(self, name):
+        try:
+            mod = __import__('codegen.batch.builtins.' + name, fromlist=['emit_code'])
+        except ImportError:
+            mod = None
+
+        if mod:
+            mod.emit_code(self)
+
 
     def code(self):
         code = ''
@@ -449,7 +369,8 @@ class Batch(CodeGenerator):
         ident = node.data
         var = self.scope.get_variable(ident)
         if not var:
-            self.builtins.check(self, ident)
+            #self.builtins.check(self, ident)
+            self.check_builtin(ident)
             var = self.scope.get_variable(ident)
         self.push(var, VAR)
 

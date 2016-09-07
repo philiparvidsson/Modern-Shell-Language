@@ -23,15 +23,15 @@ exit /b
 
 
 set __5=__5
-set __5[exit]=__5[exit]
-goto __after_exit
-:__5[exit]
-set "errorlevel=%~2"
-goto :eof
-:__after_exit
 
-set ass=ass
-set __11=__11
+set __5[exit]=__5[exit]
+goto __5[exit]_
+:__5[exit]
+goto :eof
+:__5[exit]_
+
+set __5[exitCode]=5
+
 
 goto :__after_assert
 :assert
@@ -48,23 +48,8 @@ set /a %1=1
 )
 exit /b
 :__after_assert
-goto :__after_ass
-:ass
-setlocal
 call set "__8=%%!__2![log]%%"
-call :%~2 __9 2
+call set "__9=%%!__5![exitCode]%%"
 call :!__8! __10 "!__9!"
-endlocal & (set %1=0)
-exit /b
-:__after_ass
-goto :__after___11
-:__11
-setlocal
-set /a "__12=%~2*4"
-endlocal & (
-set /a %1=%__12%
-)
-exit /b
-:__after___11
-call :!ass! __13 "__11"
+call :!assert! __11 1 1 "ass"
 

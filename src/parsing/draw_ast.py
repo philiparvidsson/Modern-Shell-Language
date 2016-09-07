@@ -10,7 +10,7 @@ def print_node(node, level):
     tab = "    " * (level - 1)
     sep = "|-- " if level > 0 else ""
 
-    if node.data:
+    if node.data is not None:
         print(tab + sep + "[{}: {}]".format(nodetype, node.data))
     else:
         print(tab + sep + "[{}]".format(nodetype))
