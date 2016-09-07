@@ -50,6 +50,15 @@ b = "bar"
 c=a+b // Concatenation
 ```
 
+## Boolean Operations
+```javascript
+a = true
+b = false
+
+c = a && b // Logical and
+d = a || b // Local or
+```
+
 ## Input/Output
 ```javascript
 
