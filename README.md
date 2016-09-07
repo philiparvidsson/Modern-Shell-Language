@@ -40,6 +40,8 @@ h = a|b  // Or
 i = a^b  // Xor
 j = a<<b // Left-shift
 k = a>>b // Right-shift
+
+// Most of the operations above also exist as an assign-operation, i.e. a+=1, b<<=1 etc.
 ```
 
 ## String Operations
