@@ -76,7 +76,7 @@ class Batch(CodeGenerator):
         self.tempvar_counter += 1
 
         name =  '__{}'.format(self.tempvar_counter)
-        return self.scope.declare_variable(name, type_)
+        return self.scope.decl_var(name, type_)
 
     def enter_scope(self):
         self.scope = Scope(self.scope)
@@ -154,10 +154,10 @@ class Batch(CodeGenerator):
         index = 0
         for item in node.children:
             self._gen_code(item)
-            self.emit('set "{}[{}]={}"'.format(temp.name, index, self.pop().value))
+            self.emit('set "{}.{}={}"'.format(temp.name, index, self.pop().value))
             index += 1
 
-        self.emit('set "{}[__length__]={}"'.format(temp.name, index))
+        self.emit('set "{}.length={}"'.format(temp.name, index))
 
         self.push(temp, VAR)
 
@@ -169,11 +169,7 @@ class Batch(CodeGenerator):
         b = self.pop().value
         a = self.pop_deref().value
 
-        # TODO: Do we have to default to str here?
-        #temp = self.tempvar(STR)
-        #self.emit('call set "{}=%%{}[{}]%%"'.format(temp.name, a, b))
-        #self.push(temp, VAR)
-        self.push('{}[{}]'.format(a, b), REF)
+        self.push('{}.{}'.format(a, b), REF)
 
     @code_emitter(syntax.ASSIGN)
     def __assign(self, node):
@@ -187,11 +183,11 @@ class Batch(CodeGenerator):
         # TODO: Is this sane?
         if ident.construct == syntax.IDENTIFIER:
             a = ident.data
-            if not self.scope.is_declared(ident.data):
+            if not self.scope.is_decl(ident.data):
                 type_ = b.type_
                 if type_ == REF:
                     type_ = VAR
-                self.scope.declare_variable(ident.data, type_)
+                self.scope.decl_var(ident.data, type_)
         else:
             self._gen_code(ident)
             a = self.pop().value
@@ -287,9 +283,9 @@ class Batch(CodeGenerator):
         if not func_name:
             func_name = self.tempvar().name
 
-        self.scope.declare_variable(func_name, STR)
+        self.scope.decl_var(func_name, STR)
         self.enter_scope()
-        self.scope.declare_variable('this', STR)
+        self.scope.decl_var('this', STR)
         self.emit('set {}={}'.format(func_name, func_name), 'decl')
         self.emit('goto :__after_{}'.format(func_name)),
         self.emit(':{}'.format(func_name))
@@ -301,7 +297,7 @@ class Batch(CodeGenerator):
         param_counter = 2
         for param in params.children:
             # TODO: Don't assume str here. Be water, my friend!
-            var = self.scope.declare_variable(param.data, STR)
+            var = self.scope.decl_var(param.data, STR)
             var.name = param_counter
             param_counter += 1
 
@@ -338,7 +334,7 @@ class Batch(CodeGenerator):
         args.reverse()
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
-        var = self.scope.get_variable(func_name)
+        var = self.scope.var(func_name)
 
         s = 'call :{} {} {}'
         self.emit(s.format(func_name, temp.name, ' '.join(args)))
@@ -367,11 +363,11 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.IDENTIFIER)
     def __identifier(self, node):
         ident = node.data
-        var = self.scope.get_variable(ident)
+        var = self.scope.var(ident)
         if not var:
             #self.builtins.check(self, ident)
             self.check_builtin(ident)
-            var = self.scope.get_variable(ident)
+            var = self.scope.var(ident)
         self.push(var, VAR)
 
     @code_emitter(syntax.INC)

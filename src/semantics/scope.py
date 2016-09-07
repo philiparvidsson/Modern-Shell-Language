@@ -14,19 +14,19 @@ class Scope(object):
 
         self.variables = {}
 
-    def declare_variable(self, name, type_):
+    def decl_var(self, name, type_):
         var = Variable(name, type_)
         self.variables[name] = var
 
         return var
 
-    def get_variable(self, name):
+    def var(self, name):
         if name in self.variables:
             return self.variables[name]
 
         if self.parent_scope:
-            return self.parent_scope.get_variable(name)
+            return self.parent_scope.var(name)
 
-    def is_declared(self, name):
+    def is_decl(self, name):
         return ((name in self.variables)
-             or (self.parent_scope and self.parent_scope.is_declared(name)))
+             or (self.parent_scope and self.parent_scope.is_decl(name)))

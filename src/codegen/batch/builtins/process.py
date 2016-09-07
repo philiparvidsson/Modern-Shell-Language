@@ -1,4 +1,21 @@
 #-------------------------------------------------
+# CONSTANTS
+#-------------------------------------------------
+
+CODE = (
+'''
+set {0}={0}
+
+set {0}.exit={0}.exit
+goto {0}.exit_
+:{0}.exit
+goto :eof
+:{0}.exit_
+
+set {0}.exitCode=0
+''')
+
+#-------------------------------------------------
 # GLOBALS
 #-------------------------------------------------
 
@@ -8,22 +25,11 @@ var = None
 # FUNCTIONS
 #-------------------------------------------------
 
-def emit_code(parser):
+def emit_code(p):
     global var
     if not var:
-        var = parser.tempvar('string')
-        code = (
-'''
-set {0}={0}
+        var = p.tempvar('string')
+        var.name += '_process'
+        p.emit(CODE.format(var.name), 'decl')
 
-set {0}[exit]={0}[exit]
-goto {0}[exit]_
-:{0}[exit]
-goto :eof
-:{0}[exit]_
-
-set {0}[exitCode]=0
-'''.format(var.name))
-        parser.emit(code, 'decl')
-
-    parser.scope.declare_variable('process', 'variable').name = var.name
+    p.scope.decl_var('process', 'variable').name = var.name

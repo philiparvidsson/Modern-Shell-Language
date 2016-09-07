@@ -1,4 +1,30 @@
 #-------------------------------------------------
+# CONSTANTS
+#-------------------------------------------------
+
+CODE = (
+'''
+set {0}={0}
+
+set {0}.log={0}.log
+goto {0}.log_
+:{0}.log
+setlocal
+set r=%1
+set s=
+:{0}_echo
+if "%~2" equ "" (goto :{0}_done)
+set "s=%s%%~2 "
+shift
+goto :{0}_echo
+:{0}_done
+if "%s%" neq "" (echo %s%)
+endlocal & (set %r%=1)
+exit /b
+:{0}.log_
+''')
+
+#-------------------------------------------------
 # GLOBALS
 #-------------------------------------------------
 
@@ -8,30 +34,11 @@ var = None
 # FUNCTIONS
 #-------------------------------------------------
 
-def emit_code(parser):
+def emit_code(p):
     global var
     if not var:
-        var = parser.tempvar('string')
-        code = (
-'''
-set {0}={0}
-set {0}[log]={0}[log]
-goto __after_print
-:{0}[log]
-setlocal
-set ret=%1
-set str=
-:__print_next
-if "%~2" equ "" (goto :__print_done)
-set "str=%str%%~2 "
-shift
-goto :__print_next
-:__print_done
-if "%str%" neq "" (echo %str%)
-endlocal & (set %ret%=0)
-exit /b
-:__after_print
-'''.format(var.name))
-        parser.emit(code, 'decl')
+        var = p.tempvar('string')
+        var.name += '_console'
+        p.emit(CODE.format(var.name), 'decl')
 
-    parser.scope.declare_variable('console', 'variable').name = var.name
+    p.scope.decl_var('console', 'variable').name = var.name

@@ -1,17 +1,8 @@
 #-------------------------------------------------
-# GLOBALS
+# CONSTANTS
 #-------------------------------------------------
 
-var = None
-
-#-------------------------------------------------
-# FUNCTIONS
-#-------------------------------------------------
-
-def emit_code(parser):
-    if not var:
-        var = parser.tempvar('string')
-        code = (
+CODE = (
 '''
 set readline=readline
 goto __after_readline
@@ -29,7 +20,22 @@ set /p tmp=%str%
 endlocal & (set %ret%=%tmp%)
 exit /b
 :__after_readline
-'''.format(var.name))
-        parser.emit(code, 'decl')
+''')
 
-    parser.scope.declare_variable('readline', 'variable').name = var.name
+#-------------------------------------------------
+# GLOBALS
+#-------------------------------------------------
+
+var = None
+
+#-------------------------------------------------
+# FUNCTIONS
+#-------------------------------------------------
+
+def emit_code(p):
+    global var
+    if not var:
+        var = p.tempvar('string')
+        p.emit(CODE.format(var.name), 'decl')
+
+    p.scope.decl_var('readline', 'variable').name = var.name

@@ -20,7 +20,8 @@ function assert(a, b, s) {
     return true
 }
 
-console.log(process.exitCode)
+    a=['ass',2,3]
+console.log(a[0])
 assert(true, true, 'ass')
 """)
     lexer  = Lexer(source)
