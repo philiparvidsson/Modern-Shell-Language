@@ -3,7 +3,5 @@ name="commutativity"
 a = 2*(3 + 4)
 b = (4 + 3)*2
 
-bool = assert(a,14)
-bool = bool * assert(b,14)
-
-if (bool==0) console.log(name, "failed")
+assertEqual(a, 14, 'addition gave incorrect result')
+assertEqual(b, 14, 'addition gave incorrect result')

@@ -1,3 +1,9 @@
-function assert(evaluated, expected) {
-    return evaluated==expected
+function assertEqual(a, b, s) {
+    if (a != b) {
+        console.log('assertion failed:', s)
+        console.log('  expected', b, 'but got', a)
+        process.exit(1)
+    }
+
+    return true
 }

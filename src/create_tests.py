@@ -1,4 +1,4 @@
-from codegen.batch import Batch
+from codegen.batch.batchgen import Batch
 
 from lexing.lexer  import Lexer
 from lexing.source import StringSource
@@ -26,7 +26,7 @@ if __name__ == '__main__':
         ast = parser.generate_abstract_syntax_tree()
         batch = Batch(ast)
         code = batch.generate_code()
-        
+
         fname = os.path.splitext(file)[0]
         ff = open('.\\tests\\' + fname + '.bat', 'w')
         ff.write(code)
