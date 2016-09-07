@@ -25,8 +25,8 @@ a = 7
 b = 5
 
 /* Basic */
-a++ // Increment
-b-- // Decrement
+a++ // Post-increment
+b-- // Post-decrement
 
 /* Arithmetic */
 c = a+b // Addition
@@ -40,6 +40,8 @@ h = a|b  // Or
 i = a^b  // Xor
 j = a<<b // Left-shift
 k = a>>b // Right-shift
+
+// Most of the operations above also exist as assign-operations, i.e. a+=1, b<<=1 etc.
 ```
 
 ## String Operations
@@ -47,7 +49,26 @@ k = a>>b // Right-shift
 a = "foo"
 b = "bar"
 
-c=a+b // Concatenation
+c = a+b // Concatenation
+```
+
+## Boolean Operations
+```javascript
+a = true
+b = false
+
+c = a && b // Logical and
+d = a || b // Logical or
+
+e = 42
+f = 42
+
+g = e==f // true
+h = e!=f // false
+i = e<f  // false
+j = e<=f // true
+k = e>f  // false
+l = e>=f // true
 ```
 
 ## Input/Output
@@ -117,3 +138,37 @@ fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
 fruit.eat('crunchy')
 ```
 
+## Built-in Functions/Objects
+
+### console
+```javascript
+/**
+ * console.log(s) - Prints text to the console.
+ *
+ * Example:
+ */
+console.log('hello', 'world') // Print 'hello world' to the console.
+```
+
+### process
+```javascript
+/**
+ * process.exit(code) - Exits the process.
+ *
+ * Examples:
+ */
+process.exit()  // Exit with code zero.
+process.exit(1) // Exit with code one.
+```
+ 
+### readline()
+```javascript
+/**
+ * readline(s) - Reads a line form the console.
+ *
+ * Examples:
+ */
+s = readline('Enter name') // Asks the user to input his or her name.
+s = readline()             // Reads a line from the user without displaying a prompt.
+```
+ 
