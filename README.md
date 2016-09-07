@@ -145,7 +145,7 @@ fruit.eat('crunchy')
  *
  * Example:
  */
- console.log('hello', 'world') // Print 'hello world' to the console.
+console.log('hello', 'world') // Print 'hello world' to the console.
 ```
 
 ### process
@@ -155,18 +155,18 @@ fruit.eat('crunchy')
  *
  * Examples:
  */
- process.exit()  // Exit with code zero.
- process.exit(1) // Exit with code one.
- ```
+process.exit()  // Exit with code zero.
+process.exit(1) // Exit with code one.
+```
  
- ### readline()
- ```javascript
- /**
-  * readline(s) - Reads a line form the console.
-  *
-  * Examples:
-  */
-  s = readline('Enter name') // Asks the user to input his or her name.
-  s = readline()             // Reads a line from the user without displaying a prompt.
-  ```
+### readline
+```javascript
+/**
+ * readline(s) - Reads a line form the console.
+ *
+ * Examples:
+ */
+s = readline('Enter name') // Asks the user to input his or her name.
+s = readline()             // Reads a line from the user without displaying a prompt.
+```
  
