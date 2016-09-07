@@ -136,3 +136,26 @@ fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
 fruit.eat('crunchy')
 ```
 
+## Built-in Functions/Objects
+
+### console
+```javascript
+/**
+ * console.log(s) - Prints text to the console.
+ *
+ * Example:
+ */
+ console.log('hello', 'world') // Print 'hello world' to the console.
+```
+
+### process
+```javascript
+/**
+ * process.exit(code) - Exits the process.
+ *
+ * Examples:
+ */
+ process.exit()  // Exit with code zero.
+ process.exit(1) // Exit with code one.
+ ```
+ 
