@@ -30,12 +30,26 @@ if __name__ == '__main__':
     f = open('.\\tests\\runtests.cmd', 'w')
     f.write("""
 @echo off
+setlocal enableDelayedExpansion
+
+set arg1=%~1
+set verbose=0
+if /i "%arg1:~0,1%"=="v" (set verbose=1)
+
 echo RUNNING TESTS
+echo -------------
 for %%i in (*.bat) do (
-  echo.
-  echo test: %%i
-  call %%i
-  del %%i
-) & del runtests.cmd
+  echo exit /b>>%%i
+  if %verbose% gtr 0 (
+    set str=%%i
+    echo test: %str:~0,-4%
+  )
+  call %%i %verbose%
+)
+
+del *.bat
+echo @echo off>cleanup.cmd
+echo del *.cmd 2^>nul 1^>nul>>cleanup.cmd
+start cmd /D /C "cd %cd% & cleanup.cmd"
 """)
     f.close()
