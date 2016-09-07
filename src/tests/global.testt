@@ -1,0 +1,10 @@
+function assert(a, b, s) {
+    if (a != b) {
+        console.log('test failed:', s)
+        process.exit(1)
+    }
+
+    return true
+}
+
+assert("a","a","hai")
