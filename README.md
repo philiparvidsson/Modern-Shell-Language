@@ -57,6 +57,16 @@ b = false
 
 c = a && b // Logical and
 d = a || b // Local or
+
+e = 42
+f = 42
+
+g = e==f // true
+h = e!=f // false
+i = e<f  // false
+j = e<=f // true
+k = e>f  // false
+l = e>=f // true
 ```
 
 ## Input/Output
