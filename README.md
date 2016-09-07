@@ -56,7 +56,7 @@ a = true
 b = false
 
 c = a && b // Logical and
-d = a || b // Local or
+d = a || b // Logical or
 
 e = 42
 f = 42
