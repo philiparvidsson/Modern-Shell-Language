@@ -159,7 +159,7 @@ process.exit()  // Exit with code zero.
 process.exit(1) // Exit with code one.
 ```
  
-### readline
+### readline()
 ```javascript
 /**
  * readline(s) - Reads a line form the console.
