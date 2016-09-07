@@ -22,7 +22,7 @@ function assert(a, b, s) {
 
     a=['ass',2,3]
 console.log(a[0])
-assert(true, true, 'ass')
+assert(true, false, 'ass!#""')
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)

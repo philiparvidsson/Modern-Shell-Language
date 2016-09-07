@@ -40,7 +40,7 @@ setlocal
 if %~3 neq %~2 (set /a __1=1) else (set /a __1=0)
 if !__1! neq 0 (
 call set "__3=%%!__2_console!.log%%"
-call :!__3! __4 "assertion failed:" "%~4"
+call :!__3! __4 "assertion^ failed^:" "%~4"
 call set "__6=%%!__5_process!.exit%%"
 call :!__6! __7 1
 )
@@ -58,5 +58,5 @@ set  "a=!__8!"
 call set "__9=%%!__2_console!.log%%"
 call set "__10=%%!a!.0%%"
 call :!__9! __11 "!__10!"
-call :!assert! __12 1 1 "ass"
+call :!assert! __12 1 0 "ass^^!^#^"^""
 

@@ -556,15 +556,19 @@ def parse_str(parser):
 
     value = value[1:-1]
 
+    # FIXME: Come up with something more clever here. This code below is ugly af.
     allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     s = ''
 
     for c in value:
-        if c not in allowed_chars:
+        if c == '!':
+            # Exclamation mark requires double-escape.
+            c = '^^!'
+        elif c not in allowed_chars:
             c = '^' + c
         s += c
 
-    return Node(STRING, c, tok)
+    return Node(STRING, s, tok)
 
 def parse_while(parser):
     while_tok = parser.expect(lexemes.WHILE, lexemes.L_PAREN)
