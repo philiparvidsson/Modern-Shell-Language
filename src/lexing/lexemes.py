@@ -8,7 +8,6 @@ EOF = '<eof>'
 # Special characters.
 ASTERISK       = 'asterisk'
 ASTERISK_EQ    = 'asterisk equals'
-ASTERISK_SLASH = 'asterisk slash'
 BIN_AND        = 'binary and'
 BIN_AND_EQ     = 'binary and equals'
 BIN_OR         = 'binary or'
@@ -49,9 +48,8 @@ SHIFT_L_EQ     = 'shift left equals'
 SHIFT_R        = 'shift right'
 SHIFT_R_EQ     = 'shift right equals'
 SLASH          = 'slash'
-SLASH_2        = 'double slash'
-SLASH_ASTERISK = 'slash asterisk'
 SLASH_EQ       = 'slash equals'
+COMMENT = 'comment'
 
 # Keywords.
 ELSE   = 'else'
@@ -70,51 +68,50 @@ STR   = 'string'
 # Lexeme lookup table.
 LEXEME_MAP = {
     # Special characters.
-    ','     : COMMA,
-    '-'     : MINUS_SIGN,
-    '/'     : SLASH,
-    '//'    : SLASH_2,
-    '/='    : SLASH_EQ,
-    '/\*'   : SLASH_ASTERISK,
-    '='     : EQ_SIGN,
-    '=='    : EQ_SIGN_2,
-    '\!='   : NOT_EQ,
-    '\%'    : MODULO,
-    '\%='   : MODULO_EQ,
-    '\&'    : BIN_AND,
-    '\&='   : BIN_AND_EQ,
-    '\&\&'  : LOGIC_AND,
-    '\('    : L_PAREN,
-    '\)'    : R_PAREN,
-    '\*'    : ASTERISK,
-    '\*/'   : ASTERISK_SLASH,
-    '\*='   : ASTERISK_EQ,
-    '\+'    : PLUS_SIGN,
-    '\+='   : PLUS_EQ,
-    '\+\+'  : PLUS_PLUS,
-    '\-='   : MINUS_EQ,
-    '\-\-'  : MINUS_MINUS,
-    '\.'    : PERIOD,
-    '\:'    : COLON,
-    '\;'    : SEMICOLON,
-    '\<'    : LESS,
-    '\<='   : LESS_EQ,
-    '\<\<'  : SHIFT_L,
-    '\<\<=' : SHIFT_L_EQ,
-    '\>'    : GREATER,
-    '\>='   : GREATER_EQ,
-    '\>\>'  : SHIFT_R,
-    '\>\>=' : SHIFT_R_EQ,
-    '\?'    : Q_MARK,
-    '\['    : L_BRACK,
-    '\]'    : R_BRACK,
-    '\^'    : BIN_XOR,
-    '\^='   : BIN_XOR_EQ,
-    '\{'    : L_BRACE,
-    '\|'    : BIN_OR,
-    '\|='   : BIN_OR_EQ,
-    '\|\|'  : LOGIC_OR,
-    '\}'    : R_BRACE,
+    ','           : COMMA,
+    '-'           : MINUS_SIGN,
+    '/'           : SLASH,
+    '//.*\\n?'    : COMMENT,
+    '/='          : SLASH_EQ,
+    '/\*.*(\*/)?' : COMMENT,
+    '='           : EQ_SIGN,
+    '=='          : EQ_SIGN_2,
+    '\!='         : NOT_EQ,
+    '\%'          : MODULO,
+    '\%='         : MODULO_EQ,
+    '\&'          : BIN_AND,
+    '\&='         : BIN_AND_EQ,
+    '\&\&'        : LOGIC_AND,
+    '\('          : L_PAREN,
+    '\)'          : R_PAREN,
+    '\*'          : ASTERISK,
+    '\*='         : ASTERISK_EQ,
+    '\+'          : PLUS_SIGN,
+    '\+='         : PLUS_EQ,
+    '\+\+'        : PLUS_PLUS,
+    '\-='         : MINUS_EQ,
+    '\-\-'        : MINUS_MINUS,
+    '\.'          : PERIOD,
+    '\:'          : COLON,
+    '\;'          : SEMICOLON,
+    '\<'          : LESS,
+    '\<='         : LESS_EQ,
+    '\<\<'        : SHIFT_L,
+    '\<\<='       : SHIFT_L_EQ,
+    '\>'          : GREATER,
+    '\>='         : GREATER_EQ,
+    '\>\>'        : SHIFT_R,
+    '\>\>='       : SHIFT_R_EQ,
+    '\?'          : Q_MARK,
+    '\['          : L_BRACK,
+    '\]'          : R_BRACK,
+    '\^'          : BIN_XOR,
+    '\^='         : BIN_XOR_EQ,
+    '\{'          : L_BRACE,
+    '\|'          : BIN_OR,
+    '\|='         : BIN_OR_EQ,
+    '\|\|'        : LOGIC_OR,
+    '\}'          : R_BRACE,
 
     # Keywords.
     'else'     : ELSE,

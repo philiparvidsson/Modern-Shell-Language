@@ -18,8 +18,6 @@ class Scope(object):
         var = Variable(name, type_)
         self.variables[name] = var
 
-        print 'declared variable:', name, 'type:', type_
-
         return var
 
     def get_variable(self, name):

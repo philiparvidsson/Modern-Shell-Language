@@ -27,27 +27,31 @@ class Builtins(object):
         pass
 
     def check(self, parser, name):
-        if name == 'print':
-            self.print_(parser)
+        if name == 'console':
+            self.console(parser)
+        elif name == 'process':
+            self.process(parser)
         elif name == 'readline':
             self.readline(parser)
 
-    def print_(self, parser):
-        if not hasattr(self, 'is_print_declared'):
-            self.is_print_declared = True
+    def console(self, parser):
+        if not hasattr(self, 'console_var_'):
+            temp = parser.tempvar()
+            parser.scope.declare_variable('console', VAR).name = temp.name
+            self.console_var_ = temp
+
             parser.emit(
 '''
-rem ----------------------------------------------
-rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
-set print=print
+set {0}={0}
+set {0}[log]={0}[log]
 goto __after_print
-:print
+:{0}[log]
 setlocal
 set ret=%1
 set str=
 :__print_next
-if "%2" equ "" (goto :__print_done)
-set "str=%str%%2 "
+if "%~2" equ "" (goto :__print_done)
+set "str=%str%%~2 "
 shift
 goto :__print_next
 :__print_done
@@ -55,10 +59,30 @@ if "%str%" neq "" (echo %str%)
 endlocal & (set %ret%=0)
 exit /b
 :__after_print
-rem ----------------------------------------------
-''', 'decl')
+'''.format(self.console_var_.name), 'decl')
 
-        parser.scope.declare_variable('print', VAR)
+        parser.scope.declare_variable('console', VAR).name = self.console_var_.name
+
+
+    def process(self, parser):
+        if not hasattr(self, 'process_var_'):
+            temp = parser.tempvar()
+            parser.scope.declare_variable('process', VAR).name = temp.name
+            self.process_var_ = temp
+
+            parser.emit(
+'''
+set {0}={0}
+set {0}[exit]={0}[exit]
+goto __after_exit
+:{0}[exit]
+set "errorlevel=%~2"
+goto :eof
+:__after_exit
+'''.format(self.process_var_.name), 'decl')
+
+        parser.scope.declare_variable('process', VAR).name = self.process_var_.name
+
 
     def readline(self, parser):
         if not hasattr(self, 'is_readline_declared'):
@@ -156,7 +180,7 @@ class Batch(CodeGenerator):
             y.type_ = y.var.type_
             if isinstance(y.value.name, int):
                 # Function parameters.
-                y.value = '%{}'.format(y.value.name)
+                y.value = '%~{}'.format(y.value.name)
             else:
                 y.value = '!{}!'.format(y.value.name)
 
@@ -168,8 +192,6 @@ class Batch(CodeGenerator):
 
     def deref(self, a):
         if a.type_ == REF:
-            print 'its a ref!', a.value, a.type_
-
             temp = self.tempvar(STR)
             self.emit('call set "{}=%%{}%%"'.format(temp.name, a.value))
 
@@ -347,6 +369,7 @@ class Batch(CodeGenerator):
 
         self.scope.declare_variable(func_name, STR)
         self.enter_scope()
+        self.scope.declare_variable('this', STR)
         self.emit('set {}={}'.format(func_name, func_name), 'decl')
         self.emit('goto :__after_{}'.format(func_name)),
         self.emit(':{}'.format(func_name))
@@ -376,15 +399,23 @@ class Batch(CodeGenerator):
     def __func_call(self, node):
         args = []
 
-        for arg in reversed(node.children):
-            self._gen_code(arg)
+        self._gen_code(node.children[0])
 
         func_name = self.pop_deref().value
+        #self.emit('set this={}'.format(func_name))
+
+        for arg in node.children[1:]:
+            self._gen_code(arg)
 
         num_args = len(node.children)
         for i in range(1, num_args):
             a = self.pop_deref()
-            args.append(a.value)
+            if a.type_ == STR:
+                args.append('"{}"'.format(a.value))
+            else:
+                args.append(a.value)
+
+        args.reverse()
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
         var = self.scope.get_variable(func_name)

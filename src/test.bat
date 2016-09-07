@@ -1,19 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set lewl=lewl
+set assert=assert
 
-rem ----------------------------------------------
-rem THIS FUNCTION WILL BE REMOVED IN THE FUTURE, console.log WILL REPLACE IT
-set print=print
+set __2=__2
+set __2[log]=__2[log]
 goto __after_print
-:print
+:__2[log]
 setlocal
 set ret=%1
 set str=
 :__print_next
-if "%2" equ "" (goto :__print_done)
-set "str=%str%%2 "
+if "%~2" equ "" (goto :__print_done)
+set "str=%str%%~2 "
 shift
 goto :__print_next
 :__print_done
@@ -21,30 +20,31 @@ if "%str%" neq "" (echo %str%)
 endlocal & (set %ret%=0)
 exit /b
 :__after_print
-rem ----------------------------------------------
 
 
-goto :__after_lewl
-:lewl
+set __5=__5
+set __5[exit]=__5[exit]
+goto __after_exit
+:__5[exit]
+set "errorlevel=%~2"
+goto :eof
+:__after_exit
+
+
+goto :__after_assert
+:assert
 setlocal
-set /a "__1=%2*1"
-set /a "a=!__1!"
-set /a "__2=%3*1"
-set /a "b=!__2!"
-set /a "__3=1*%2"
-set /a "__4=1*%3"
-set /a "__5=!__3!+!__4!"
-set "__6=heylo!__5!"
+if %~3 neq %~2 (set /a __1=1) else (set /a __1=0)
+if !__1! neq 0 (
+call set "__3=%%!__2![log]%%"
+call :!__3! __4 "assertion failed:" "%~4"
+call set "__6=%%!__5![exit]%%"
+call :!__6! __7 1
+)
 endlocal & (
-set %1=%__6%
+set /a %1=1
 )
 exit /b
-:__after_lewl
-set "__7=__7"
-set "__7[__length__]=0"
-set  "a=!__7!"
-set  "!a![lol]=!lewl!"
-call set "__8=%%!a![lol]%%"
-call :!__8! __9 5 9
-call :!print! __10 !__9!
+:__after_assert
+call :!assert! __8 0 1 "ass"
 

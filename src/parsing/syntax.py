@@ -52,21 +52,8 @@ THEN       = 'then'
 WHILE      = 'while'
 
 #--------------------------------------------------
-# GLOBALS
-#--------------------------------------------------
-
-rules = dict()
-
-#--------------------------------------------------
 # FUNCTIONS
 #--------------------------------------------------
-
-def rule(*args):
-    def decorator(func):
-        rules[args] = func
-        return func
-
-    return decorator
 
 def parse_expr(parser):
     expr = parse_expr2(parser)
@@ -253,7 +240,7 @@ def parse_expr2(parser):
     # <expr3> != <expr>
     elif tok.category == lexemes.NOT_EQ:
         parser.read_token()
-        expr = Node(NOT_EQUAL, children=[expr, parse_expr3(parser)])
+        expr = Node(NOT_EQ, children=[expr, parse_expr3(parser)])
 
     # <expr3> < <expr>
     elif tok.category == lexemes.LESS:
@@ -290,35 +277,45 @@ def parse_expr3(parser):
 
     tok = parser.peek_token()
 
-    # <expr4> (<expr>[, <expr> ...])
+    # <expr3> (<expr>[, <expr> ...])
     if tok.category == lexemes.L_PAREN:
-        parser.read_token()
-        args = [expr]
         while True:
+            parser.expect(lexemes.L_PAREN)
+            args = [expr]
+            while True:
+                tok = parser.peek_token()
+                if tok.category == lexemes.R_PAREN:
+                    break
+
+                args.append(parse_expr(parser))
+
+                tok = parser.peek_token()
+                if tok.category == lexemes.R_PAREN:
+                    break
+
+                parser.expect(lexemes.COMMA)
+
+            parser.expect(lexemes.R_PAREN)
+
+            if len(args) == 0:
+                args = None
+
+            expr = Node(FUNC_CALL, token=tok, children=args)
+
             tok = parser.peek_token()
-            if tok.category == lexemes.R_PAREN:
+            if tok.category != lexemes.L_PAREN:
                 break
 
-            args.append(parse_expr(parser))
-
-            tok = parser.peek_token()
-            if tok.category == lexemes.R_PAREN:
-                break
-
-            parser.expect(lexemes.COMMA)
-
-        parser.expect(lexemes.R_PAREN)
-
-        if len(args) == 0:
-            args = None
-
-        expr = Node(FUNC_CALL, token=tok, children=args)
-
-    # <expr4>[<expr>]
+    # <expr3>[<expr>]
     elif tok.category == lexemes.L_BRACK:
-        parser.read_token()
-        expr = Node(ARRAY_IDX, token=tok, children=[expr, parse_expr(parser)])
-        parser.expect(lexemes.R_BRACK)
+        while True:
+            parser.expect(lexemes.L_BRACK)
+            expr = Node(ARRAY_IDX, token=tok, children=[expr, parse_expr(parser)])
+            parser.expect(lexemes.R_BRACK)
+
+            tok = parser.peek_token()
+            if tok.category != lexemes.L_BRACK:
+                break
 
     if expr:
         expr.token = tok
@@ -461,13 +458,16 @@ def parse_ident(parser):
     ident = Node(IDENTIFIER, tok.lexeme, tok)
 
     tok = parser.peek_token()
-    while tok.category == lexemes.PERIOD:
-        parser.read_token()
-        tok = parser.expect(lexemes.IDENT)
+    if tok.category == lexemes.PERIOD:
+        while True:
+            parser.expect(lexemes.PERIOD)
 
-        ident = Node(IDENTIFIER, tok.lexeme, tok, children=[ident])
+            tok = parser.expect(lexemes.IDENT)
+            ident = Node(ARRAY_IDX, token=tok, children=[ident, Node(STRING, tok.lexeme, tok)])
 
-        tok = parser.peek_token()
+            tok = parser.peek_token()
+            if tok.category != lexemes.PERIOD:
+                break
 
     #if len(tok.lexeme) > 64:
     #    parser.warn("identifier unnecessarily long", tok)
