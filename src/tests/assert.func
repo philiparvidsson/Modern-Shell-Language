@@ -1,7 +1,8 @@
 function assertEqual(a, b, s) {
     if (a != b) {
         console.log('assertion failed:', s)
-        console.log('  expected', b, 'but got', a)
+        console.log('expected value:', b)
+        console.log('actual value:', a)
         process.exit(1)
     }
 
