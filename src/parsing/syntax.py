@@ -240,7 +240,7 @@ def parse_expr2(parser):
     # <expr3> != <expr>
     elif tok.category == lexemes.NOT_EQ:
         parser.read_token()
-        expr = Node(NOT_EQUAL, children=[expr, parse_expr3(parser)])
+        expr = Node(NOT_EQ, children=[expr, parse_expr3(parser)])
 
     # <expr3> < <expr>
     elif tok.category == lexemes.LESS:

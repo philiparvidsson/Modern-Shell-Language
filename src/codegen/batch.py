@@ -28,11 +28,13 @@ class Builtins(object):
 
     def check(self, parser, name):
         if name == 'console':
-            self.console_(parser)
+            self.console(parser)
+        elif name == 'process':
+            self.process(parser)
         elif name == 'readline':
             self.readline(parser)
 
-    def console_(self, parser):
+    def console(self, parser):
         if not hasattr(self, 'console_var_'):
             temp = parser.tempvar()
             parser.scope.declare_variable('console', VAR).name = temp.name
@@ -60,6 +62,26 @@ exit /b
 '''.format(self.console_var_.name), 'decl')
 
         parser.scope.declare_variable('console', VAR).name = self.console_var_.name
+
+
+    def process(self, parser):
+        if not hasattr(self, 'process_var_'):
+            temp = parser.tempvar()
+            parser.scope.declare_variable('process', VAR).name = temp.name
+            self.process_var_ = temp
+
+            parser.emit(
+'''
+set {0}={0}
+set {0}[exit]={0}[exit]
+goto __after_exit
+:{0}[exit]
+set "errorlevel=%~2"
+goto :eof
+:__after_exit
+'''.format(self.process_var_.name), 'decl')
+
+        parser.scope.declare_variable('process', VAR).name = self.process_var_.name
 
 
     def readline(self, parser):

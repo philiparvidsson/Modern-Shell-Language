@@ -11,10 +11,16 @@ from parsing.draw_ast import draw_ast_tree
 if __name__ == '__main__':
     source = StringSource(
 """
-a=[]
-a.q = 'ass'
-a.lol = function () { return this.q }
-a.lol()
+function assert(a, b, s) {
+    if (a != b) {
+        console.log('assertion failed:', s)
+        process.exit(1)
+    }
+
+    return true
+}
+
+assert(false, true, 'ass')
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
