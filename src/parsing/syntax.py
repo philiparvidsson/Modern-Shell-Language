@@ -344,7 +344,9 @@ def parse_expr4(parser):
             if tok.category == lexemes.R_BRACK:
                 break
 
+            parser.eat_whitespace(whitespace_only=True)
             items.append(parse_expr(parser))
+            parser.eat_whitespace(whitespace_only=True)
 
             tok = parser.peek_token()
             if tok.category == lexemes.R_BRACK:
@@ -352,6 +354,7 @@ def parse_expr4(parser):
 
             parser.expect(lexemes.COMMA)
 
+        parser.eat_whitespace(whitespace_only=True)
         parser.expect(lexemes.R_BRACK)
 
         expr = Node(ARRAY, token=tok, children=items)
@@ -553,7 +556,15 @@ def parse_str(parser):
 
     value = value[1:-1]
 
-    return Node(STRING, value, tok)
+    allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    s = ''
+
+    for c in value:
+        if c not in allowed_chars:
+            c = '^' + c
+        s += c
+
+    return Node(STRING, c, tok)
 
 def parse_while(parser):
     while_tok = parser.expect(lexemes.WHILE, lexemes.L_PAREN)
