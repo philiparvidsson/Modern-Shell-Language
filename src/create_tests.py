@@ -9,10 +9,16 @@ from parsing.parser import Parser
 import os
 
 if __name__ == '__main__':
-    files = [f for f in os.listdir('.\\tests') if os.path.splitext(f)[1] == ".test"]
-    for file in files:
+    functionfiles = [f for f in os.listdir('.\\tests') if os.path.splitext(f)[1] == ".func"]
+    globalfunctions = ""
+    for file in functionfiles:
         with open('.\\tests\\' + file, 'r') as sourcefile:
-            source=StringSource(sourcefile.read())
+            globalfunctions += "\n" + sourcefile.read() + "\n"
+
+    testfiles = [f for f in os.listdir('.\\tests') if os.path.splitext(f)[1] == ".test"]
+    for file in testfiles:
+        with open('.\\tests\\' + file, 'r') as sourcefile:
+            source=StringSource(globalfunctions + sourcefile.read())
 
         lexer  = Lexer(source)
         parser = Parser(lexer)
@@ -36,13 +42,11 @@ set arg1=%~1
 set verbose=0
 if /i "%arg1:~0,1%"=="v" (set verbose=1)
 
-echo RUNNING TESTS
-echo -------------
 for %%i in (*.bat) do (
   echo exit /b>>%%i
   if %verbose% gtr 0 (
     set str=%%i
-    echo test: %str:~0,-4%
+    echo test: !str:~0,-4!
   )
   call %%i %verbose%
 )
