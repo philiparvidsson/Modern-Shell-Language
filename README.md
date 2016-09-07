@@ -25,8 +25,8 @@ a = 7
 b = 5
 
 /* Basic */
-a++ // Increment
-b-- // Decrement
+a++ // Post-increment
+b-- // Post-decrement
 
 /* Arithmetic */
 c = a+b // Addition
