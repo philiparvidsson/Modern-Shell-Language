@@ -123,7 +123,7 @@ LEXEME_MAP = {
     'while'    : WHILE,
 
     # User specified.
-    '0x[0-9A-Fa-f]*'         : INT,
+    '0x[0-9A-Fa-f]+'         : INT,
     '[0-1]+b'                : INT,
     '[0-9]+'                 : INT,
     '"[^"\n]*"?'             : STR,
