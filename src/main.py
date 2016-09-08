@@ -44,14 +44,17 @@ def print_usage():
 Usage: smaragd [options] <srcfile> [destfile]
 
 Options:
-  --max-errors=<n>\t- sets the max number of errors before exiting
-  --no-logo\t\t- don't display logo
-  --no-optim\t\t- don't optimize
-  --viz-ast\t\t- shows the syntax tree
+  --max-errors=<n>  - sets the max number of errors before exiting
+  --no-logo         - don't display logo
+  --no-optim        - don't optimize
+  --no-warn         - suppress warnings
+  --show-ast        - shows the syntax tree
+  --warn-err        - treat warnings as errors
 '''
 )
 
-def viz_ast(root):
+def show_ast(root):
+    print
     visualize_ast(root)
 
 def main():
@@ -69,7 +72,7 @@ def main():
     smaragd.conf.destfile = smaragd.conf.srcfile + '.bat'
 
     if not os.path.isfile(smaragd.conf.srcfile):
-        fatal('no such file exists: {}'.format(smaragd.conf.srcfile))
+        smaragd.fatal('no such file exists')
 
     os.chdir(os.path.dirname(os.path.abspath(smaragd.conf.srcfile)))
 
@@ -85,8 +88,8 @@ def main():
         optim = ASTOptimizer()
         optim.optimize_ast(tree)
 
-    if smaragd.conf.flag('--viz-ast'):
-        viz_ast(tree)
+    if smaragd.conf.flag('--show-ast'):
+        show_ast(tree)
     else:
         compile_(tree)
 

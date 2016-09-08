@@ -1,4 +1,10 @@
 #-------------------------------------------------
+# IMPORTS
+#-------------------------------------------------
+
+import sys
+
+#-------------------------------------------------
 # GLOBALS
 #-------------------------------------------------
 
@@ -54,11 +60,10 @@ class Config(object):
 #-------------------------------------------------
 
 def error(s, t=None):
-    print 'error:', s
     if t:
-        print '  in', conf.srcfile, ' ({}:{})'.format(t.row, t.column)
+        print conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s
     else:
-        print '  in', conf.srcfile
+        print conf.srcfile + ':', s
 
     conf.num_errors += 1
     if conf.num_errors > int(conf.option('--max-errors')):
@@ -66,5 +71,23 @@ def error(s, t=None):
         sys.exit()
 
 def fatal(s, t=None):
-    error(s, t)
+    print '!!fatal error!!'
+    if t:
+        print conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s
+    else:
+        print conf.srcfile + ':', s
     sys.exit()
+
+def warning(s, t=None):
+    if conf.flag('--warn-err'):
+        error(s, t)
+        return
+
+    if conf.flag('--no-warn'):
+        return
+
+    print '[warning]', s
+    if t:
+        print conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s
+    else:
+        print conf.srcfile + ':', s
