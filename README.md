@@ -129,7 +129,7 @@ Smaragd has support for arrays.
 function print_all(a) {
     i = 0
     s = ''
-    while (i < a.__length__) {
+    while (i < a.length) {
         s += (a[i] + ' and ')
         i++
     }
