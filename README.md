@@ -71,11 +71,29 @@ k = e>f  // false
 l = e>=f // true
 ```
 
-## Input/Output
+## Conditional Statements
 ```javascript
+function foo() { console.log('foo()'); return false }
+function bar() { console.log('bar()'); return true }
 
-a = readline("What's your name?") // Ask user for input
-console.log(a) // Print the input back to the console.
+a = true
+
+/* Regular if-then-else statements */
+if (a) foo() else bar()
+
+if (a) {
+    foo()
+}
+else {
+    bar()
+}
+
+/* Ternary operator */
+fn = a ? foo : bar
+fn()
+
+/* Short-circuiting */
+foo() && bar() // Only prints 'foo()' since foo() returns false!
 ```
 
 ## Loops
