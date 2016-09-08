@@ -4,11 +4,12 @@
 
 import sys
 
-from lexing.source import StringSource
-from lexing.lexer import Lexer
-from optimization.astoptim import ASTOptimizer
-from parsing.parser import Parser
 from codegen.batch.batchgen import Batch
+from debug.ast              import visualize_ast
+from lexing.lexer           import Lexer
+from lexing.source          import StringSource
+from optim.astoptim         import ASTOptimizer
+from parsing.parser         import Parser
 
 #-------------------------------------------------
 # GLOBALS
@@ -90,11 +91,12 @@ Usage: smaragd [options] <srcfile> [destfile]
 Options:
   --no-logo\t- don't display logo
   --no-optim\t- don't optimize
+  --viz-ast\t- shows the syntax tree
 '''
 )
 
 def viz_ast(root):
-    ast.visualize(root)
+    visualize_ast(root)
 
 #-------------------------------------------------
 # SCRIPT

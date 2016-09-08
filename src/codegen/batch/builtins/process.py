@@ -9,7 +9,22 @@ set {0}={0}
 set {0}.exit={0}.exit
 goto {0}.exit_
 :{0}.exit
-goto :eof
+setlocal
+if not "%2"=="" (set {0}.exitCode=%2)
+:{0}_unwind_stack
+set x=%0
+set x=!x:~0,1!
+if "!x!"==":" (
+    (goto) 2>nul & (
+        set {0}.exitCode=%{0}.exitCode%
+        goto :{0}_unwind_stack
+    )
+) else (
+    exit /b !{0}.exitCode!
+)
+endlocal
+exit /b
+
 :{0}.exit_
 
 set {0}.exitCode=0
