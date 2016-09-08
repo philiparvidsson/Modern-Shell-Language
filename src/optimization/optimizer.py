@@ -54,3 +54,36 @@ class Optimizer(object):
             return Node(STRING, value, node.token)
 
         return node
+
+    @node_optimizer(DIVIDE)
+    def __divide(self, node):
+        a = node.children[0]
+        b = node.children[1]
+
+        if a.construct == INTEGER and b.construct == INTEGER:
+            value = int(a.data) / int(b.data)
+            return Node(INTEGER, value, node.token)
+
+        return node
+
+    @node_optimizer(MULTIPLY)
+    def __multiply(self, node):
+        a = node.children[0]
+        b = node.children[1]
+
+        if a.construct == INTEGER and b.construct == INTEGER:
+            value = int(a.data) * int(b.data)
+            return Node(INTEGER, value, node.token)
+
+        return node
+
+    @node_optimizer(SUBTRACT)
+    def __subtract(self, node):
+        a = node.children[0]
+        b = node.children[1]
+
+        if a.construct == INTEGER and b.construct == INTEGER:
+            value = int(a.data) - int(b.data)
+            return Node(INTEGER, value, node.token)
+
+        return node
