@@ -107,7 +107,9 @@ while ((a++) < 10) {
 }
 
 /* For-loop */
-// NOT YET SUPPORTED!
+for (i=1; i <= 10; i++) {
+    console.log(i) // Prints 1 through 10.
+}
 ```
 
 ### Functions
