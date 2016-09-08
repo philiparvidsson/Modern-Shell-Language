@@ -88,7 +88,6 @@ else {
     bar()
 }
 
-
 /* Ternary operator */
 fn = a ? foo : bar
 fn()
