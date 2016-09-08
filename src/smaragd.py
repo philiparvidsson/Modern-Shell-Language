@@ -1,21 +1,8 @@
 #-------------------------------------------------
-# IMPORTS
-#-------------------------------------------------
-
-import sys
-
-from codegen.batch.batchgen import Batch
-from debug.ast              import visualize_ast
-from lexing.lexer           import Lexer
-from lexing.source          import StringSource
-from optim.astoptim         import ASTOptimizer
-from parsing.parser         import Parser
-
-#-------------------------------------------------
 # GLOBALS
 #-------------------------------------------------
 
-config = None
+conf = None
 
 #-------------------------------------------------
 # CONSTANTS
@@ -34,7 +21,10 @@ VERSION = '0.1'
 
 class Config(object):
     def __init__(self, opts):
+        self.num_errors = 0
+
         self.options = {
+            '--max-errors': '10',
             # FIXME: Pick default target depending on platform. When we have bash, heh.
             '--target': 'bat'
         }
@@ -63,72 +53,18 @@ class Config(object):
 # FUNCTIONS
 #-------------------------------------------------
 
-def compile_(tree):
-    if config.option('--target') == 'bat':
-        codegen = Batch(tree)
+def error(s, t=None):
+    print 'error:', s
+    if t:
+        print '  in', conf.srcfile, ' ({}:{})'.format(t.row, t.column)
     else:
-        # FIXME: Generate error here.
-        pass
+        print '  in', conf.srcfile
 
-    codegen.generate_code()
-    code = codegen.code()
-
-    with open(config.destfile, 'w') as f:
-        f.write(code)
-
-def print_logo():
-    print (
-'''
-smaragd v{}\n\ndevs: {}
-'''.format(VERSION, '\n      '.join(AUTHORS))
-)
-
-def print_usage():
-    print (
-'''
-Usage: smaragd [options] <srcfile> [destfile]
-
-Options:
-  --no-logo\t- don't display logo
-  --no-optim\t- don't optimize
-  --viz-ast\t- shows the syntax tree
-'''
-)
-
-def viz_ast(root):
-    visualize_ast(root)
-
-#-------------------------------------------------
-# SCRIPT
-#-------------------------------------------------
-
-if __name__ == '__main__':
-    opts = filter(lambda s: s.startswith('--'), sys.argv)
-    config = Config(opts)
-
-    if not config.flag('--no-logo'):
-        print_logo()
-
-    if len(sys.argv) < 2:
-        print_usage()
+    conf.num_errors += 1
+    if conf.num_errors > int(conf.option('--max-errors')):
+        print 'error: too many errors, aborting...'
         sys.exit()
 
-    config.srcfile  = sys.argv[-1]
-    config.destfile = config.srcfile + '.bat'
-
-    with open(config.srcfile, 'r') as f:
-        source = StringSource(f.read())
-
-    lexer  = Lexer(source)
-    parser = Parser(lexer)
-
-    tree = parser.generate_ast()
-
-    if not config.flag('--no-optim'):
-        optim = ASTOptimizer()
-        optim.optimize_ast(tree)
-
-    if config.flag('--viz-ast'):
-        viz_ast(tree)
-    else:
-        compile_(tree)
+def fatal(s, t=None):
+    error(s, t)
+    sys.exit()

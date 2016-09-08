@@ -1,7 +1,0 @@
-x = 5
-z = myfunc(x)
-print(z)
-
-func myfunc(a):
-    b = a+1332
-    return b

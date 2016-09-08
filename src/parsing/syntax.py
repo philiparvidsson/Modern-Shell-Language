@@ -2,7 +2,7 @@
 # IMPORTS
 #--------------------------------------------------
 
-import copy
+import smaragd
 
 from .node import Node
 
@@ -413,7 +413,7 @@ def parse_expr4(parser):
     #    pass
 
     elif tok.category != lexemes.EOF:
-        parser.err("unexpected token: {}".format(tok.category), tok)
+        smaragd.error("unexpected token: {}".format(tok.category), tok)
 
     if expr:
         expr.token = tok
@@ -609,7 +609,7 @@ def parse_int(parser):
     value = tok.lexeme
     if value.startswith("0x"):
         if len(value) == 2:
-            parser.err("invalid hex value", tok)
+            smaragd.error("invalid hex value", tok)
             value = 0
         else:
             value = int(value[2:], 16)
@@ -625,7 +625,7 @@ def parse_str(parser):
 
     if ((not value.startswith('"') or not value.endswith('"')) and
         (not value.startswith('\'') or not value.endswith('\''))):
-            parser.err("unterminated string", tok)
+            smaragd.error("unterminated string", tok)
 
     value = value[1:-1]
 

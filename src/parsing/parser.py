@@ -2,7 +2,7 @@
 # IMPORTS
 #--------------------------------------------------
 
-import inspect
+import smaragd
 
 from .error  import Error
 from .node   import Node
@@ -29,12 +29,6 @@ class Parser(object):
 
         self.peeked_token = None
 
-    def err(self, message, token=None):
-        e = Error(message, token)
-        self.errors.append(e)
-
-        print e
-
     def eat_whitespace(self, eat_semicolons=False):
         tok = self.peek_token()
         if eat_semicolons:
@@ -52,6 +46,7 @@ class Parser(object):
             token = self.read_token()
 
             if token.category != lexeme:
+                smaragd.error('expected {}'.format(lexeme))
                 self.err("expected {}".format(lexeme), token)
 
             tokens.append(token)
