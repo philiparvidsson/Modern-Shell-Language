@@ -91,6 +91,7 @@ else {
 /* Ternary operator */
 fn = a ? foo : bar
 fn()
+// We could also do: a ? foo() : bar()
 
 /* Short-circuiting */
 foo() && bar() // Only prints 'foo' since foo() returns false!
