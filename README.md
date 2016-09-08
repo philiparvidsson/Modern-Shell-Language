@@ -46,8 +46,8 @@ k = a>>b // Right-shift
 
 ## String Operations
 ```javascript
-a = "foo"
-b = "bar"
+a = 'foo'
+b = 'bar'
 
 c = a+b // Concatenation
 ```
