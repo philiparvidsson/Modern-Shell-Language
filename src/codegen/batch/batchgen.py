@@ -11,6 +11,11 @@ from parsing import syntax
 from semantics.scope    import Scope
 from semantics.variable import INT, STR, Variable
 
+from lexing.lexer  import Lexer
+from lexing.source import StringSource
+
+from parsing.parser import Parser
+
 #--------------------------------------------------
 # CONSTANTS
 #--------------------------------------------------
@@ -36,6 +41,25 @@ class Batch(CodeGenerator):
             ('decl', ''),
             ('code', '')
         ))
+
+    def include(self, file_name):
+        # TODO: Provide some general compilation function so we can reuse flags here
+        f = open(file_name)
+        s = f.read()
+        f.close()
+
+        p = Parser(Lexer(StringSource(s)))
+        ast = p.generate_ast()
+        b = Batch(ast)
+        b.generate_code()
+
+        for varname, var in b.scope.variables.iteritems():
+            self.scope.decl_var(varname, var.type_)
+
+        self.emit(b.code())
+
+        # Don't kill the stack.
+        self.push('include', STR)
 
     def check_builtin(self, name):
         try:
@@ -183,11 +207,11 @@ class Batch(CodeGenerator):
         # TODO: Is this sane?
         if ident.construct == syntax.IDENTIFIER:
             a = ident.data
-            if not self.scope.is_decl(ident.data):
+            if not self.scope.is_decl(a):
                 type_ = b.type_
                 if type_ == REF:
                     type_ = VAR
-                self.scope.decl_var(ident.data, type_)
+                self.scope.decl_var(a, type_)
         else:
             self._gen_code(ident)
             a = self.pop().value
@@ -314,6 +338,15 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.FUNC_CALL)
     def __func_call(self, node):
         args = []
+
+        # The include function needs special treatment!
+        if node.children[0].construct == syntax.IDENTIFIER and node.children[0].data == 'include':
+            # TODO: Generate errors instead of asserting
+            assert len(node.children) == 2
+            # We don't support runtime compilation yet
+            assert node.children[1].construct == syntax.STRING
+            self.include(node.children[1].data)
+            return
 
         self._gen_code(node.children[0])
 
@@ -577,7 +610,19 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.STRING)
     def __string(self, node):
-        self.push('{}'.format(node.data), STR)
+        # FIXME: Come up with something more clever here. This code below is ugly af.
+        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
+        s = ''
+
+        for c in node.data:
+            if c == '!':
+                # Exclamation mark requires double-escape.
+                c = '^^!'
+            elif c not in allowed_chars:
+                c = '^' + c
+            s += c
+
+        self.push('{}'.format(s), STR)
 
     @code_emitter(syntax.SUBTRACT)
     def __subtract(self, node):

@@ -61,7 +61,7 @@ class Parser(object):
 
         return tokens
 
-    def generate_abstract_syntax_tree(self):
+    def generate_ast(self):
         expressions = []
 
         while True:
