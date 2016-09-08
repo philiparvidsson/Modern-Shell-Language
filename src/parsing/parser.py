@@ -4,7 +4,6 @@
 
 import smaragd
 
-from .error  import Error
 from .node   import Node
 from .syntax import PROGRAM, parse_expr
 
@@ -60,6 +59,7 @@ class Parser(object):
         expressions = []
 
         while True:
+            self.eat_whitespace(eat_semicolons=True)
             expression = self.parse_expression()
 
             if not expression:

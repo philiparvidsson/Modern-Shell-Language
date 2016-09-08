@@ -25,6 +25,8 @@ def compile_(tree):
         # FIXME: Generate error here.
         pass
 
+    smaragd.trace('generating code...')
+
     codegen.generate_code()
     code = codegen.code()
 
@@ -74,7 +76,11 @@ def main():
     if not os.path.isfile(smaragd.conf.srcfile):
         smaragd.fatal('no such file exists')
 
-    os.chdir(os.path.dirname(os.path.abspath(smaragd.conf.srcfile)))
+    #smaragd.trace('source:', smaragd.conf.srcfile)
+    #smaragd.trace('output:', smaragd.conf.destfile)
+    #smaragd.trace()
+
+    #os.chdir(os.path.dirname(os.path.abspath(smaragd.conf.srcfile)))
 
     with open(smaragd.conf.srcfile, 'r') as f:
         source = StringSource(f.read())
@@ -82,7 +88,11 @@ def main():
     lexer  = Lexer(source)
     parser = Parser(lexer)
 
+    smaragd.trace('generating syntax tree...')
     tree = parser.generate_ast()
+
+    if smaragd.conf.num_errors > 0:
+        smaragd.fatal('there were errors')
 
     if not smaragd.conf.flag('--no-optim'):
         optim = ASTOptimizer()
@@ -92,6 +102,9 @@ def main():
         show_ast(tree)
     else:
         compile_(tree)
+
+    smaragd.trace()
+    smaragd.trace('done.')
 
 #-------------------------------------------------
 # SCRIPT

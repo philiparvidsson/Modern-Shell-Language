@@ -4,22 +4,22 @@
 
 CODE = (
 '''
-set readline=readline
-goto __after_readline
-:readline
+set {0}={0}
+goto {0}_
+:{0}
 setlocal
-set ret=%1
-set str=
-:__readline_next
-if "%2" equ "" (goto :__readline_done)
-set "str=%str%%2 "
+set r=%1
+set s=
+:{0}_next
+if "%2" equ "" (goto {0}_done)
+set "s=%s%%2 "
 shift
-goto :__readline_next
-:__readline_done
-set /p tmp=%str%
-endlocal & (set %ret%=%tmp%)
+goto {0}_next
+:{0}_done
+set /p t=%s%
+endlocal & (set %r%=%t%)
 exit /b
-:__after_readline
+:{0}_
 ''')
 
 #-------------------------------------------------

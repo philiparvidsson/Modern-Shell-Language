@@ -61,21 +61,22 @@ class Config(object):
 
 def error(s, t=None):
     if t:
-        print conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s
+        trace(conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        print conf.srcfile + ':', s
+        trace(conf.srcfile + ':', s)
 
     conf.num_errors += 1
     if conf.num_errors > int(conf.option('--max-errors')):
-        print 'error: too many errors, aborting...'
-        sys.exit()
+        fatal('too many errors, aborting...')
 
 def fatal(s, t=None):
-    print '!!fatal error!!'
+    trace()
+    trace('!!fatal error!!')
     if t:
-        print conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s
+        trace(conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        print conf.srcfile + ':', s
+        trace(conf.srcfile + ':', s)
+
     sys.exit()
 
 def warning(s, t=None):
@@ -86,8 +87,13 @@ def warning(s, t=None):
     if conf.flag('--no-warn'):
         return
 
-    print '[warning]', s
     if t:
-        print conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s
+        trace(conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        print conf.srcfile + ':', s
+        trace(conf.srcfile + ':', s)
+
+def trace(*args):
+    if not args:
+        print
+    else:
+        print ' '.join(args)

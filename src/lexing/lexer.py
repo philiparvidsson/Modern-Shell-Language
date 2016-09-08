@@ -4,7 +4,6 @@
 
 import re
 
-from .error   import Error
 from .lexemes import EOF, LEXEME_MAP, NEWLINE
 from .token   import Token
 
@@ -100,9 +99,7 @@ class Lexer(object):
             # We've reached the end of the source.
             return Token(EOF)
 
-        # FIXME: Don't return error, pile it up somewhere.
-        s = "sequence not understood: {}"
-        return Error(s.format(lexeme), row, column)
+        smaragd.error('sequence not understood: {}'.format(lexeme))
 
     def peek_char(self):
         return self.source.peek_char()
