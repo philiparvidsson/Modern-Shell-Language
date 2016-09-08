@@ -50,6 +50,7 @@ SHIFT_R_EQ     = 'shift right equals'
 SLASH          = 'slash'
 SLASH_EQ       = 'slash equals'
 COMMENT = 'comment'
+FOR = 'for'
 
 # Keywords.
 ELSE   = 'else'
@@ -116,6 +117,7 @@ LEXEME_MAP = {
     # Keywords.
     'else'     : ELSE,
     'false'    : FALSE,
+    'for'      : FOR,
     'function' : FUNC,
     'if'       : IF,
     'return'   : RETURN,

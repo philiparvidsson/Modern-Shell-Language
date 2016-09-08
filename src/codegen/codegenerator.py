@@ -2,7 +2,7 @@
 # IMPORTS
 #--------------------------------------------------
 
-from parsing.syntax import FUNC_CALL
+from parsing.syntax import NOOP
 
 #--------------------------------------------------
 # CLASSES
@@ -24,6 +24,9 @@ class CodeGenerator(object):
         assert False, "Not implemented"
 
     def _gen_code(self, root):
+        if root.construct == NOOP:
+            return
+
         code_func = self.code_funcs[root.construct]
         code_func(root)
 

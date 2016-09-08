@@ -24,6 +24,7 @@ DIVIDE     = 'divide'
 ELSE       = 'else'
 END        = 'end'
 EQUAL      = 'equal'
+FOR        = 'for'
 FUNC       = 'func'
 FUNC_CALL  = 'func call'
 FUNC_DECL  = 'func decl'
@@ -41,6 +42,7 @@ LOGIC_AND  = 'logic and'
 LOGIC_OR   = 'logic or'
 MODULO     = 'modulo'
 MULTIPLY   = 'multiply'
+NOOP       = 'no-op'
 NOT_EQ     = 'not equal'
 PROGRAM    = 'program'
 RETURN     = 'return'
@@ -375,6 +377,10 @@ def parse_expr4(parser):
     elif tok.category == lexemes.STR:
         expr = parse_str(parser)
 
+    # for ([<expr>]; [<expr>]; [<expr>]) ...
+    elif tok.category == lexemes.FOR:
+        expr = parse_for(parser)
+
     # func <identifier>(...)
     elif tok.category == lexemes.FUNC:
         expr = parse_func(parser)
@@ -413,6 +419,59 @@ def parse_expr4(parser):
         expr.token = tok
 
     return expr
+
+def parse_for(parser):
+    for_tok = parser.expect(lexemes.FOR, lexemes.L_PAREN)[0]
+
+    init_expr = Node(NOOP)
+    cond_expr = Node(NOOP)
+    loop_expr = Node(NOOP)
+
+    parser.eat_whitespace()
+
+    tok = parser.peek_token()
+    if tok.category != lexemes.SEMICOLON:
+        init_expr = parse_expr(parser)
+
+    parser.eat_whitespace()
+    parser.expect(lexemes.SEMICOLON)
+
+    tok = parser.peek_token()
+    if tok.category != lexemes.SEMICOLON:
+        cond_expr = parse_expr(parser)
+
+    parser.eat_whitespace()
+    parser.expect(lexemes.SEMICOLON)
+
+    tok = parser.peek_token()
+    if tok.category not in (lexemes.R_PAREN, lexemes.SEMICOLON):
+        loop_expr = parse_expr(parser)
+
+    parser.eat_whitespace()
+    parser.expect(lexemes.R_PAREN)
+    parser.eat_whitespace()
+
+    node = Node(FOR, token=for_tok, children=[init_expr, cond_expr, loop_expr])
+
+    tok = parser.peek_token()
+    if tok.category == lexemes.L_BRACE:
+        parser.read_token()
+        while True:
+            parser.eat_whitespace()
+
+            tok = parser.peek_token()
+            if tok.category == lexemes.R_BRACE:
+                parser.read_token()
+                break
+
+            node.children.append(parse_expr(parser))
+    else:
+        node.children.append(parse_expr(parser))
+
+    parser.eat_whitespace()
+
+    return node
+
 
 def parse_func(parser):
     func_tok = parser.expect(lexemes.FUNC)
@@ -573,7 +632,7 @@ def parse_str(parser):
     return Node(STRING, value, tok)
 
 def parse_while(parser):
-    while_tok = parser.expect(lexemes.WHILE, lexemes.L_PAREN)
+    while_tok = parser.expect(lexemes.WHILE, lexemes.L_PAREN)[0]
 
     cond = parse_expr(parser)
 

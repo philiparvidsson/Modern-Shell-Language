@@ -12,13 +12,8 @@ from optimization.optimizer import Optimizer
 if __name__ == '__main__':
     source = StringSource(
 """
-function apa() {
-  return true
-/*
-crap
-crap
-*/
-}
+for (i=0;i<10;i++) console.log(i)
+
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)

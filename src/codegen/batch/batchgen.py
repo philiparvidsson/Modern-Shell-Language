@@ -290,16 +290,42 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.EQUAL)
     def __equal(self, node):
-        lhs = node.children[0]
-        rhs = node.children[1]
+        self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
 
-        self._gen_code(rhs)
-        self._gen_code(lhs)
+        b = self.pop_deref().value
+        a = self.pop_deref().value
 
         temp = self.tempvar(INT)
         s = 'if {} equ {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
+        self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
+
+    @code_emitter(syntax.FOR)
+    def __for(self, node):
+        label = self.label()
+
+        init = node.children[0]
+        cond = node.children[1]
+        loop = node.children[2]
+
+        if init.construct != syntax.NOOP:
+            self._gen_code(init)
+
+        self.emit(':{}'.format(label))
+
+        if cond.construct != syntax.NOOP:
+            self._gen_code(cond)
+            self.emit('if {} equ 0 (goto :{}_)'.format(self.pop().value, label))
+
+        for expr in node.children[3:]:
+            self._gen_code(expr)
+
+        if loop.construct != syntax.NOOP:
+            self._gen_code(loop)
+        self.emit('goto :{}'.format(label))
+        self.emit(':{}_'.format(label))
+        self.emit(')')
 
     @code_emitter(syntax.FUNC)
     def __func(self, node):
@@ -378,9 +404,12 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
+        b = self.pop_deref().value
+        a = self.pop_deref().value
+
         temp = self.tempvar(INT)
         s = 'if {} gtr {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
+        self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.GREATER_EQ)
@@ -388,9 +417,12 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
+        b = self.pop_deref().value
+        a = self.pop_deref().value
+
         temp = self.tempvar(INT)
         s = 'if {} geq {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
+        self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.IDENTIFIER)
@@ -468,12 +500,15 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.LESS)
     def __less(self, node):
-        self._gen_code(node.children[1])
         self._gen_code(node.children[0])
+        self._gen_code(node.children[1])
+
+        b = self.pop_deref().value
+        a = self.pop_deref().value
 
         temp = self.tempvar(INT)
         s = 'if {} lss {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
+        self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.LESS_EQ)
@@ -481,9 +516,12 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
+        b = self.pop_deref().value
+        a = self.pop_deref().value
+
         temp = self.tempvar(INT)
         s = 'if {} leq {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
+        self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.LOGIC_AND)
@@ -546,9 +584,12 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
         self._gen_code(node.children[1])
 
+        b = self.pop_deref().value
+        a = self.pop_deref().value
+
         temp = self.tempvar(INT)
         s = 'if {} neq {} (set /a {}=1) else (set /a {}=0)'
-        self.emit(s.format(self.pop_deref().value, self.pop_deref().value, temp.name, temp.name))
+        self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
     @code_emitter(syntax.PROGRAM)
