@@ -2,5 +2,5 @@
 setlocal enabledelayedexpansion
 
 
-set /a "x=3"
+set /a "x=-369"
 
