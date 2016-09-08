@@ -71,11 +71,31 @@ k = e>f  // false
 l = e>=f // true
 ```
 
-## Input/Output
+## Conditional Statements
 ```javascript
+function foo() { console.log('foo'); return false }
+function bar() { console.log('bar'); return true }
 
-a = readline("What's your name?") // Ask user for input
-console.log(a) // Print the input back to the console.
+a = false
+
+/* Regular if-then-else statements */
+if (a) foo() else bar() // Braces can be omitted for single statements.
+
+if (a) {
+    foo()
+}
+else {
+    bar()
+}
+
+
+/* Ternary operator */
+fn = a ? foo : bar
+fn()
+
+/* Short-circuiting */
+foo() && bar() // Only prints 'foo' since foo() returns false!
+foo() || bar() // Prints 'foo' and 'bar'
 ```
 
 ## Loops
@@ -145,9 +165,25 @@ fruit.eat('crunchy')
 /**
  * console.log(s) - Prints text to the console.
  *
- * Example:
+ * Examples:
  */
 console.log('hello', 'world') // Print 'hello world' to the console.
+```
+
+### include()
+```javascript
+/**
+ * include(fileName) - Includes the specified file for use in the current source file.
+ *
+ * Examples:
+ */
+
+// a.js:
+MY_STRING = 'hello world'
+
+// b.js:
+include('a.js')
+console.log(MY_STRING)
 ```
 
 ### process
@@ -157,8 +193,16 @@ console.log('hello', 'world') // Print 'hello world' to the console.
  *
  * Examples:
  */
-process.exit()  // Exit with code zero.
+process.exit()  // Exit with process.exitCode
 process.exit(1) // Exit with code one.
+
+/**
+ * process.exitCode - The exit code to use if no code is specified in the call to process.exit()
+ *
+ * Examples:
+ */
+process.exitCode = 1
+process.exit() // Exit with code one
 ```
 
 ### readline()
