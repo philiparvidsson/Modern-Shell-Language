@@ -12,7 +12,13 @@ from optimization.optimizer import Optimizer
 if __name__ == '__main__':
     source = StringSource(
 """
-x = 1 + 2*9+6-(99*2-1)*4/2
+function apa() {
+  return true
+/*
+crap
+crap
+*/
+}
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
