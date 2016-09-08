@@ -1,10 +1,10 @@
 # Smaragd
 Smaragd is a compiler for a JavaScript-like language. It compiles to Windows Batch (more targets will be provided in the future!) files. This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows without requiring the end user to install any piece of software.
 
-# Syntax
+## Syntax
 The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
 
-## Assignment
+### Assignment
 The most basic operations are variable assignments. Smaragd tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in Smaragd.
 
 ```javascript
@@ -19,7 +19,7 @@ x = "a string"
 y = 'another string'
 ```
 
-## Integer Operations
+### Integer Operations
 ```javascript
 a = 7
 b = 5
@@ -44,7 +44,7 @@ k = a>>b // Right-shift
 // Most of the operations above also exist as assign-operations, i.e. a+=1, b<<=1 etc.
 ```
 
-## String Operations
+### String Operations
 ```javascript
 a = 'foo'
 b = 'bar'
@@ -52,7 +52,7 @@ b = 'bar'
 c = a+b // Concatenation
 ```
 
-## Boolean Operations
+### Boolean Operations
 ```javascript
 a = true
 b = false
@@ -71,7 +71,7 @@ k = e>f  // false
 l = e>=f // true
 ```
 
-## Conditional Statements
+### Conditional Statements
 ```javascript
 function foo() { console.log('foo'); return false }
 function bar() { console.log('bar'); return true }
@@ -97,7 +97,7 @@ foo() && bar() // Only prints 'foo' since foo() returns false!
 foo() || bar() // Prints 'foo' and 'bar'
 ```
 
-## Loops
+### Loops
 ```javascript
 /* While-loop */
 a = 0
@@ -109,7 +109,7 @@ while ((a++) < 10) {
 // NOT YET SUPPORTED!
 ```
 
-## Functions
+### Functions
 Smaragd naturally supports functions.
 ```javascript
 function my_func(s) {
@@ -123,7 +123,7 @@ log_fn = function (s) { console.log(s) }
 log_fn('hello again')
 ```
 
-## Arrays
+### Arrays
 Smaragd has support for arrays.
 ```javascript
 function print_all(a) {
@@ -139,7 +139,7 @@ function print_all(a) {
 print_all(['one', 'two', 'three'])
 ```
 
-## Objects
+### Objects
 Smaragd also supports objects!
 ```javascript
 function show_fruit_info(f) {
