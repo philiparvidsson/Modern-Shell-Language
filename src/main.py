@@ -12,17 +12,7 @@ from optimization.optimizer import Optimizer
 if __name__ == '__main__':
     source = StringSource(
 """
-function print_all(a) {
-    i = 0
-    s = ''
-    while (i < a.length) {
-        s += (a[i] + ' and ')
-        i++
-    }
-    console.log(s)
-}
-
-print_all(['one', 'two', 'three'])
+x = 1 + 2
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
