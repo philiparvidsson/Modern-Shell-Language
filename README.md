@@ -150,6 +150,22 @@ fruit.eat('crunchy')
 console.log('hello', 'world') // Print 'hello world' to the console.
 ```
 
+### include()
+```javascript
+/**
+ * include(fileName) - Includes the specified file for use in the current source file.
+ *
+ * Examples:
+ */
+
+// a.js:
+MY_STRING = 'hello world'
+
+// b.js:
+include('a.js')
+console.log(MY_STRING)
+```
+
 ### process
 ```javascript
 /**
@@ -165,8 +181,8 @@ process.exit(1) // Exit with code one.
  *
  * Examples:
  */
- process.exitCode = 1
- process.exit() // Exit with code one
+process.exitCode = 1
+process.exit() // Exit with code one
 ```
 
 ### readline()
