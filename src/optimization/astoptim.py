@@ -15,7 +15,7 @@ def node_optimizer(construct):
 
     return decorator
 
-class Optimizer(object):
+class ASTOptimizer(object):
     def __init__(self):
         self.optimize_constants = True
         self.optimize_literals  = True
