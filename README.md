@@ -1,11 +1,11 @@
-# Codename Crutch
-Crutch is a compiler for a JavaScript-like language. It compiles to Windows Batch (more targets will be provided in the future!) files. This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows without requiring the end user to install any piece of software.
+# Smaragd
+Smaragd is a compiler for a JavaScript-like language. It compiles to Windows Batch (more targets will be provided in the future!) files. This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows without requiring the end user to install any piece of software.
 
 # Syntax
 The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
 
 ## Assignment
-The most basic operations are variable assignments. Crutch tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in Crutch.
+The most basic operations are variable assignments. Smaragd tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in Smaragd.
 
 ```javascript
 
@@ -32,7 +32,7 @@ b-- // Post-decrement
 c = a+b // Addition
 d = a-b // Subtraction
 e = a*b // Multiplication
-f = a/b // Division 
+f = a/b // Division
 
 /* Binary */
 g = a&b  // And
@@ -91,7 +91,7 @@ while ((a++) < 10) {
 ```
 
 ## Functions
-Crutch naturally supports functions.
+Smaragd naturally supports functions.
 ```javascript
 function my_func(s) {
     console.log(s)
@@ -105,7 +105,7 @@ log_fn('hello again')
 ```
 
 ## Arrays
-Crutch has support for arrays.
+Smaragd has support for arrays.
 ```javascript
 function print_all(a) {
     i = 0
@@ -121,7 +121,7 @@ print_all(['one', 'two', 'three'])
 ```
 
 ## Objects
-Crutch also supports objects!
+Smaragd also supports objects!
 ```javascript
 function show_fruit_info(f) {
     console.log('the', f.name, 'is', f.taste)
@@ -160,7 +160,7 @@ console.log('hello', 'world') // Print 'hello world' to the console.
 process.exit()  // Exit with code zero.
 process.exit(1) // Exit with code one.
 ```
- 
+
 ### readline()
 ```javascript
 /**
@@ -171,4 +171,3 @@ process.exit(1) // Exit with code one.
 s = readline('Enter name') // Asks the user to input his or her name.
 s = readline()             // Reads a line from the user without displaying a prompt.
 ```
- 
