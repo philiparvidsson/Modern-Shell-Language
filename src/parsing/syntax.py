@@ -15,7 +15,7 @@ from lexing import lexemes
 ADD        = 'add'
 ARRAY      = 'array'
 ARRAY_IDX  = 'array index'
-ASSIGN     = 'assignment'
+ASSIGN     = 'assign'
 BIN_AND    = 'binary and'
 BIN_OR     = 'binary or'
 BIN_XOR    = 'binary xor'
@@ -24,28 +24,28 @@ DIVIDE     = 'divide'
 ELSE       = 'else'
 END        = 'end'
 EQUAL      = 'equal'
-FUNC       = 'function'
-FUNC_CALL  = 'function call'
-FUNC_DECL  = 'function declaration'
-FUNC_DEF   = 'function definition'
-GREATER    = 'greater than'
-GREATER_EQ = 'greater than or equal'
-IDENTIFIER = 'identifier'
+FUNC       = 'func'
+FUNC_CALL  = 'func call'
+FUNC_DECL  = 'func decl'
+FUNC_DEF   = 'func def'
+GREATER    = 'greater'
+GREATER_EQ = 'greater or eq'
+IDENTIFIER = 'ident'
 IF         = 'if'
 IF_TERNARY = 'if ternary'
 INC        = 'increment'
 INTEGER    = 'integer'
-LESS       = 'less than'
-LESS_EQ    = 'less than or equal'
-LOGIC_AND  = 'logical and'
+LESS       = 'less'
+LESS_EQ    = 'less or equal'
+LOGIC_AND  = 'logic and'
 LOGIC_OR   = 'logic or'
 MODULO     = 'modulo'
 MULTIPLY   = 'multiply'
 NOT_EQ     = 'not equal'
 PROGRAM    = 'program'
 RETURN     = 'return'
-SHIFT_L    = 'shift left'
-SHIFT_R    = 'shift right'
+SHIFT_L    = 'left-shift'
+SHIFT_R    = 'right-shift'
 STRING     = 'string'
 SUBTRACT   = 'subtract'
 THEN       = 'then'
@@ -516,12 +516,10 @@ def parse_if(parser):
     else_expr = Node(ELSE, token=tok, children=[])
 
     tok = parser.peek_token()
-    print 'fasd'
     if tok.category == lexemes.ELSE:
         parser.read_token()
         parser.eat_whitespace()
 
-        print tok.category, 'loooooool'
         tok = parser.peek_token()
         if tok.category == lexemes.L_BRACE:
             tok = parser.read_token()

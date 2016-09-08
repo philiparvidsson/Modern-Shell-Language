@@ -6,40 +6,28 @@ from lexing.token  import Token
 
 from parsing.parser import Parser
 
-from parsing.draw_ast import draw_ast_tree
+from debugging.ast import visualize
 
 if __name__ == '__main__':
     source = StringSource(
 """
-function foo() { console.log('foo'); return false }
-function bar() { console.log('bar'); return true }
-
-a = false
-
-/* Regular if-then-else statements */
-if (a) foo() else bar() // Braces can be omitted for single statements.
-
-if (a) {
-    foo()
-}
-else {
-    bar()
+function print_all(a) {
+    i = 0
+    s = ''
+    while (i < a.length) {
+        s += (a[i] + ' and ')
+        i++
+    }
+    console.log(s)
 }
 
-
-/* Ternary operator */
-fn = a ? foo : bar
-fn()
-
-/* Short-circuiting */
-foo() && bar() // Only prints 'foo' since foo() returns false!
-foo() || bar() // Prints 'foo' and 'bar'
+print_all(['one', 'two', 'three'])
 """)
     lexer  = Lexer(source)
     parser = Parser(lexer)
 
     ast = parser.generate_ast()
-    draw_ast_tree(ast)
+    visualize(ast)
 
     batch = Batch(ast)
     code = batch.generate_code()
