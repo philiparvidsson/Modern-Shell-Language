@@ -35,12 +35,12 @@ class Parser(object):
 
         print e
 
-    def eat_whitespace(self, whitespace_only=False):
+    def eat_whitespace(self, eat_semicolons=False):
         tok = self.peek_token()
-        if whitespace_only:
-            cats = (lexemes.NEWLINE,)
-        else:
+        if eat_semicolons:
             cats = (lexemes.NEWLINE, lexemes.SEMICOLON)
+        else:
+            cats = (lexemes.NEWLINE,)
         while tok.category in cats:
             self.read_token()
             tok = self.peek_token()

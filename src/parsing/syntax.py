@@ -56,6 +56,7 @@ WHILE      = 'while'
 #--------------------------------------------------
 
 def parse_expr(parser):
+    parser.eat_whitespace()
     expr = parse_expr2(parser)
 
     tok = parser.peek_token()
@@ -118,6 +119,7 @@ def parse_expr(parser):
     return expr
 
 def parse_expr2(parser):
+    parser.eat_whitespace()
     expr = parse_expr3(parser)
 
     tok = parser.peek_token()
@@ -273,6 +275,7 @@ def parse_expr2(parser):
     return expr
 
 def parse_expr3(parser):
+    parser.eat_whitespace()
     expr = parse_expr4(parser)
 
     tok = parser.peek_token()
@@ -323,6 +326,7 @@ def parse_expr3(parser):
     return expr
 
 def parse_expr4(parser):
+    parser.eat_whitespace()
     expr = None
 
     tok = parser.peek_token()
@@ -344,9 +348,9 @@ def parse_expr4(parser):
             if tok.category == lexemes.R_BRACK:
                 break
 
-            parser.eat_whitespace(whitespace_only=True)
+            parser.eat_whitespace()
             items.append(parse_expr(parser))
-            parser.eat_whitespace(whitespace_only=True)
+            parser.eat_whitespace()
 
             tok = parser.peek_token()
             if tok.category == lexemes.R_BRACK:
@@ -354,7 +358,7 @@ def parse_expr4(parser):
 
             parser.expect(lexemes.COMMA)
 
-        parser.eat_whitespace(whitespace_only=True)
+        parser.eat_whitespace()
         parser.expect(lexemes.R_BRACK)
 
         expr = Node(ARRAY, token=tok, children=items)
@@ -428,29 +432,32 @@ def parse_func(parser):
         if tok.category == lexemes.R_PAREN:
             break
 
+        parser.eat_whitespace()
         args.children.append(parse_ident(parser))
 
         tok = parser.peek_token()
         if tok.category == lexemes.R_PAREN:
             break
 
+        parser.eat_whitespace()
         parser.expect(lexemes.COMMA)
 
     parser.expect(lexemes.R_PAREN)
     parser.eat_whitespace()
     parser.expect(lexemes.L_BRACE)
+    parser.eat_whitespace()
 
     body = Node(FUNC_DEF, token=func_tok, children=[])
 
     while True:
-        parser.eat_whitespace()
-
         tok = parser.peek_token()
         if tok.category in (lexemes.EOF, lexemes.R_BRACE):
             break
 
         body.children.append(parse_expr(parser))
+        parser.eat_whitespace(eat_semicolons=True)
 
+    parser.eat_whitespace()
     parser.expect(lexemes.R_BRACE)
 
     return Node(FUNC, name, func_tok, [args, body])
@@ -490,28 +497,34 @@ def parse_if(parser):
     tok = parser.peek_token()
     if tok.category == lexemes.L_BRACE:
         parser.read_token()
-        while True:
-            parser.eat_whitespace()
+        parser.eat_whitespace()
 
+        while True:
             tok = parser.peek_token()
             if tok.category == lexemes.R_BRACE:
                 parser.read_token()
                 break
 
             then_expr.children.append(parse_expr(parser))
+            parser.eat_whitespace(eat_semicolons=True)
     else:
         then_expr.children.append(parse_expr(parser))
+        parser.eat_whitespace(eat_semicolons=True)
 
     parser.eat_whitespace()
 
     else_expr = Node(ELSE, token=tok, children=[])
 
     tok = parser.peek_token()
+    print 'fasd'
     if tok.category == lexemes.ELSE:
         parser.read_token()
+        parser.eat_whitespace()
 
+        print tok.category, 'loooooool'
+        tok = parser.peek_token()
         if tok.category == lexemes.L_BRACE:
-            tok = parser.peek_token()
+            tok = parser.read_token()
             while True:
                 parser.eat_whitespace()
 
@@ -521,8 +534,11 @@ def parse_if(parser):
                     break
 
                 else_expr.children.append(parse_expr(parser))
+                parser.eat_whitespace(eat_semicolons=True)
+
         else:
             else_expr.children.append(parse_expr(parser))
+            parser.eat_whitespace(eat_semicolons=True)
 
 
     return Node(IF, token=if_tok, children=[cond, then_expr, else_expr])

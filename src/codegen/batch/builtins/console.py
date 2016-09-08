@@ -18,7 +18,7 @@ set "s=%s%%~2 "
 shift
 goto :{0}_echo
 :{0}_done
-if "%s%" neq "" (echo %s%)
+if "%s%" neq "" (echo %s%) else (echo.)
 endlocal & (set %r%=1)
 exit /b
 :{0}.log_
