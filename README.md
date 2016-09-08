@@ -145,7 +145,7 @@ fruit.eat('crunchy')
 /**
  * console.log(s) - Prints text to the console.
  *
- * Example:
+ * Examples:
  */
 console.log('hello', 'world') // Print 'hello world' to the console.
 ```
@@ -157,8 +157,16 @@ console.log('hello', 'world') // Print 'hello world' to the console.
  *
  * Examples:
  */
-process.exit()  // Exit with code zero.
+process.exit()  // Exit with process.exitCode
 process.exit(1) // Exit with code one.
+
+/**
+ * process.exitCode - The exit code to use if no code is specified in the call to process.exit()
+ *
+ * Examples:
+ */
+ process.exitCode = 1
+ process.exit() // Exit with code one
 ```
 
 ### readline()
