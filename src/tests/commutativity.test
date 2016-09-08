@@ -1,9 +1,0 @@
-name="commutativity"
-
-a = 2*(3 + 4)
-b = (3 + 4)*2
-
-bool = assert(a,14)
-bool = bool * assert(b,14)
-
-if (bool==0) console.log(name, "failed")
