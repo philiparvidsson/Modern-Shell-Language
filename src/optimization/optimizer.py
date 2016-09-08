@@ -18,6 +18,7 @@ def node_optimizer(construct):
 class Optimizer(object):
     def __init__(self):
         self.optimize_constants = True
+        self.optimize_literals  = True
 
         self.optimizer_funcs = dict()
 
@@ -42,6 +43,9 @@ class Optimizer(object):
 
     @node_optimizer(ADD)
     def __add(self, node):
+        if not self.optimize_literals:
+            return node
+
         a = node.children[0]
         b = node.children[1]
 
@@ -57,6 +61,9 @@ class Optimizer(object):
 
     @node_optimizer(DIVIDE)
     def __divide(self, node):
+        if not self.optimize_literals:
+            return node
+
         a = node.children[0]
         b = node.children[1]
 
@@ -68,6 +75,9 @@ class Optimizer(object):
 
     @node_optimizer(MULTIPLY)
     def __multiply(self, node):
+        if not self.optimize_literals:
+            return node
+
         a = node.children[0]
         b = node.children[1]
 
@@ -79,6 +89,9 @@ class Optimizer(object):
 
     @node_optimizer(SUBTRACT)
     def __subtract(self, node):
+        if not self.optimize_literals:
+            return node
+
         a = node.children[0]
         b = node.children[1]
 

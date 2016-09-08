@@ -1,7 +1,7 @@
 assert = []
 test   = []
 
-assert.equal = function (a, b, s) {
+assert.areEqual = function (a, b, s) {
     if (a != b) {
         console.log('assertion failed:', s)
         console.log('expected value:', b)
@@ -17,4 +17,12 @@ test.fail = function () {
     process.exit()
 }
 
-test.name = 'missing name'
+assert.isFalse = function (a, s) {
+    assert.areEqual(a, false, s)
+}
+
+assert.isTrue = function (a, s) {
+    assert.areEqual(a, true, s)
+}
+
+test.name = '<missing name>'
