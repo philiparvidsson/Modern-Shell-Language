@@ -73,13 +73,13 @@ l = e>=f // true
 
 ## Conditional Statements
 ```javascript
-function foo() { console.log('foo()'); return false }
-function bar() { console.log('bar()'); return true }
+function foo() { console.log('foo'); return false }
+function bar() { console.log('bar'); return true }
 
-a = true
+a = false
 
 /* Regular if-then-else statements */
-if (a) foo() else bar()
+if (a) foo() else bar() // Braces can be omitted for single statements.
 
 if (a) {
     foo()
@@ -88,12 +88,14 @@ else {
     bar()
 }
 
+
 /* Ternary operator */
 fn = a ? foo : bar
 fn()
 
 /* Short-circuiting */
-foo() && bar() // Only prints 'foo()' since foo() returns false!
+foo() && bar() // Only prints 'foo' since foo() returns false!
+foo() || bar() // Prints 'foo' and 'bar'
 ```
 
 ## Loops
