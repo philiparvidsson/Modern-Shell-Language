@@ -172,6 +172,22 @@ fruit.eat('crunchy')
 console.log('hello', 'world') // Print 'hello world' to the console.
 ```
 
+```javascript
+/**
+ * file.delete(s) - Deletes the specified file if it exists. Returns true if the file existed.
+ *
+ * Examples:
+ */
+file.delete('foo/somefile.txt')
+
+/**
+ * file.exists(s) - Returns true if the specified file exists.
+ *
+ * Examples:
+ */
+file.exists('myfile.txt') ? console.log('file exists') : console.log('no such file')
+```
+
 ### include()
 ```javascript
 /**
