@@ -179,7 +179,7 @@ console.log('hello', 'world') // Print 'hello world' to the console.
  *
  * Examples:
  */
-file.delete('foo/somefile.txt')
+file.delete('myfile.txt')
 
 /**
  * file.exists(s) - Returns true if the specified file exists.
