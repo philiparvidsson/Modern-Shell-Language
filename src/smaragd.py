@@ -70,8 +70,6 @@ def error(s, t=None):
         fatal('too many errors, aborting...')
 
 def fatal(s, t=None):
-    trace()
-    trace('!!fatal error!!')
     if t:
         trace('fatal error in ' + conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:

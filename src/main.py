@@ -106,6 +106,10 @@ def main():
         # Semantic analysis is really only relevant for code generation.
         analyzer = SemanticAnalyzer()
         analyzer.verify(tree)
+
+        if smaragd.conf.num_errors > 0:
+            smaragd.fatal('there were errors')
+
         compile_(tree)
 
     smaragd.trace()
