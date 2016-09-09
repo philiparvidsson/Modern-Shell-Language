@@ -114,7 +114,6 @@ def parse_expr(parser):
         else_expr = parse_expr(parser)
         expr = Node(IF_TERNARY, children=[expr, then_expr, else_expr])
 
-
     if expr:
         expr.token = tok
 
