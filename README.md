@@ -179,7 +179,7 @@ console.log('hello', 'world') // Print 'hello world' to the console.
  *
  * Examples:
  */
-file.delete('foo/somefile.txt')
+file.delete('myfile.txt')
 
 /**
  * file.exists(s) - Returns true if the specified file exists.
@@ -187,6 +187,13 @@ file.delete('foo/somefile.txt')
  * Examples:
  */
 file.exists('myfile.txt') ? console.log('file exists') : console.log('no such file')
+
+/**
+ * file.read(s) - Reads the contents of the file with the specified name and returns it as a string.
+ *
+ * Examples:
+ */
+s = file.read('myfile.txt')
 ```
 
 ### include()
