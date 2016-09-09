@@ -1,13 +1,13 @@
-function show_fruit_info(f) {
-    console.log('the', f.name, 'is', f.taste)
-}
+a = [123, 456, 789]
 
-fruit = [] // Array declarations can be used as objects!
-fruit.name = 'apple'
-fruit.taste = 'sweet'
+for (i = 0; i < a.length; i++)
+    console.log(a[i])
 
-show_fruit_info(fruit)
+// Arrays can also be nested:
+b = [['a', 'b', 'c'],
+     [ 1 ,  2 ,  3 ],
+     ['x',  5 , 'z']]
 
-// Objects can have functions!
-fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
-fruit.eat('crunchy')
+for (i = 0; i < b.length; i++)
+    for (j = 0; j < b[i].length; j++)
+        console.log(b[i][j])

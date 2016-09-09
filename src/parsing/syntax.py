@@ -314,12 +314,19 @@ def parse_expr3(parser):
     # <expr3>[<expr>]
     elif tok.category == lexemes.L_BRACK:
         while True:
-            parser.expect(lexemes.L_BRACK)
-            expr = Node(ARRAY_IDX, token=tok, children=[expr, parse_expr(parser)])
-            parser.expect(lexemes.R_BRACK)
+            tok = parser.peek_token()
+            if tok.category == lexemes.L_BRACK:
+                parser.read_token()
+                expr = Node(ARRAY_IDX, token=tok, children=[expr, parse_expr(parser)])
+                parser.expect(lexemes.R_BRACK)
+            elif tok.category == lexemes.PERIOD:
+                parser.read_token()
+                tok = parser.expect(lexemes.IDENT)
+                expr = Node(ARRAY_IDX, token=tok, children=[expr, Node(STRING, tok.lexeme, tok)])
+                tok = parser.peek_token()
 
             tok = parser.peek_token()
-            if tok.category != lexemes.L_BRACK:
+            if tok.category not in (lexemes.L_BRACK, lexemes.PERIOD):
                 break
 
     if expr:

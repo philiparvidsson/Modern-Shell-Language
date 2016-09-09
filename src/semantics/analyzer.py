@@ -2,13 +2,14 @@
 # IMPORTS
 #-------------------------------------------------
 
-from parsing.syntax import *
+from parsing.syntax  import *
 from semantics.scope import Scope
 
 #-------------------------------------------------
 # CONSTANTS
 #-------------------------------------------------
 
+# Maybe we don't even need multiple passes?  Well, might be useful someday.
 PASS_1 = 1
 PASS_2 = 2
 PASS_3 = 3
@@ -98,6 +99,18 @@ class SemanticAnalyzer(object):
 
         self.scope = self.scope.parent_scope
 
+    @analyzes(ADD, PASS_2)
+    def __add(self, node):
+        a = node.children[0]
+        b = node.children[1]
+
+        if (a.construct in (INTEGER, STRING)
+        and b.construct in (INTEGER, STRING)
+        and a.construct != b.construct):
+            smaragd.warning('adding integer and string', node.token)
+
+        self.verify_children(node)
+
     @analyzes(ASSIGN, PASS_1)
     def __assign(self, node):
         if node.children[0].construct == IDENTIFIER:
@@ -150,28 +163,15 @@ class SemanticAnalyzer(object):
         else:
             var.reads += 1
 
-    @analyzes(ADD, PASS_2)
-    def __add(self, node):
-        a = node.children[0]
-        b = node.children[1]
-
-        if (a.construct in (INTEGER, STRING)
-        and b.construct in (INTEGER, STRING)
-        and a.construct != b.construct):
-            smaragd.warning('adding integer and string', node.token)
-
-        for child in node.children:
-            self.verify_single(child)
-
     @analyzes(DIVIDE, PASS_2)
     def __divide(self, node):
         a = node.children[0]
         b = node.children[1]
 
-        if (a.construct == STRING or b.construct == STRING):
+        if a.construct == STRING or b.construct == STRING:
             smaragd.error('division only allowed with integers', node.token)
 
-        elif (a.construct == INTEGER and b.construct == INTEGER):
+        elif a.construct == INTEGER and b.construct == INTEGER:
             if int(b.data) == 0:
                 smaragd.warning('division by zero', node.token)
             elif int(a.data) > int(b.data):
@@ -184,7 +184,7 @@ class SemanticAnalyzer(object):
         a = node.children[0]
         b = node.children[1]
 
-        if (a.construct == STRING or b.construct == STRING):
+        if a.construct == STRING or b.construct == STRING:
             smaragd.error('multiplication only allowed with integers', node.token)
 
         self.verify_children(node)
@@ -194,7 +194,7 @@ class SemanticAnalyzer(object):
         a = node.children[0]
         b = node.children[1]
 
-        if (a.construct == STRING or b.construct == STRING):
+        if a.construct == STRING or b.construct == STRING:
             smaragd.error('subtraction only allowed with integers', node.token)
 
         self.verify_children(node)
