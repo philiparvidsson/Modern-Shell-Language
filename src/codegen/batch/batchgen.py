@@ -646,19 +646,19 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.STRING)
     def __string(self, node):
         # FIXME: Come up with something more clever here. This code below is ugly af.
-        allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
-        s = ''
+        #allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
+        #s = ''
 
-        for c in node.data:
-            if c == '!':
-                # Exclamation mark requires double-escape.
-                # TODO: Or does it!?
-                c = '^^!'
-            elif c not in allowed_chars:
-                c = '^' + c
-            s += c
+        #for c in node.data:
+        #    if c == '!':
+        #        # Exclamation mark requires double-escape.
+        #        # TODO: Or does it!?
+        #        c = '^^!'
+        #    elif c not in allowed_chars:
+        #        c = '^' + c
+        #    s += c
 
-        self.push('{}'.format(s), STR)
+        self.push('{}'.format(node.data), STR)
 
     @code_emitter(syntax.SUBTRACT)
     def __subtract(self, node):

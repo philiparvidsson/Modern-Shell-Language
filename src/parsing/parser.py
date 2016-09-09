@@ -45,8 +45,7 @@ class Parser(object):
             token = self.read_token()
 
             if token.category != lexeme:
-                smaragd.error('expected {}'.format(lexeme))
-                self.err("expected {}".format(lexeme), token)
+                smaragd.error('expected {}'.format(lexeme), token)
 
             tokens.append(token)
 

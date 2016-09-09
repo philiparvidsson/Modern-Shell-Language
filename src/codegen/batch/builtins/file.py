@@ -6,27 +6,28 @@ CODE = (
 '''
 set {0}={0}
 
-set {0}.exit={0}.exit
-goto {0}.exit_
-:{0}.exit
+set {0}.delete={0}.delete
+goto {0}.delete_
+:{0}.delete
 setlocal
-if not "%2"=="" (set {0}.exitCode=%2)
-:{0}_unwind_stack
-set x=%0
-set x=!x:~0,1!
-if "!x!"==":" (
-    (goto) 2>nul & (
-        set {0}.exitCode=%{0}.exitCode%
-        goto :{0}_unwind_stack
-    )
+if exist "%~2" (
+    del "%~2"
+    set r=1
 ) else (
-    exit /b !{0}.exitCode!
+    set r=0
 )
-endlocal
+endlocal & (set %1=%r%)
 exit /b
-:{0}.exit_
+:{0}.delete_
 
-set {0}.exitCode=0
+set {0}.exists={0}.exists
+goto {0}.exists_
+:{0}.exists
+setlocal
+if exist "%~2" (set r=1) else (set r=0)
+endlocal & (set /a %~1=%r%)
+exit /b
+:{0}.exists_
 ''')
 
 #-------------------------------------------------
@@ -43,7 +44,7 @@ def emit_code(p):
     global var
     if not var:
         var = p.tempvar('string')
-        var.name += '_process'
+        var.name += '_file'
         p.emit(CODE.format(var.name), 'decl')
 
-    p.scope.decl_var('process', 'variable').name = var.name
+    p.scope.decl_var('file', 'variable').name = var.name
