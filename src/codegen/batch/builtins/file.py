@@ -16,7 +16,7 @@ if exist "%~2" (
 ) else (
     set r=0
 )
-endlocal & (set %1=%r%)
+endlocal & (set %~1=%r%)
 exit /b
 :{0}.delete_
 
@@ -25,9 +25,23 @@ goto {0}.exists_
 :{0}.exists
 setlocal
 if exist "%~2" (set r=1) else (set r=0)
-endlocal & (set /a %~1=%r%)
+endlocal & (set %~1=%r%)
 exit /b
 :{0}.exists_
+
+set {0}.read={0}.read
+goto {0}.read_
+:{0}.read
+setlocal
+set lf=^
+
+
+set "r="
+for /f "delims=" %%s in (%~2) do (set "r=!r!%%s!lf!")
+
+endlocal & (set %1=%r%)
+exit /b
+:{0}.read_
 ''')
 
 #-------------------------------------------------
