@@ -172,6 +172,7 @@ fruit.eat('crunchy')
 console.log('hello', 'world') // Print 'hello world' to the console.
 ```
 
+### file
 ```javascript
 /**
  * file.delete(s) - Deletes the specified file if it exists. Returns true if the file existed.
