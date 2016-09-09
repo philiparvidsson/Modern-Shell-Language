@@ -27,7 +27,7 @@ def compile_(tree):
         # FIXME: Generate error here.
         smaragd.fatal('unsupported target'.format(target))
 
-    smaragd.trace('generating code...')
+    #smaragd.trace('generating code...')
 
     codegen.generate_code()
     code = codegen.code()
@@ -90,7 +90,7 @@ def main():
     lexer  = Lexer(source)
     parser = Parser(lexer)
 
-    smaragd.trace('generating syntax tree...')
+    #smaragd.trace('generating syntax tree...')
     tree = parser.generate_ast()
 
     if smaragd.conf.num_errors > 0:

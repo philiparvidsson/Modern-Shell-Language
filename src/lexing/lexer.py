@@ -88,15 +88,15 @@ class Lexer(object):
             # Consume the character that made the token creation possible.
             self.read_char()
 
+        if len(lexeme) == 0:
+            # We've reached the end of the source.
+            token = Token(EOF)
+
         if token:
             token.row = row
             token.column = column
-            #print token
+            print token
             return token
-
-        if len(lexeme) == 0:
-            # We've reached the end of the source.
-            return Token(EOF)
 
         smaragd.error('sequence not understood: {}'.format(lexeme))
 

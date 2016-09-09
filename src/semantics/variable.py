@@ -13,3 +13,6 @@ class Variable(object):
     def __init__(self, name, type_):
         self.name = name
         self.type_ = type_
+
+        self.reads  = 0
+        self.writes = 0

@@ -15,7 +15,7 @@ PASS_3 = 3
 PASS_4 = 4
 
 #-------------------------------------------------
-# CLASSES
+# DECORATORS
 #-------------------------------------------------
 
 def analyzes(c, p):
@@ -26,6 +26,10 @@ def analyzes(c, p):
         return func
 
     return decorator
+
+#-------------------------------------------------
+# CLASSES
+#-------------------------------------------------
 
 class SemanticAnalyzer(object):
     def __init__(self):
@@ -47,15 +51,26 @@ class SemanticAnalyzer(object):
         self.scope = Scope()
 
         # Built-ins
-        self.scope.decl_var('console', 'string')
-        self.scope.decl_var('file', 'string')
-        self.scope.decl_var('process', 'string')
-        self.scope.decl_var('readline', 'string')
+        self.scope.decl_var('console'  , 'string')
+        self.scope.decl_var('file'     , 'string')
+        self.scope.decl_var('process'  , 'string')
+        self.scope.decl_var('readline' , 'string')
 
     def verify(self, ast):
+        self.enter_scope()
+
         for p in range(1, 5):
             self.cur_pass = p
             self.verify_single(ast)
+
+        self.leave_scope()
+
+    def verify_children(self, node):
+        if not node.children:
+            return
+
+        for child in node.children:
+            self.verify_single(child)
 
     def verify_single(self, node):
         p = self.cur_pass
@@ -67,28 +82,39 @@ class SemanticAnalyzer(object):
                 funcs[node.construct](node)
                 r = True
 
-        if not r and node.children:
-            for child in node.children:
-                self.verify_single(child)
+        if not r:
+            self.verify_children(node)
 
     def enter_scope(self):
         self.scope = Scope(parent_scope=self.scope)
 
     def leave_scope(self):
+        for s in self.scope.variables:
+            var = self.scope.var(s)
+
+            # One read means the variable is never used (only assigned once).
+            if var.reads == 1:
+                smaragd.warning('variable not used: {}'.format(var.name))
+
         self.scope = self.scope.parent_scope
 
     @analyzes(ASSIGN, PASS_1)
     def __assign(self, node):
         if node.children[0].construct == IDENTIFIER:
-            # FIXME: Keep type data?
-            self.scope.decl_var(node.children[0].data, 'string')
+            var_name = node.children[0].data
+            var = self.scope.var(var_name)
+            if not var:
+                # FIXME: Keep type data?
+                self.scope.decl_var(var_name, 'string')
+            var = self.scope.var(var_name)
+            var.writes += 1
 
-        for child in node.children:
-            self.verify_single(child)
+        self.verify_children(node)
 
     @analyzes(FUNC, PASS_1)
     def __func(self, node):
-        self.scope.decl_var(node.data, 'string')
+        if node.data:
+            self.scope.decl_var(node.data, 'string')
 
         self.enter_scope()
 
@@ -99,15 +125,17 @@ class SemanticAnalyzer(object):
             assert child.construct == IDENTIFIER
             self.scope.decl_var(child.data, 'string')
 
-        for child in defi.children:
-            self.verify_single(child)
+        self.verify_children(node)
 
         self.leave_scope()
 
     @analyzes(IDENTIFIER, PASS_1)
     def __identifier(self, node):
-        if not self.scope.is_decl(node.data):
+        var = self.scope.var(node.data)
+        if not var:
             smaragd.error('identifier not declared: {}'.format(node.data), node.token)
+        else:
+            var.reads += 1
 
     @analyzes(ADD, PASS_2)
     def __add(self, node):
@@ -136,8 +164,7 @@ class SemanticAnalyzer(object):
             elif int(a.data) > int(b.data):
                 smaragd.warning('division will result in zero', node.token)
 
-        for child in node.children:
-            self.verify_single(child)
+        self.verify_children(node)
 
     @analyzes(MULTIPLY, PASS_2)
     def __multiply(self, node):
@@ -147,8 +174,7 @@ class SemanticAnalyzer(object):
         if (a.construct == STRING or b.construct == STRING):
             smaragd.error('multiplication only allowed with integers', node.token)
 
-        for child in node.children:
-            self.verify_single(child)
+        self.verify_children(node)
 
     @analyzes(SUBTRACT, PASS_2)
     def __subtract(self, node):
@@ -158,5 +184,4 @@ class SemanticAnalyzer(object):
         if (a.construct == STRING or b.construct == STRING):
             smaragd.error('subtraction only allowed with integers', node.token)
 
-        for child in node.children:
-            self.verify_single(child)
+        self.verify_children(node)
