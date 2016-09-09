@@ -129,6 +129,19 @@ class SemanticAnalyzer(object):
 
         self.leave_scope()
 
+    @analyzes(FUNC_CALL, PASS_1)
+    def __func_call(self, node):
+        # First child is the function identifier.
+        func_name = node.children[0].data
+        var = self.scope.var(func_name)
+        if var:
+            # Should really be +1 here but this is a hack.  We don't really care
+            # about the number of reads anyway, we just want to keep track of
+            # which vars are actually used.
+            var.reads += 2
+
+        self.verify_children(node)
+
     @analyzes(IDENTIFIER, PASS_1)
     def __identifier(self, node):
         var = self.scope.var(node.data)

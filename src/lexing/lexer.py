@@ -95,7 +95,7 @@ class Lexer(object):
         if token:
             token.row = row
             token.column = column
-            print token
+            #print token
             return token
 
         smaragd.error('sequence not understood: {}'.format(lexeme))

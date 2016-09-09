@@ -1,4 +1,4 @@
-/*function show_fruit_info(f) {
+function show_fruit_info(f) {
     console.log('the', f.name, 'is', f.taste)
 }
 
@@ -11,5 +11,3 @@ show_fruit_info(fruit)
 // Objects can have functions!
 fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
 fruit.eat('crunchy')
-*/
-a=f
