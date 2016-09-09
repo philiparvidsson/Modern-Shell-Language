@@ -55,13 +55,13 @@ class Lexer(object):
             self.read_char()
             char = self.peek_char()
 
-        if newline:
-            #print Token(NEWLINE, '\n')
-            return Token(NEWLINE, '\n')
-
         lexeme = ''
         row    = self.row
         column = self.column
+
+        if newline:
+            #print Token(NEWLINE, '\n')
+            return Token(NEWLINE, '\n', row=row, column=column)
 
         num_attempts = 0
         token = None

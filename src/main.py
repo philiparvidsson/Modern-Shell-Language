@@ -13,17 +13,19 @@ from lexing.lexer           import Lexer
 from lexing.source          import StringSource
 from optim.astoptim         import ASTOptimizer
 from parsing.parser         import Parser
+from semantics.analyzer     import SemanticAnalyzer
 
 #-------------------------------------------------
 # FUNCTIONS
 #-------------------------------------------------
 
 def compile_(tree):
-    if smaragd.conf.option('--target') == 'bat':
+    target = smaragd.conf.option('--target')
+    if target == 'bat':
         codegen = Batch(tree)
     else:
         # FIXME: Generate error here.
-        pass
+        smaragd.fatal('unsupported target'.format(target))
 
     smaragd.trace('generating code...')
 
@@ -101,6 +103,9 @@ def main():
     if smaragd.conf.flag('--show-ast'):
         show_ast(tree)
     else:
+        # Semantic analysis is really only relevant for code generation.
+        analyzer = SemanticAnalyzer()
+        analyzer.verify(tree)
         compile_(tree)
 
     smaragd.trace()

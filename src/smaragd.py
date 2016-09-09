@@ -61,9 +61,9 @@ class Config(object):
 
 def error(s, t=None):
     if t:
-        trace(conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('error in ' + conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace(conf.srcfile + ':', s)
+        trace('error in ' + conf.srcfile + ':', s)
 
     conf.num_errors += 1
     if conf.num_errors > int(conf.option('--max-errors')):
@@ -73,9 +73,9 @@ def fatal(s, t=None):
     trace()
     trace('!!fatal error!!')
     if t:
-        trace(conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('fatal error in ' + conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace(conf.srcfile + ':', s)
+        trace('fatal error in ' + conf.srcfile + ':', s)
 
     sys.exit()
 
@@ -88,9 +88,9 @@ def warning(s, t=None):
         return
 
     if t:
-        trace(conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('warning in ' + conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace(conf.srcfile + ':', s)
+        trace('warning in ' + conf.srcfile + ':', s)
 
 def trace(*args):
     if not args:
