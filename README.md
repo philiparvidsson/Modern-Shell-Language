@@ -215,6 +215,14 @@ console.log(MY_STRING)
 ### process
 ```javascript
 /**
+ * process.argv - Array containing the arguments passed to the program.
+ *
+ * Examples:
+ */
+for (i=0; i < process.argv.length; i++)
+    console.log(process.argv[i])
+    
+/**
  * process.exit(code) - Exits the process.
  *
  * Examples:
