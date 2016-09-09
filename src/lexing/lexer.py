@@ -60,7 +60,6 @@ class Lexer(object):
         column = self.column
 
         if newline:
-            #print Token(NEWLINE, '\n')
             return Token(NEWLINE, '\n', row=row, column=column)
 
         num_attempts = 0
