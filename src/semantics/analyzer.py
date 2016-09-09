@@ -2,6 +2,9 @@
 # IMPORTS
 #-------------------------------------------------
 
+from lexing.lexer    import Lexer
+from lexing.source   import StringSource
+from parsing.parser  import Parser
 from parsing.syntax  import *
 from semantics.scope import Scope
 
@@ -56,6 +59,22 @@ class SemanticAnalyzer(object):
         self.scope.decl_var('file'     , 'string')
         self.scope.decl_var('process'  , 'string')
         self.scope.decl_var('readline' , 'string')
+
+    def include(self, file_name):
+        s = smaragd.conf.srcfile
+        smaragd.conf.srcfile = file_name
+        with open(smaragd.conf.srcfile, 'r') as f:
+            source = StringSource(f.read())
+
+        lexer  = Lexer(source)
+        parser = Parser(lexer)
+
+        #smaragd.trace('generating syntax tree...')
+        tree = parser.generate_ast()
+
+        self.verify(tree)
+
+        smaragd.conf.srcfile = s
 
     def verify(self, ast):
         self.enter_scope()
@@ -152,6 +171,17 @@ class SemanticAnalyzer(object):
             # about the number of reads anyway, we just want to keep track of
             # which vars are actually used.
             var.reads += 2
+
+        if func_name == 'include':
+            # Function name and a string is required.
+            assert len(node.children) == 2
+            assert node.children[1].construct == STRING
+
+            file_name = node.children[1].data
+
+            self.include(file_name)
+
+            return
 
         self.verify_children(node)
 

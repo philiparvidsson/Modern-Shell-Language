@@ -1,7 +1,5 @@
-MY_DATA = 'this data is defined in foo.js'
+MY_DATA = 'this data is defined in data.js'
 
-function some_func(s) {
-    console.log('this function is from foo.js')
-    console.log('s is', s)
-    return 'foo.js says hello'
+function data_func(s) {
+    return 'data.js says hello ' + s
 }

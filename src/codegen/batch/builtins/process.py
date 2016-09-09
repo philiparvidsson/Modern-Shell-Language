@@ -20,7 +20,6 @@ if not "%~1"=="" (
 
 CODE = (
 '''
-
 set {0}.exit={0}.exit
 goto {0}.exit_
 :{0}.exit

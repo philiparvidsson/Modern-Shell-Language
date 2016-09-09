@@ -93,7 +93,7 @@ def main():
     #smaragd.trace('generating syntax tree...')
     tree = parser.generate_ast()
 
-    if smaragd.conf.num_errors > 0:
+    if smaragd.num_errors > 0:
         smaragd.fatal('there were errors')
 
     if not smaragd.conf.flag('--no-optim'):
@@ -107,7 +107,7 @@ def main():
         analyzer = SemanticAnalyzer()
         analyzer.verify(tree)
 
-        if smaragd.conf.num_errors > 0:
+        if smaragd.num_errors > 0:
             smaragd.fatal('there were errors')
 
         compile_(tree)

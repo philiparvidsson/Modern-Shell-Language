@@ -9,6 +9,7 @@ import sys
 #-------------------------------------------------
 
 conf = None
+num_errors = 0
 
 #-------------------------------------------------
 # CONSTANTS
@@ -27,8 +28,6 @@ VERSION = '0.1'
 
 class Config(object):
     def __init__(self, opts):
-        self.num_errors = 0
-
         self.options = {
             '--max-errors': '10',
             # FIXME: Pick default target depending on platform.
@@ -65,8 +64,9 @@ def error(s, t=None):
     else:
         trace('error in ' + conf.srcfile + ':', s)
 
-    conf.num_errors += 1
-    if conf.num_errors > int(conf.option('--max-errors')):
+    global num_errors
+    num_errors += 1
+    if num_errors > int(conf.option('--max-errors')):
         fatal('too many errors, aborting...')
 
 def fatal(s, t=None):
