@@ -31,7 +31,7 @@ class Config(object):
 
         self.options = {
             '--max-errors': '10',
-            # FIXME: Pick default target depending on platform. When we have bash, heh.
+            # FIXME: Pick default target depending on platform.
             '--target': 'bat'
         }
 

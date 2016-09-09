@@ -11,8 +11,8 @@ setlocal
 set r=%1
 set s=
 :{0}_next
-if "%2" equ "" (goto {0}_done)
-set "s=%s%%2 "
+if "%~2" equ "" (goto {0}_done)
+set "s=%s%%~2 "
 shift
 goto {0}_next
 :{0}_done

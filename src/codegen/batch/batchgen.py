@@ -337,7 +337,7 @@ class Batch(CodeGenerator):
         self.enter_scope()
         self.scope.decl_var('this', STR)
         self.emit('set {}={}'.format(func_name, func_name), 'decl')
-        self.emit('goto :__after_{}'.format(func_name)),
+        self.emit('goto {}_'.format(func_name)),
         self.emit(':{}'.format(func_name))
         self.emit('setlocal')
 
@@ -359,7 +359,7 @@ class Batch(CodeGenerator):
             self.emit('exit /b')
         self.leave_scope()
         self.push(func_name, STR)
-        self.emit(':__after_{}'.format(func_name))
+        self.emit(':{}_'.format(func_name))
 
     @code_emitter(syntax.FUNC_CALL)
     def __func_call(self, node):
@@ -526,27 +526,27 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.LOGIC_AND)
     def __logic_and(self, node):
-        cond = node.children[0]
-        then_expr = node.children[1]
+        a = node.children[0]
+        b = node.children[1]
 
-        self._gen_code(cond)
+        self._gen_code(a)
         self.emit('if {} neq 0 ('.format(self.pop().value))
-        self._gen_code(then_expr)
+        self._gen_code(b)
         self.emit(')')
 
     @code_emitter(syntax.LOGIC_OR)
     def __logic_or(self, node):
-        cond = node.children[0]
-        then_expr = node.children[1]
+        a = node.children[0]
+        b = node.children[1]
 
         temp = self.tempvar(INT)
 
-        self._gen_code(cond)
+        self._gen_code(a)
         self.emit('set /a {}=0'.format(temp.name))
         self.emit('if {} neq 0 ('.format(self.pop().value))
         self.emit('set /a {}=1'.format(temp.name))
         self.emit(') else (')
-        self._gen_code(then_expr)
+        self._gen_code(b)
         self.emit('if {} neq 0 ('.format(self.pop().value))
         self.emit('set /a {}=1'.format(temp.name))
         self.emit(')')
@@ -595,30 +595,24 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.PROGRAM)
     def __program(self, node):
         self.emit('@echo off', 'init')
-        self.emit('setlocal enabledelayedexpansion', 'init')
+        self.emit('setlocal EnableDelayedExpansion', 'init')
 
         for child in node.children:
             self._gen_code(child)
 
     @code_emitter(syntax.RETURN)
     def __return(self, node):
-        expr = node.children[0]
-        self._gen_code(expr)
+        self._gen_code(node.children[0])
 
         a = self.pop_deref()
 
         self.emit('endlocal & (')
-        if a.type_ == INT:
-            s = 'set /a %1={}'
-        else:
-            s = 'set %1={}'
-
-        # FIXME: Clean this function up.
 
         if hasattr(a, 'var'):
-            self.emit(s.format('%{}%'.format(a.var.name)))
-        else:
-            self.emit(s.format(a.value))
+            a.value = '%{}%'.format(a.var.name)
+
+        s = 'set /a %1={}' if a.type_ == INT else 'set %1={}'
+        self.emit(s.format(a.value))
 
         self.emit(')')
         self.emit('exit /b')
@@ -658,6 +652,7 @@ class Batch(CodeGenerator):
         for c in node.data:
             if c == '!':
                 # Exclamation mark requires double-escape.
+                # TODO: Or does it!?
                 c = '^^!'
             elif c not in allowed_chars:
                 c = '^' + c
@@ -690,7 +685,3 @@ class Batch(CodeGenerator):
 
         self.emit('goto :{}'.format(label))
         self.emit(')')
-
-#--------------------------------------------------
-# FUNCTIONS
-#--------------------------------------------------
