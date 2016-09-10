@@ -260,7 +260,7 @@ class Batch(CodeGenerator):
         a = self.pop_deref()
 
         temp = self.tempvar(INT)
-        s = 'set /a "{}={}^{}"'
+        s = 'set /a "{}={}^^{}"'
         self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 

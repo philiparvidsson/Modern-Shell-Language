@@ -38,7 +38,9 @@ if __name__ == '__main__':
         print 'running test:', f2
         subprocess.call(args)
         r = subprocess.call(f + '.bat')
-        os.remove(f + '.bat')
         if r != 0:
             print
             print 'a test failed. please fix the issue and run the tests again'
+            break
+
+        os.remove(f + '.bat')
