@@ -37,6 +37,7 @@ class Batch(CodeGenerator):
         self.scope = Scope()
 
         self.segments = collections.OrderedDict((
+            ('pre' , ''),
             ('init', ''),
             ('decl', ''),
             ('code', '')
@@ -56,7 +57,9 @@ class Batch(CodeGenerator):
         for varname, var in b.scope.variables.iteritems():
             self.scope.decl_var(varname, var.type_)
 
-        self.emit(b.code())
+        self.emit(b.segments['init'], 'init')
+        self.emit(b.segments['decl'], 'decl')
+        self.emit(b.segments['code'], 'code')
 
         # Don't kill the stack.
         self.push('include', STR)
@@ -594,8 +597,8 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.PROGRAM)
     def __program(self, node):
-        self.emit('@echo off', 'init')
-        self.emit('setlocal EnableDelayedExpansion', 'init')
+        self.emit('@echo off', 'pre')
+        self.emit('setlocal EnableDelayedExpansion', 'pre')
 
         for child in node.children:
             self._gen_code(child)
@@ -646,19 +649,19 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.STRING)
     def __string(self, node):
         # FIXME: Come up with something more clever here. This code below is ugly af.
-        #allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
-        #s = ''
+        allowed_chars = '\'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '
+        s = ''
 
-        #for c in node.data:
-        #    if c == '!':
-        #        # Exclamation mark requires double-escape.
-        #        # TODO: Or does it!?
-        #        c = '^^!'
-        #    elif c not in allowed_chars:
-        #        c = '^' + c
-        #    s += c
+        for c in node.data:
+            if c == '!':
+                # Exclamation mark requires double-escape.
+                # TODO: Or does it!?
+                c = '^^!'
+            elif c not in allowed_chars:
+                c = '^' + c
+            s += c
 
-        self.push('{}'.format(node.data), STR)
+        self.push('{}'.format(s), STR)
 
     @code_emitter(syntax.SUBTRACT)
     def __subtract(self, node):

@@ -23,6 +23,9 @@ if __name__ == '__main__':
     print 'compiling and running tests...'
     print
 
+    passing = []
+    failing = []
+
     d = os.getcwd()
     for f in os.listdir(d):
         if not f.endswith('.js'):
@@ -39,8 +42,22 @@ if __name__ == '__main__':
         subprocess.call(args)
         r = subprocess.call(f + '.bat')
         if r != 0:
-            print
-            print 'a test failed. please fix the issue and run the tests again'
-            break
+            failing.append(f2)
+        else:
+            passing.append(f2)
+            os.remove(f + '.bat')
 
-        os.remove(f + '.bat')
+    print
+    print 'ran {} tests'.format(len(passing)+len(failing))
+    print
+    print 'results:'
+    print
+
+    if passing:
+        print 'passing tests ({}):'.format(len(passing))
+        print ' '.join(passing)
+        print
+
+    if failing:
+        print 'failing tests ({})'.format(len(failing))
+        print ' '.join(failing)
