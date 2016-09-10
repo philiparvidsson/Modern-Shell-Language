@@ -3,6 +3,8 @@ test   = []
 
 assert.areEqual = function (a, b, s) {
     if (a != b) {
+        console.log()
+        console.log('----------')
         console.log('assertion failed:', s)
         console.log('expected value:', b)
         console.log('actual value:', a)
@@ -14,7 +16,7 @@ assert.areEqual = function (a, b, s) {
 
 test.fail = function () {
     console.log(test.name, 'failed')
-    process.exit()
+    process.exit(1)
 }
 
 assert.isFalse = function (a, s) {

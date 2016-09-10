@@ -58,11 +58,18 @@ class Config(object):
 # FUNCTIONS
 #-------------------------------------------------
 
+def trace(*args):
+    if not args:
+        print
+    else:
+        print ' '.join(args)
+
+
 def error(s, t=None):
     if t:
-        trace('error in ' + conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('error in ' + '<file>' + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace('error in ' + conf.srcfile + ':', s)
+        trace('error in ' + '<file>' + ':', s)
 
     global num_errors
     num_errors += 1
@@ -71,9 +78,9 @@ def error(s, t=None):
 
 def fatal(s, t=None):
     if t:
-        trace('fatal error in ' + conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('fatal error in ' + '<file>' + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace('fatal error in ' + conf.srcfile + ':', s)
+        trace('fatal error in ' + '<file>' + ':', s)
 
     sys.exit()
 
@@ -86,12 +93,6 @@ def warning(s, t=None):
         return
 
     if t:
-        trace('warning in ' + conf.srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('warning in ' + '<file>' + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace('warning in ' + conf.srcfile + ':', s)
-
-def trace(*args):
-    if not args:
-        print
-    else:
-        print ' '.join(args)
+        trace('warning in ' + '<file>' + ':', s)

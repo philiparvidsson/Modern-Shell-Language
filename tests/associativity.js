@@ -1,9 +1,9 @@
-include('tests/test.js')
+include('inc/testing.js')
 
-test.name = "associativity"
+test.name = "associativity test"
 
 a = 2*3 + 4
 b = 4 + 3*2
 
-assert.equal(a, 10, 'multiplication gave incorrect result')
-assert.equal(b, 10, 'multiplication gave incorrect result')
+assert.areEqual(a, 10, 'multiplication gave incorrect result')
+assert.areEqual(b, 10, 'multiplication gave incorrect result')

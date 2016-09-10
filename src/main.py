@@ -19,7 +19,31 @@ from semantics.analyzer     import SemanticAnalyzer
 # FUNCTIONS
 #-------------------------------------------------
 
-def compile_(tree):
+def parse_file(s):
+    with open(s, 'r') as f:
+        source = StringSource(f.read())
+
+    lexer  = Lexer(source)
+    parser = Parser(lexer)
+
+    if smaragd.num_errors > 0:
+        smaragd.fatal('there were errors')
+
+    tree = parser.generate_ast()
+
+    if not smaragd.conf.flag('--no-optim'):
+        optim = ASTOptimizer()
+        optim.optimize_ast(tree)
+
+    analyzer = SemanticAnalyzer()
+    analyzer.verify(tree)
+
+    if smaragd.num_errors > 0:
+        smaragd.fatal('there were errors')
+
+    return tree
+
+def compile_(tree, destfile):
     target = smaragd.conf.option('--target')
     if target == 'bat':
         codegen = Batch(tree)
@@ -32,7 +56,7 @@ def compile_(tree):
     codegen.generate_code()
     code = codegen.code()
 
-    with open(smaragd.conf.destfile, 'w') as f:
+    with open(destfile, 'w') as f:
         f.write(code)
 
 def print_logo():
@@ -53,6 +77,7 @@ Options:
   --no-optim        - don't optimize
   --no-warn         - suppress warnings
   --show-ast        - shows the syntax tree
+  --target=<s>      - compiles to the specified target ('bat')
   --warn-err        - treat warnings as errors
 '''
 )
@@ -72,48 +97,22 @@ def main():
         print_usage()
         sys.exit()
 
-    smaragd.conf.srcfile  = sys.argv[-1]
-    smaragd.conf.destfile = smaragd.conf.srcfile + '.bat'
+    srcfile  = sys.argv[-1]
+    destfile = srcfile + '.bat'
 
-    if not os.path.isfile(smaragd.conf.srcfile):
-        smaragd.fatal('no such file exists')
-
-    #smaragd.trace('source:', smaragd.conf.srcfile)
-    #smaragd.trace('output:', smaragd.conf.destfile)
-    #smaragd.trace()
+    if not os.path.isfile(srcfile):
+        smaragd.fatal('no such file')
 
     #os.chdir(os.path.dirname(os.path.abspath(smaragd.conf.srcfile)))
 
-    with open(smaragd.conf.srcfile, 'r') as f:
-        source = StringSource(f.read())
-
-    lexer  = Lexer(source)
-    parser = Parser(lexer)
-
     #smaragd.trace('generating syntax tree...')
-    tree = parser.generate_ast()
-
-    if smaragd.num_errors > 0:
-        smaragd.fatal('there were errors')
-
-    if not smaragd.conf.flag('--no-optim'):
-        optim = ASTOptimizer()
-        optim.optimize_ast(tree)
+    tree = parse_file(srcfile)
 
     if smaragd.conf.flag('--show-ast'):
         show_ast(tree)
     else:
         # Semantic analysis is really only relevant for code generation.
-        analyzer = SemanticAnalyzer()
-        analyzer.verify(tree)
-
-        if smaragd.num_errors > 0:
-            smaragd.fatal('there were errors')
-
-        compile_(tree)
-
-    smaragd.trace()
-    smaragd.trace('done.')
+        compile_(tree, destfile)
 
 #-------------------------------------------------
 # SCRIPT

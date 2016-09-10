@@ -61,9 +61,9 @@ class SemanticAnalyzer(object):
         self.scope.decl_var('readline' , 'string')
 
     def include(self, file_name):
-        s = smaragd.conf.srcfile
-        smaragd.conf.srcfile = file_name
-        with open(smaragd.conf.srcfile, 'r') as f:
+        # FIXME: This crap needs to be cleaned up and moved into some other
+        # function in another file.
+        with open(file_name, 'r') as f:
             source = StringSource(f.read())
 
         lexer  = Lexer(source)
@@ -73,8 +73,6 @@ class SemanticAnalyzer(object):
         tree = parser.generate_ast()
 
         self.verify(tree)
-
-        smaragd.conf.srcfile = s
 
     def verify(self, ast):
         self.enter_scope()

@@ -4,6 +4,8 @@
 
 import re
 
+import smaragd
+
 from .lexemes import EOF, LEXEME_MAP, NEWLINE
 from .token   import Token
 
