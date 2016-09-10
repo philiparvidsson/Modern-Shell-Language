@@ -1,5 +1,7 @@
 include('inc/testing.js')
 
+test.name = 'string operations test'
+
 a = 'string1'
 b = 'string2'
 c = a+b

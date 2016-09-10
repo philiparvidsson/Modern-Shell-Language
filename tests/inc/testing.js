@@ -27,4 +27,4 @@ assert.isTrue = function (a, s) {
     assert.areEqual(a, true, s)
 }
 
-test.name = '<missing name>'
+test.name = 'missing name'
