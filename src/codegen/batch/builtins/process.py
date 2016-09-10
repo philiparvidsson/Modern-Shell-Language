@@ -10,7 +10,7 @@ set {0}.argv={0}.argv
 set {0}.argv.length=0
 
 :{0}_argv
-if not "%~1"=="" (
+if "%~1" neq "" (
     set "{0}.argv.!{0}.argv.length!=%~1"
     set /a {0}.argv.length+=1
     shift

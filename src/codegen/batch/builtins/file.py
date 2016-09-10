@@ -38,7 +38,6 @@ set lf=^
 
 set "r="
 for /f "delims=" %%s in (%~2) do (set "r=!r!%%s!lf!")
-
 endlocal & (set %1=%r%)
 exit /b
 :{0}.read_

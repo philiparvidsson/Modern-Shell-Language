@@ -52,7 +52,11 @@ class Batch(CodeGenerator):
         p = Parser(Lexer(StringSource(s)))
         ast = p.generate_ast()
         b = Batch(ast)
+        b.tempvar_counter = self.tempvar_counter
+        b.label_counter = self.label_counter
         b.generate_code()
+        self.tempvar_counter = b.tempvar_counter
+        self.label_counter = b.label_counter
 
         for varname, var in b.scope.variables.iteritems():
             self.scope.decl_var(varname, var.type_)
@@ -300,7 +304,7 @@ class Batch(CodeGenerator):
         a = self.pop_deref().value
 
         temp = self.tempvar(INT)
-        s = 'if {} equ {} (set /a {}=1) else (set /a {}=0)'
+        s = 'if "{}" equ "{}" (set /a {}=1) else (set /a {}=0)'
         self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
@@ -591,7 +595,7 @@ class Batch(CodeGenerator):
         a = self.pop_deref().value
 
         temp = self.tempvar(INT)
-        s = 'if {} neq {} (set /a {}=1) else (set /a {}=0)'
+        s = 'if "{}" neq "{}" (set /a {}=1) else (set /a {}=0)'
         self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
