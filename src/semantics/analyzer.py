@@ -151,6 +151,11 @@ class SemanticAnalyzer(object):
         decl = node.children[0]
         defi = node.children[1]
 
+        if len(decl.children) > 9:
+            # This is actually a limitation in Batch files, but since we want
+            # portability we have to stick to the lowest common denominator.
+            smaragd.error('functions cannot have more than 9 parameters')
+
         for child in decl.children:
             assert child.construct == IDENTIFIER
             self.scope.decl_var(child.data, 'string')
@@ -163,12 +168,16 @@ class SemanticAnalyzer(object):
     def __func_call(self, node):
         # First child is the function identifier.
         func_name = node.children[0].data
+
         var = self.scope.var(func_name)
         if var:
             # Should really be +1 here but this is a hack.  We don't really care
             # about the number of reads anyway, we just want to keep track of
             # which vars are actually used.
             var.reads += 2
+
+        if len(node.children) > 10:
+            smaragd.error('functions cannot take more than 9 arguments')
 
         if func_name == 'include':
             # Function name and a string is required.
