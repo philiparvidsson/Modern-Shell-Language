@@ -20,11 +20,13 @@ test.fail = function () {
 }
 
 assert.isFalse = function (a, s) {
-    assert.areEqual(a, false, s)
+    b = a ? true : false
+    assert.areEqual(b, false, s)
 }
 
 assert.isTrue = function (a, s) {
-    assert.areEqual(a, true, s)
+    b = a ? true : false
+    assert.areEqual(b, true, s)
 }
 
 test.name = 'missing name'

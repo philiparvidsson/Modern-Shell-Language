@@ -20,3 +20,12 @@ assert.areEqual(b++  , 27 , 'post-increment gave incorrect result')
 
 c=a
 assert.areEqual(c--  , 27 , 'post-decrement gave incorrect result')
+
+d = 11
+e = 13
+assert.isTrue (d <  e, 'd should be less than e')
+assert.isTrue (d <= e, 'd should be less than or equal to e')
+assert.isTrue (d != e, 'd should be unequal to e')
+assert.isFalse(d >  e, 'd should not be greater than e')
+assert.isFalse(d >= e, 'd should not be greater than or equal to e')
+assert.isFalse(d == e, 'd should not be equal to e')
