@@ -411,9 +411,9 @@ def parse_expr4(parser):
 
         if parser.peek_token().category == lexemes.SEMICOLON:
             tok = parser.read_token()
-            expr = Node(RETURN, token=tok, children=[Node(INTEGER, 0)])
+            expr = Node(RETURN, children=[Node(INTEGER, 0, tok)])
         else:
-            expr = Node(RETURN, token=tok, children=[parse_expr(parser)])
+            expr = Node(RETURN, children=[parse_expr(parser)])
 
     # true
     elif tok.category == lexemes.TRUE:
@@ -429,7 +429,15 @@ def parse_expr4(parser):
         parser.read_token()
         parser.eat_whitespace()
         expr = parse_expr(parser)
-        expr = Node(IF_TERNARY, children=[expr, Node(INTEGER, 0), Node(INTEGER, 1)])
+        expr = Node(IF_TERNARY, children=[expr, Node(INTEGER, 0, tok), Node(INTEGER, 1, tok)])
+
+    elif tok.category == lexemes.BREAK:
+        parse.read_token()
+        expr = Node(BREAK)
+
+    elif tok.category == lexemes.CONTINUE:
+        parse.read_token()
+        expr = Node(CONTINUE)
 
     # <eof> | <newline>
     #elif tok.category in (lexemes.EOF, lexemes.NEWLINE):

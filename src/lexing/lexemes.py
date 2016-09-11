@@ -117,6 +117,8 @@ LEXEME_MAP = {
     '\}'                       : R_BRACE,
 
     # Keywords.
+    'break'    : BREAK,
+    'continue' : CONTINUE,
     'else'     : ELSE,
     'false'    : FALSE,
     'for'      : FOR,
