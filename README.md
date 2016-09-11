@@ -251,3 +251,16 @@ process.exit() // Exit with code one
 s = readline('Enter name') // Asks the user to input his or her name.
 s = readline()             // Reads a line from the user without displaying a prompt.
 ```
+
+### raw()
+```javascript
+/**
+ * raw(s)   - Inserts the string s directly into the shell script.
+ * raw(s,t) - Optionally, t specifies the target platform: 'bat', 'bash'
+ *            If the platform does not match t, no changes are made.
+ *
+ * Examples:
+ */
+raw('echo This line will be inserted directly into any shell script')
+raw('echo This one will only be inserted into batch files', 'bat')
+```
