@@ -72,13 +72,13 @@ def print_usage():
 Usage: smaragd [options] <srcfile> [destfile]
 
 Options:
-  --analyze         - only performs semantic analysis
-  --max-errors=<n>  - sets the max number of errors before exiting
+  --analyze         - only perform semantic analysis
+  --max-errors=<n>  - set the max number of errors before exiting
   --no-logo         - don't display logo
   --no-optim        - don't optimize
   --no-warn         - suppress warnings
-  --show-ast        - shows the syntax tree
-  --target=<s>      - compiles to the specified target ('bat')
+  --show-ast        - show abstract syntax tree
+  --target=<s>      - compile to the specified target ('bat')
   --warn-err        - treat warnings as errors
 '''
 )
