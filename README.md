@@ -69,6 +69,8 @@ i = e<f  // false
 j = e<=f // true
 k = e>f  // false
 l = e>=f // true
+
+m = !true // not-operator
 ```
 
 ### Conditional Statements
