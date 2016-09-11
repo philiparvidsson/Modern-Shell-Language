@@ -52,13 +52,18 @@ class SemanticAnalyzer(object):
 
             self.analyzer_funcs[p][c] = func
 
+        self.cur_pass = 0
         self.scope = Scope()
 
         # Built-ins
-        self.scope.decl_var('console'  , 'string')
-        self.scope.decl_var('file'     , 'string')
-        self.scope.decl_var('process'  , 'string')
-        self.scope.decl_var('readline' , 'string')
+        self.scope.decl_var('console' , 'string')
+        self.scope.decl_var('file'    , 'string')
+        self.scope.decl_var('process' , 'string')
+        self.scope.decl_var('raw'     , 'string')
+        self.scope.decl_var('readline', 'string')
+
+    def raw(self, code, target):
+        pass
 
     def include(self, file_name):
         # FIXME: This crap needs to be cleaned up and moved into some other
@@ -75,13 +80,13 @@ class SemanticAnalyzer(object):
         self.verify(tree)
 
     def verify(self, ast):
-        self.enter_scope()
+        cur_pass = self.cur_pass
 
         for p in range(1, 5):
             self.cur_pass = p
             self.verify_single(ast)
 
-        self.leave_scope()
+        self.cur_pass = cur_pass
 
     def verify_children(self, node):
         if not node.children:
@@ -176,19 +181,41 @@ class SemanticAnalyzer(object):
             # which vars are actually used.
             var.reads += 2
 
-        if len(node.children) > 10:
-            smaragd.error('functions cannot take more than 9 arguments')
-
         if func_name == 'include':
             # Function name and a string is required.
-            assert len(node.children) == 2
-            assert node.children[1].construct == STRING
+            if len(node.children) != 2:
+                smaragd.error('include() takes exactly one argument', node.token)
+                return
+
+            if node.children[1].construct != STRING:
+                smaragd.error('included file name must be a compile-time constant', node.token)
+                return
 
             file_name = node.children[1].data
 
             self.include(file_name)
 
             return
+        elif func_name == 'raw':
+            if len(node.children) < 2 or len(node.children) > 3:
+                smaragd.error('raw() takes one or two arguments', node.token)
+                return
+
+            if node.children[1].construct != STRING:
+                smaragd.error('raw command must be a compile-time constant', node.token)
+                return
+
+            target = None
+            if len(node.children) > 2:
+                if node.children[2].construct != STRING:
+                    smaragd.error('target must be a compile-time constant', node.token)
+                else:
+                    target = node.children[2].data
+            else:
+                smaragd.warning('using raw() without specifying target is non-portable')
+
+        if len(node.children) > 10:
+            smaragd.error('functions cannot take more than 9 arguments', node.token)
 
         self.verify_children(node)
 

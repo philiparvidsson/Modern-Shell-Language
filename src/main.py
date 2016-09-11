@@ -72,6 +72,7 @@ def print_usage():
 Usage: smaragd [options] <srcfile> [destfile]
 
 Options:
+  --analyze         - only performs semantic analysis
   --max-errors=<n>  - sets the max number of errors before exiting
   --no-logo         - don't display logo
   --no-optim        - don't optimize
@@ -110,7 +111,7 @@ def main():
 
     if smaragd.conf.flag('--show-ast'):
         show_ast(tree)
-    else:
+    elif not smaragd.conf.flag('--analyze'):
         # Semantic analysis is really only relevant for code generation.
         compile_(tree, destfile)
 

@@ -5,7 +5,7 @@ function a(x, y) {
     assert.areEqual(y, 'world', 'y should contain world')
 }
 
-function b(x, y) {
+function b(x) {
     assert.areEqual(x, 'hello world', 'x should contain hello world')
 }
 
