@@ -147,7 +147,7 @@ class SemanticAnalyzer(object):
     def leave_scope(self):
         self.scope = self.scope.parent_scope
 
-    @analyzes(ADD, PASS_2)
+    @analyzes(ADD, PASS_1)
     def __add(self, node):
         a = node.children[0]
         b = node.children[1]
