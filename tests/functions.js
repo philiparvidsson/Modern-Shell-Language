@@ -13,7 +13,6 @@ function c() {
     return 'hello world'
 }
 
-
 a('hello', 'world')
 b('hello world')
 

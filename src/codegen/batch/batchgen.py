@@ -4,6 +4,8 @@
 
 import collections
 
+import smaragd
+
 from ..codegenerator import code_emitter, CodeGenerator
 
 from parsing import syntax
@@ -42,6 +44,18 @@ class Batch(CodeGenerator):
             ('decl', ''),
             ('code', '')
         ))
+
+    def raw(self, code, target):
+        if target:
+            print smaragd.conf.option('--target'), target
+            if smaragd.conf.option('--target') != target:
+                # Maybe validate target?
+                return
+        else:
+            smaragd.warning('using raw() without specifying target is non-portable')
+
+
+        self.emit(code)
 
     def include(self, file_name):
         # TODO: Provide some general compilation function so we can reuse flags here
@@ -374,11 +388,32 @@ class Batch(CodeGenerator):
 
         # The include function needs special treatment!
         if node.children[0].construct == syntax.IDENTIFIER and node.children[0].data == 'include':
-            # TODO: Generate errors instead of asserting
-            assert len(node.children) == 2
-            # We don't support runtime compilation yet
-            assert node.children[1].construct == syntax.STRING
-            self.include(node.children[1].data)
+            if len(node.children) != 2:
+                smaragd.error('include() takes exactly one argument')
+            else:
+                # We don't support runtime compilation yet
+                if node.children[1].construct != syntax.STRING:
+                    smaragd.error('included file name must be a compile-time constant')
+                else:
+                    self.include(node.children[1].data)
+            return
+
+        # The raw function needs special treatment!
+        if node.children[0].construct == syntax.IDENTIFIER and node.children[0].data == 'raw':
+            if len(node.children) < 2 or len(node.children) > 3:
+                smaragd.error('raw() takes one or two arguments')
+            else:
+                target = None
+                if len(node.children) > 2:
+                    if node.children[2].construct != syntax.STRING:
+                        smaragd.error('target must be a compile-time constant')
+                    else:
+                        target = node.children[2].data
+
+                if node.children[1].construct != syntax.STRING:
+                    smaragd.error('raw command must be a compile-time constant')
+                else:
+                    self.raw(node.children[1].data, target)
             return
 
         self._gen_code(node.children[0])

@@ -40,12 +40,17 @@ if __name__ == '__main__':
 
         print 'running test:', f2
         subprocess.call(args)
-        r = subprocess.call(f + '.bat')
-        if r != 0:
-            failing.append(f2)
+
+        if os.path.isfile(f + '.bat'):
+            r = subprocess.call(f + '.bat')
+            if r != 0:
+                failing.append(f2)
+            else:
+                passing.append(f2)
+                os.remove(f + '.bat')
         else:
-            passing.append(f2)
-            os.remove(f + '.bat')
+            failing.append(f2)
+            print 'test {} failed to compile'.format(f2)
 
     print
     print 'ran {} tests'.format(len(passing)+len(failing))
