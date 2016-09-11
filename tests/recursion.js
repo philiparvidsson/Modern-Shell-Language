@@ -18,10 +18,6 @@ function fib(x)  {
     return 1*fib(x-1) + 1*fib(x-2)
 }
 
-function sum(x) {
-    return x ? 1*sum(x-1)+1*x : 0
-}
-
 assert.areEqual(fac(0), 1  , 'recursion failed 1')
 assert.areEqual(fac(1), 1  , 'recursion failed 2')
 assert.areEqual(fac(2), 2  , 'recursion failed 3')
@@ -35,10 +31,3 @@ assert.areEqual(fib(2), 1, 'recursion failed 9')
 assert.areEqual(fib(3), 2, 'recursion failed 10')
 assert.areEqual(fib(4), 3, 'recursion failed 11')
 assert.areEqual(fib(5), 5, 'recursion failed 12')
-
-assert.areEqual(sum(0), 0 , 'recursion failed 13')
-assert.areEqual(sum(1), 1 , 'recursion failed 14')
-assert.areEqual(sum(2), 3 , 'recursion failed 15')
-assert.areEqual(sum(3), 6 , 'recursion failed 16')
-assert.areEqual(sum(4), 10, 'recursion failed 17')
-assert.areEqual(sum(5), 15, 'recursion failed 18')
