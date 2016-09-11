@@ -414,6 +414,12 @@ def parse_expr4(parser):
         parser.read_token()
         expr = Node(INTEGER, 0)
 
+    elif tok.category == lexemes.NOT:
+        parser.read_token()
+        parser.eat_whitespace()
+        expr = parse_expr(parser)
+        expr = Node(IF_TERNARY, children=[expr, Node(INTEGER, 0), Node(INTEGER, 1)])
+
     # <eof> | <newline>
     #elif tok.category in (lexemes.EOF, lexemes.NEWLINE):
     #    pass

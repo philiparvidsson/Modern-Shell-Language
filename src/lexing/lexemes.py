@@ -33,6 +33,7 @@ MINUS_SIGN     = 'minus sign'
 MODULO         = 'modulo'
 MODULO_EQ      = 'modulo equals'
 NEWLINE        = 'newline'
+NOT            = 'not'
 NOT_EQ         = 'not equal'
 PERIOD         = 'period'
 PLUS_EQ        = 'plus equals'
@@ -77,6 +78,7 @@ LEXEME_MAP = {
     '/\*((?!\*/).|\\n)*(\*/)?' : COMMENT,
     '='                        : EQ_SIGN,
     '=='                       : EQ_SIGN_2,
+    '\!'                       : NOT,
     '\!='                      : NOT_EQ,
     '\%'                       : MODULO,
     '\%='                      : MODULO_EQ,
