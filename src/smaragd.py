@@ -20,7 +20,7 @@ AUTHORS = [
     'Mattias Eriksson <pls enter mail>'
 ]
 
-VERSION = '0.1'
+VERSION = '0.12'
 
 #-------------------------------------------------
 # CLASSES
