@@ -22,4 +22,5 @@ function main() {
 // The line below would result in an error since a is inside main()!
 //console.log(a)
 
+// This is where we invoke the main function.
 main()

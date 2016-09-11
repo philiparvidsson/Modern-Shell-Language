@@ -167,6 +167,7 @@ class SemanticAnalyzer(object):
             if not var:
                 # FIXME: Keep type data?
                 self.scope.decl_var(var_name, 'string')
+
             var = self.scope.var(var_name)
             var.writes += 1
 
@@ -176,8 +177,9 @@ class SemanticAnalyzer(object):
     def __func(self, node):
         scope_name = None
 
+        func = None
         if node.data:
-            self.scope.decl_var(node.data, 'func')
+            func = self.scope.decl_var(node.data, 'func')
             scope_name = 'function ' + node.data
 
         self.enter_scope(scope_name)
@@ -185,10 +187,13 @@ class SemanticAnalyzer(object):
         decl = node.children[0]
         defi = node.children[1]
 
-        if len(decl.children) > 9:
+        if len(decl.children) > 7:
             # This is actually a limitation in Batch files, but since we want
             # portability we have to stick to the lowest common denominator.
-            smaragd.error('functions cannot have more than 9 parameters')
+            smaragd.error('functions cannot have more than 7 parameters')
+
+        if func:
+            func.num_args = len(decl.children)
 
         for child in decl.children:
             assert child.construct == IDENTIFIER
@@ -205,9 +210,9 @@ class SemanticAnalyzer(object):
         # First child is the function identifier.
         func_name = node.children[0].data
 
-        var = node.scope.var(func_name)
-        if var:
-            var.reads += 1
+        func = node.scope.var(func_name)
+        if func:
+            func.reads += 1
 
         if func_name == 'include':
             # Function name and a string is required.
@@ -242,8 +247,8 @@ class SemanticAnalyzer(object):
             else:
                 smaragd.warning('using raw() without specifying target is non-portable')
 
-        if len(node.children) > 10:
-            smaragd.error('functions cannot take more than 9 arguments', node.token)
+        if hasattr(func, 'num_args') and len(node.children) != func.num_args+1:
+            smaragd.warning('function {} takes {} arguments'.format(func_name, func.num_args), node.token)
 
         self.verify_children(node)
 
