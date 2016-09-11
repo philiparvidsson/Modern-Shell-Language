@@ -46,7 +46,6 @@ for (p = 0; p < 10; p++) {
 
 assert.areEqual(o, 21, 'break did not seem to work correctly 3')
 
-
 r = 10
 s = 0
 while (r > 0) {
@@ -71,9 +70,9 @@ u = 0
 for (v = 0; v < 10; v++) {
     if (v == 3) continue
     for (w = 0; w < 10; w++) {
-        if (w == 7) continue
+        if (w == 7 || v == 4) continue
         u++
     }
 }
 
-assert.areEqual(u, 81, 'continue did not seem to work correctly 3')
+assert.areEqual(u, 72, 'continue did not seem to work correctly 3')

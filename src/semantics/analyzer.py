@@ -62,6 +62,11 @@ class SemanticAnalyzer(object):
         self.scope.decl_var('raw'     , 'string')
         self.scope.decl_var('readline', 'string')
 
+        # Prevent warnings for built-ins being unused
+        for s in self.scope.variables:
+            self.scope.var(s).reads  = 1000
+            self.scope.var(s).writes = 999
+
     def raw(self, code, target):
         pass
 
@@ -77,16 +82,40 @@ class SemanticAnalyzer(object):
         #smaragd.trace('generating syntax tree...')
         tree = parser.generate_ast()
 
-        self.verify(tree)
+        self.verify_internal(tree)
 
-    def verify(self, ast):
+    def verify_internal(self, node):
         cur_pass = self.cur_pass
 
         for p in range(1, 5):
             self.cur_pass = p
-            self.verify_single(ast)
+            self.verify_single(node)
 
         self.cur_pass = cur_pass
+
+    def verify(self, ast):
+        self.verify_internal(ast)
+        self.verify_scope(self.scope)
+
+    def verify_scope(self, scope):
+        for s in scope.variables:
+            var = scope.var(s)
+
+            # One read means the variable is never used (only assigned once).
+            if var.reads <= var.writes:
+                if var.type_ == 'func':
+                    if scope.name:
+                        smaragd.warning('function not used in {}: {}'.format(scope.name, var.name))
+                    else:
+                        smaragd.warning('function not used: {}'.format(var.name))
+                else:
+                    if scope.name:
+                        smaragd.warning('variable not used in {}: {}'.format(scope.name, var.name))
+                    else:
+                        smaragd.warning('variable not used: {}'.format(var.name))
+
+        for nested in scope.nested_scopes:
+            self.verify_scope(nested)
 
     def verify_children(self, node):
         if not node.children:
@@ -108,17 +137,14 @@ class SemanticAnalyzer(object):
         if not r:
             self.verify_children(node)
 
-    def enter_scope(self):
-        self.scope = Scope(parent_scope=self.scope)
+        # Store scope for next pass.
+        node.scope = self.scope
+
+    def enter_scope(self, name):
+        self.scope = self.scope.nested_scope()
+        self.scope.name = name
 
     def leave_scope(self):
-        for s in self.scope.variables:
-            var = self.scope.var(s)
-
-            # One read means the variable is never used (only assigned once).
-            if var.reads == 1:
-                smaragd.warning('variable not used: {}'.format(var.name))
-
         self.scope = self.scope.parent_scope
 
     @analyzes(ADD, PASS_2)
@@ -148,10 +174,13 @@ class SemanticAnalyzer(object):
 
     @analyzes(FUNC, PASS_1)
     def __func(self, node):
-        if node.data:
-            self.scope.decl_var(node.data, 'string')
+        scope_name = None
 
-        self.enter_scope()
+        if node.data:
+            self.scope.decl_var(node.data, 'func')
+            scope_name = 'function ' + node.data
+
+        self.enter_scope(scope_name)
 
         decl = node.children[0]
         defi = node.children[1]
@@ -163,23 +192,22 @@ class SemanticAnalyzer(object):
 
         for child in decl.children:
             assert child.construct == IDENTIFIER
-            self.scope.decl_var(child.data, 'string')
+            # Start with 1 write since they are actually given values when
+            # function is called.
+            self.scope.decl_var(child.data, 'string').writes = 1
 
         self.verify_children(node)
 
         self.leave_scope()
 
-    @analyzes(FUNC_CALL, PASS_1)
+    @analyzes(FUNC_CALL, PASS_2)
     def __func_call(self, node):
         # First child is the function identifier.
         func_name = node.children[0].data
 
-        var = self.scope.var(func_name)
+        var = node.scope.var(func_name)
         if var:
-            # Should really be +1 here but this is a hack.  We don't really care
-            # about the number of reads anyway, we just want to keep track of
-            # which vars are actually used.
-            var.reads += 2
+            var.reads += 1
 
         if func_name == 'include':
             # Function name and a string is required.
@@ -219,15 +247,15 @@ class SemanticAnalyzer(object):
 
         self.verify_children(node)
 
-    @analyzes(IDENTIFIER, PASS_1)
+    @analyzes(IDENTIFIER, PASS_2)
     def __identifier(self, node):
-        var = self.scope.var(node.data)
+        var = node.scope.var(node.data)
         if not var:
             smaragd.error('identifier not declared: {}'.format(node.data), node.token)
         else:
             var.reads += 1
 
-    @analyzes(DIVIDE, PASS_2)
+    @analyzes(DIVIDE, PASS_1)
     def __divide(self, node):
         a = node.children[0]
         b = node.children[1]
@@ -243,7 +271,7 @@ class SemanticAnalyzer(object):
 
         self.verify_children(node)
 
-    @analyzes(MULTIPLY, PASS_2)
+    @analyzes(MULTIPLY, PASS_1)
     def __multiply(self, node):
         a = node.children[0]
         b = node.children[1]
@@ -253,7 +281,7 @@ class SemanticAnalyzer(object):
 
         self.verify_children(node)
 
-    @analyzes(SUBTRACT, PASS_2)
+    @analyzes(SUBTRACT, PASS_1)
     def __subtract(self, node):
         a = node.children[0]
         b = node.children[1]
