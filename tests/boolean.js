@@ -11,6 +11,13 @@ assert.isTrue(0-1  , 'non-zero should be truthy 2')
 assert.isTrue(500  , 'non-zero should be truthy 3')
 assert.isTrue(0-500, 'non-zero should be truthy 4')
 
+assert.isFalse(!!false, 'not not false should be falsy')
+assert.isFalse(!123   , 'not 123 should be falsy')
+assert.isFalse(!true  , 'not true should be falsy')
+assert.isTrue(!!true  , 'not not true should be truthy')
+assert.isTrue(!0      , 'not zero should be truthy')
+assert.isTrue(!false  , 'not false should be truthy')
+
 assert.areEqual( f, false, 'f should equal false')
 assert.areEqual( t, true , 't should equal true')
 assert.areEqual(!f, true , 'not f should equal true')
