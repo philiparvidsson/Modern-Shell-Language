@@ -402,7 +402,18 @@ def parse_expr4(parser):
     # return <expr>
     elif tok.category == lexemes.RETURN:
         parser.read_token()
-        expr = Node(RETURN, token=tok, children=[parse_expr(parser)])
+
+        if parser.peek_token().category == lexemes.NEWLINE:
+            tok = parser.peek_token()
+            smaragd.warning('prefer semicolon or expression on same row as return keyword', tok)
+
+        parser.eat_whitespace()
+
+        if parser.peek_token().category == lexemes.SEMICOLON:
+            tok = parser.read_token()
+            expr = Node(RETURN, token=tok, children=[Node(INTEGER, 0)])
+        else:
+            expr = Node(RETURN, token=tok, children=[parse_expr(parser)])
 
     # true
     elif tok.category == lexemes.TRUE:
