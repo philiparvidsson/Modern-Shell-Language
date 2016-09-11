@@ -37,6 +37,7 @@ class Batch(CodeGenerator):
         self.tempvar_counter = 0
         self.value_stack = []
         self.scope = Scope()
+        self.loop_labels = []
 
         self.segments = collections.OrderedDict((
             ('pre' , ''),
@@ -282,6 +283,14 @@ class Batch(CodeGenerator):
         self.emit(s.format(temp.name, a.value, b.value))
         self.push(temp, VAR)
 
+    @code_emitter(syntax.BREAK)
+    def __break(self, node):
+        self.emit('goto {}_'.format(self.loop_labels[-1]))
+
+    @code_emitter(syntax.CONTINUE)
+    def __continue(self, node):
+        self.emit('goto {}_continue'.format(self.loop_labels[-1]))
+
     @code_emitter(syntax.DEC)
     def __dec(self, node):
         self._gen_code(node.children[0])
@@ -322,6 +331,7 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.FOR)
     def __for(self, node):
         label = self.label()
+        self.loop_labels.append(label)
 
         init = node.children[0]
         cond = node.children[1]
@@ -339,11 +349,16 @@ class Batch(CodeGenerator):
         for expr in node.children[3:]:
             self._gen_code(expr)
 
+
+        self.emit(':{}_continue'.format(label))
         if loop.construct != syntax.NOOP:
             self._gen_code(loop)
+
         self.emit('goto :{}'.format(label))
-        self.emit(':{}_'.format(label))
         self.emit(')')
+        self.emit(':{}_'.format(label))
+
+        self.loop_labels.pop()
 
     @code_emitter(syntax.FUNC)
     def __func(self, node):
@@ -698,7 +713,10 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.WHILE)
     def __while(self, node):
         label = self.label()
+        self.loop_labels.append(label)
+
         self.emit(':{}'.format(label))
+        self.emit(':{}_continue'.format(label))
         self._gen_code(node.children[0])
         self.emit('if {} neq 0 ('.format(self.pop().value))
 
@@ -707,3 +725,6 @@ class Batch(CodeGenerator):
 
         self.emit('goto :{}'.format(label))
         self.emit(')')
+        self.emit(':{}_'.format(label))
+
+        self.loop_labels.pop()

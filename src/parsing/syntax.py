@@ -19,6 +19,8 @@ ASSIGN     = 'assign'
 BIN_AND    = 'binary and'
 BIN_OR     = 'binary or'
 BIN_XOR    = 'binary xor'
+BREAK      = 'break'
+CONTINUE   = 'continue'
 DEC        = 'decrement'
 DIVIDE     = 'divide'
 ELSE       = 'else'
@@ -432,11 +434,11 @@ def parse_expr4(parser):
         expr = Node(IF_TERNARY, children=[expr, Node(INTEGER, 0, tok), Node(INTEGER, 1, tok)])
 
     elif tok.category == lexemes.BREAK:
-        parse.read_token()
+        parser.read_token()
         expr = Node(BREAK)
 
     elif tok.category == lexemes.CONTINUE:
-        parse.read_token()
+        parser.read_token()
         expr = Node(CONTINUE)
 
     # <eof> | <newline>

@@ -39,6 +39,9 @@ if __name__ == '__main__':
         args.append(f)
 
         print 'running test:', f2
+        if os.path.isfile(f + '.bat'):
+            os.remove(f + '.bat')
+
         subprocess.call(args)
 
         if os.path.isfile(f + '.bat'):
