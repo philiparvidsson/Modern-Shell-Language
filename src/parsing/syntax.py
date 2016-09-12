@@ -127,6 +127,18 @@ def parse_expr2(parser):
 
     tok = parser.peek_token()
 
+    # <expr3>++
+    if tok.category == lexemes.PLUS_PLUS:
+        parser.read_token()
+        expr = Node(INC, children=[expr])
+
+    # <expr3>--
+    elif tok.category == lexemes.MINUS_MINUS:
+        parser.read_token()
+        expr = Node(DEC, children=[expr])
+
+    tok = parser.peek_token()
+
     # <expr3> * <expr2>
     if tok.category == lexemes.ASTERISK:
         parser.read_token()
@@ -232,11 +244,6 @@ def parse_expr2(parser):
             Node(SHIFT_R, children=[expr, parse_expr2(parser)])
         ])
 
-    # <expr3>++
-    elif tok.category == lexemes.PLUS_PLUS:
-        parser.read_token()
-        expr = Node(INC, children=[expr])
-
     # <expr3> == <expr>
     elif tok.category == lexemes.EQ_SIGN_2:
         parser.read_token()
@@ -266,11 +273,6 @@ def parse_expr2(parser):
     elif tok.category == lexemes.GREATER_EQ:
         parser.read_token()
         expr = Node(GREATER_EQ, children=[expr, parse_expr3(parser)])
-
-    # <expr3>--
-    elif tok.category == lexemes.MINUS_MINUS:
-        parser.read_token()
-        expr = Node(DEC, children=[expr])
 
     if expr:
         expr.token = tok

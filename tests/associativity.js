@@ -7,3 +7,18 @@ b = 4 + 3*2
 
 assert.areEqual(a, 10, 'multiplication gave incorrect result 1')
 assert.areEqual(b, 10, 'multiplication gave incorrect result 2')
+
+c = 0
+d = c++ == 0
+e = c++ <= 1
+f = c++ < 3
+g = c++ >= 3
+h = c++ > 3
+i = c++ != 4
+
+assert.isTrue(d, 'associativity for ++ and == is wrong')
+assert.isTrue(e, 'associativity for ++ and <= is wrong')
+assert.isTrue(f, 'associativity for ++ and < is wrong')
+assert.isTrue(g, 'associativity for ++ and >= is wrong')
+assert.isTrue(h, 'associativity for ++ and > is wrong')
+assert.isTrue(i, 'associativity for ++ and != is wrong')
