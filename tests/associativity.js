@@ -22,3 +22,20 @@ assert.isTrue(f, 'associativity for ++ and < is wrong')
 assert.isTrue(g, 'associativity for ++ and >= is wrong')
 assert.isTrue(h, 'associativity for ++ and > is wrong')
 assert.isTrue(i, 'associativity for ++ and != is wrong')
+
+
+
+j = 10
+k = j-- == 10
+l = j-- <= 9
+m = j-- < 9
+n = j-- >= 7
+o = j-- > 5
+p = j-- != 4
+
+assert.isTrue(k, 'associativity for -- and == is wrong')
+assert.isTrue(l, 'associativity for -- and <= is wrong')
+assert.isTrue(m, 'associativity for -- and < is wrong')
+assert.isTrue(n, 'associativity for -- and >= is wrong')
+assert.isTrue(o, 'associativity for -- and > is wrong')
+assert.isTrue(p, 'associativity for -- and != is wrong')
