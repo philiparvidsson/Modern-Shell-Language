@@ -62,6 +62,7 @@ WHILE      = 'while'
 def parse_expr(parser):
     parser.eat_whitespace()
     expr = parse_expr2(parser)
+    parser.eat_whitespace()
 
     tok = parser.peek_token()
 
@@ -510,6 +511,7 @@ def parse_for(parser):
 
 def parse_func(parser):
     func_tok = parser.expect(lexemes.FUNC)
+    parser.eat_whitespace()
 
     name = None
 
@@ -518,6 +520,7 @@ def parse_func(parser):
         name = parse_ident(parser).data
 
     parser.expect(lexemes.L_PAREN)
+    parser.eat_whitespace()
 
     args = Node(FUNC_DECL, token=func_tok, children=[])
 
@@ -528,6 +531,7 @@ def parse_func(parser):
 
         parser.eat_whitespace()
         args.children.append(parse_ident(parser))
+        parser.eat_whitespace()
 
         tok = parser.peek_token()
         if tok.category == lexemes.R_PAREN:
@@ -536,6 +540,7 @@ def parse_func(parser):
         parser.eat_whitespace()
         parser.expect(lexemes.COMMA)
 
+    parser.eat_whitespace()
     parser.expect(lexemes.R_PAREN)
     parser.eat_whitespace()
     parser.expect(lexemes.L_BRACE)
@@ -560,6 +565,7 @@ def parse_ident(parser):
     tok = parser.expect(lexemes.IDENT)
 
     ident = Node(IDENTIFIER, tok.lexeme, tok)
+    parser.eat_whitespace()
 
     tok = parser.peek_token()
     if tok.category == lexemes.PERIOD:
