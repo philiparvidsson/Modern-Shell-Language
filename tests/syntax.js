@@ -18,7 +18,11 @@ c
     return x*10
 }
 assert
-    .areEqual ( c(b),
+    .
+    areEqual (
+        c(
+        b)
+                ,
                 10,
               'something is not right')
 

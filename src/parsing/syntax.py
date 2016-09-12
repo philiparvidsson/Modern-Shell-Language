@@ -571,9 +571,12 @@ def parse_ident(parser):
     if tok.category == lexemes.PERIOD:
         while True:
             parser.expect(lexemes.PERIOD)
+            parser.eat_whitespace()
 
             tok = parser.expect(lexemes.IDENT)
             ident = Node(ARRAY_IDX, token=tok, children=[ident, Node(STRING, tok.lexeme, tok)])
+
+            parser.eat_whitespace()
 
             tok = parser.peek_token()
             if tok.category != lexemes.PERIOD:
