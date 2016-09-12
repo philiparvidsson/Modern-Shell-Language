@@ -23,8 +23,6 @@ assert.isTrue(g, 'associativity for ++ and >= is wrong')
 assert.isTrue(h, 'associativity for ++ and > is wrong')
 assert.isTrue(i, 'associativity for ++ and != is wrong')
 
-
-
 j = 10
 k = j-- == 10
 l = j-- <= 9
@@ -45,3 +43,5 @@ q[0]++
 assert.areEqual(q[0], 2, 'post-increment failed for array indexer')
 q[0]--
 assert.areEqual(q[0], 1, 'post-decrement failed for array indexer')
+
+// TODO: Test associativity of more operators here.
