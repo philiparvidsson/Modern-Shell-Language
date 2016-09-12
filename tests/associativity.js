@@ -39,3 +39,9 @@ assert.isTrue(m, 'associativity for -- and < is wrong')
 assert.isTrue(n, 'associativity for -- and >= is wrong')
 assert.isTrue(o, 'associativity for -- and > is wrong')
 assert.isTrue(p, 'associativity for -- and != is wrong')
+
+q = [1]
+q[0]++
+assert.areEqual(q[0], 2, 'post-increment failed for array indexer')
+q[0]--
+assert.areEqual(q[0], 1, 'post-decrement failed for array indexer')
