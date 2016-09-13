@@ -56,8 +56,11 @@ def compile_(tree, destfile):
     codegen.generate_code()
     code = codegen.code()
 
-    with open(destfile, 'w') as f:
-        f.write(code)
+    if smaragd.conf.option('--show-code'):
+        smaragd.trace(code)
+    else:
+        with open(destfile, 'w') as f:
+            f.write(code)
 
 def print_logo():
     print (
@@ -78,6 +81,7 @@ Options:
   --no-optim        - don't optimize
   --no-warn         - suppress warnings
   --show-ast        - show abstract syntax tree
+  --show-code       - show code (do not write to file)
   --target=<s>      - compile to the specified target ('bat')
   --warn-err        - treat warnings as errors
 '''
