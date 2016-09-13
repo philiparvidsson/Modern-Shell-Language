@@ -63,7 +63,7 @@ function k() {
 
     obj.value = 0
 
-    obj.test_func = function my_func() {
+    obj.test_func = function () {
         return obj.value
     }
 
@@ -79,7 +79,7 @@ m.value = 777
 assert.areEqual(l.test_func(), 444, 'self-reference failed 1')
 assert.areEqual(m.test_func(), 777, 'self-reference failed 2')
 
-// 7. Objects inside arrays.
+// 7. Objects inside arrays (with 'ctor' args)
 
 n = function (x) {
     o = []
