@@ -35,7 +35,7 @@ goto {0}.execSync_
 :{0}.execSync
 set _proc="%~3"
 set _args="%~4"
-if !_args! == "" (start /wait /min cmd /c "!_proc!") else (start /wait /min cmd /c "!_proc! !_args!")
+if !_args! == "" (start /wait /min "!_proc!") else (start /wait /min "!_proc! !_args!")
 set %~1=!errorlevel!
 goto :eof
 :{0}.execSync_
