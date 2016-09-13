@@ -1,12 +1,16 @@
-function outer(x) {
-    outer_var = x
 
-    inner = function () {
-        console.log('ass', outer_var)
+// Test access to global/outer scopes.
+a = '123'
+function b() {
+    console.log('a is', a)
+
+    c = 'xyz'
+
+    function d() {
+        console.log('c is', c)
     }
 
-    return inner
+    d()
 }
 
-q = outer('abc')
-q()
+b()

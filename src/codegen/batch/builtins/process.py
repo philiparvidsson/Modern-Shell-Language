@@ -41,9 +41,11 @@ goto :eof
 :{0}.execSync_
 
 set {0}.exit={0}.exit
+set {0}.exit.__c=0
+set {0}.exit.__f={0}.exit
 goto {0}.exit_
 :{0}.exit
-if not "%3"=="" (set {0}.exitCode=%3)
+if not "%4"=="" (set {0}.exitCode=%4)
 :{0}_unwind_stack
 set x=%0
 set x=!x:~0,1!
@@ -71,12 +73,11 @@ var = None
 # FUNCTIONS
 #-------------------------------------------------
 
-def emit_code(p):
+def emit_code(b):
     global var
     if not var:
-        var = p.tempvar('string')
-        var.name += '_process'
-        p.emit(INIT.format(var.name), 'init')
-        p.emit(CODE.format(var.name), 'decl')
-
-    p.scope.decl_var('process', 'variable').name = var.name
+        var = b.tempvar('string')
+        var.name = '__process'
+        #b.emit(INIT.format(var.name), 'init')
+        b.emit(CODE.format(var.name), 'decl')
+        b.scope.decl_var('process', 'variable').name = var.name

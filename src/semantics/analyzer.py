@@ -179,6 +179,8 @@ class SemanticAnalyzer(object):
 
         func = None
         if node.data:
+            if self.scope.nesting > 0:
+                smaragd.error('nested functions must be anonymous', node.token)
             func = self.scope.decl_var(node.data, 'func')
             scope_name = 'function ' + node.data
 

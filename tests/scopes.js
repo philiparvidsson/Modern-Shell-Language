@@ -9,7 +9,8 @@ function b() {
 
     c = 'xyz'
 
-    function d() {
+    // FIXME: nested functions may not be named
+    d = function () {
         assert.areEqual(c, 'xyz', 'could not access outer scope var c')
     }
 

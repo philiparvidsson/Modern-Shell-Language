@@ -238,12 +238,13 @@ class Batch(CodeGenerator):
 
         # TODO: Is this sane?
         if ident.construct == syntax.IDENTIFIER:
-            a = ident.data
-            if not self.scope.is_decl(a):
+            if not self.scope.is_decl(ident.data):
                 type_ = b.type_
                 if type_ == REF:
                     type_ = VAR
-                a = self.decl_var(a, type_).name
+                a = self.decl_var(ident.data, type_).name
+            else:
+                a = self.scope.var(ident.data).name
         else:
             self._gen_code(ident)
             a = self.pop().value
@@ -255,6 +256,7 @@ class Batch(CodeGenerator):
             switches.append('/a')
 
         self.emit('set {} "{}={}"'.format(' '.join(switches), a, b.value))
+        #self.emit('echo {} set to {}'.format(a, b.value))
         #self.push(var, VAR)
 
     @code_emitter(syntax.BIN_AND)
@@ -388,8 +390,7 @@ class Batch(CodeGenerator):
 
         var = scope.decl_var(name, type_)
 
-        if var.scope.nesting > 0:
-            var.name = var.name + '_%~2'
+        var.name = '__c_%~2__.' + var.name
 
         return var
 
@@ -399,25 +400,46 @@ class Batch(CodeGenerator):
 
         is_global = True
         if not func_name:
-            func_name = self.tempvar().name
+            func_name = self.tempvar(STR).name
             is_global = False
 
-        self.decl_var(func_name, STR, global_scope=is_global)
+        ret = self.decl_var(func_name, STR, global_scope=is_global)
         self.enter_scope()
-        self.decl_var('this', STR)
+        #self.decl_var('this', STR)
+
+
         if is_global:
             self.emit('set {}={}'.format(func_name, func_name), 'decl')
+            self.emit('set {}.__c=0'.format(func_name), 'decl')
+            self.emit('set {}.__f={}'.format(func_name, func_name), 'decl')
+
+            ret.type_ = STR
+            ret.name = func_name
         else:
-            self.emit('set {}={}'.format(func_name, func_name))
+            func_name = self.label()
+
+            t = self.tempvar(STR)
+            self.emit('set {}={}'.format(t.name, t.name))
+            self.emit('set {}.__f={}'.format(t.name, func_name))
+            self.emit('set {}.__c=!__c_%~2__!'.format(t.name))
+            ret = t
+
         self.emit('goto {}_'.format(func_name)),
         self.emit(':{}'.format(func_name))
+
+        self.emit('set __c_%~2__=%~2')
+        self.emit('set __c_%~2__.__p=%~3')
+
+        #self.emit('echo current closure is %~2 in ' + func_name)
+        #self.emit('echo stored closure is %~3  in ' + func_name)
+
         #self.emit('setlocal')
 
         params = node.children[0]
         body = node.children[1]
 
-        # Start from 3 since first 2 args are reserved for impl.
-        param_counter = 3
+        # Start from 4 since first 3 args are reserved for impl.
+        param_counter = 4
         for param in params.children:
             # TODO: Don't assume str here. Be water, my friend!
             var = self.decl_var(param.data, STR)
@@ -435,7 +457,7 @@ class Batch(CodeGenerator):
         self.emit(':{}_'.format(func_name))
 
         self.leave_scope()
-        self.push(func_name, STR)
+        self.push(ret, VAR)
 
     @code_emitter(syntax.FUNC_CALL)
     def __func_call(self, node):
@@ -473,19 +495,23 @@ class Batch(CodeGenerator):
         args.reverse()
 
         temp = self.tempvar(STR) # FIXME: Don't assume str!
-        var = self.scope.var(func_name)
 
-        if self.scope.nesting == 0:
-            nesting = '!__call__!'
-            self.emit('set /a __call__+=1')
-        else:
-            t = self.tempvar(INT)
-            self.emit('set /a "{}=(1 + %~2)"'.format(t.name))
-            self.emit('set /a __call__={}'.format(t.name))
-            nesting = '!{}!'.format(t.name)
+        t = self.tempvar(INT)
+        self.emit('set /a "__i__+=1"'.format(t.name))
+        self.emit('set /a "{}=!__i__!"'.format(t.name))
+        #self.emit('echo calling with !__i__!')
+        nesting = '!{}!'.format(t.name)
 
-        s = 'call :{} {} {} {}'
-        self.emit(s.format(func_name, temp.name, nesting, ' '.join(args)))
+        t2 = self.tempvar(INT)
+        self.emit('call set {}=%%{}.__c%%'.format(t2.name, func_name))
+
+        t3 = self.tempvar(INT)
+        self.emit('call set {}=%%{}.__f%%'.format(t3.name, func_name))
+
+        #self.emit('echo calling !{}!'.format(t3.name))
+
+        s = 'call :!{}! {} {} !{}! {}'
+        self.emit(s.format(t3.name, temp.name, nesting, t2.name, ' '.join(args)))
         self.push(temp, VAR)
 
     @code_emitter(syntax.GREATER)
@@ -522,6 +548,37 @@ class Batch(CodeGenerator):
             #self.builtins.check(self, ident)
             self.check_builtin(ident)
             var = self.scope.var(ident)
+
+        if var.scope != self.scope and isinstance(var.name, str) and var.name.startswith('__c_%~2__.'):
+            scopes_out = 0
+            scope = self.scope
+            while scope != var.scope:
+                scope = scope.parent_scope
+                scopes_out += 1
+
+            var_name = var.name[10:]
+
+            t = self.tempvar(INT)
+
+            self.emit('set {}=__c_%~2__'.format(t.name))
+
+            #self.emit('echo oo')
+            #self.emit('echo !{}!'.format(t.name))
+            for i in range(scopes_out):
+                self.emit('set {}=!{}!.__p'.format(t.name, t.name))
+                #self.emit('echo a !{}!'.format(t.name))
+                self.emit('call set {}=__c_%%!{}!%%__'.format(t.name, t.name))
+                #self.emit('echo b !{}!'.format(t.name))
+
+            #self.emit('set {}=!{}!.{}'.format(t.name, t.name, var_name))
+            #self.emit('echo c !{}!'.format(t.name))
+
+            #print 'we want', var_name, 'from', scopes_out, 'scopes out'
+            #self.emit('echo !{}!.{}'.format(t.name, var_name))
+            self.push('!{}!.{}'.format(t.name, var_name), REF)
+            return
+
+
         self.push(var, VAR)
 
     @code_emitter(syntax.INC)
@@ -691,7 +748,12 @@ class Batch(CodeGenerator):
         self.emit('@echo off', 'pre')
         self.emit('setlocal EnableDelayedExpansion', 'pre')
 
-        self.emit('set __call__=0', 'pre')
+        self.emit('set __i__=0', 'pre')
+
+        self.emit('call :__main__ __ !__i__!', 'pre')
+        self.emit('goto :eof', 'pre')
+        self.emit(':__main__', 'pre')
+        self.emit('set __c_%~2__=%~2', 'pre')
 
         for child in node.children:
             self._gen_code(child)
