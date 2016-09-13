@@ -1,6 +1,7 @@
 include('inc/testing.js')
 
 // Testing complex objects here!
+test.name = 'objects test'
 
 // 1. Object properties
 a = []
@@ -61,8 +62,9 @@ function k() {
     obj = []
 
     obj.value = 0
+
     obj.test_func = function my_func() {
-        return obj
+        return obj.value
     }
 
     return obj
@@ -76,3 +78,18 @@ m.value = 777
 
 assert.areEqual(l.test_func(), 444, 'self-reference failed 1')
 assert.areEqual(m.test_func(), 777, 'self-reference failed 2')
+
+// 7. Objects inside arrays.
+
+n = function (x) {
+    o = []
+
+    o.val = x
+
+    return o
+}
+
+p = [n('xyz'), n('pqr')]
+
+assert.areEqual(p[0].val, 'xyz', 'object in array failed 1')
+assert.areEqual(p[1].val, 'pqr', 'object in array failed 2')
