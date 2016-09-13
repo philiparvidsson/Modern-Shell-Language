@@ -18,7 +18,7 @@ class Scope(object):
         self.nesting = 0
 
     def decl_var(self, name, type_):
-        var = Variable(name, type_)
+        var = Variable(name, type_, self)
         self.variables[name] = var
 
         return var

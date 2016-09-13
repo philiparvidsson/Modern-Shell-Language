@@ -379,10 +379,16 @@ class Batch(CodeGenerator):
 
         self.loop_labels.pop()
 
-    def decl_var(self, name, type_):
-        var = self.scope.decl_var(name, type_)
+    def decl_var(self, name, type_, global_scope=False):
+        scope = self.scope
 
-        if self.scope.nesting > 0:
+        if global_scope:
+            while scope.parent_scope:
+                scope = scope.parent_scope
+
+        var = scope.decl_var(name, type_)
+
+        if var.scope.nesting > 0:
             var.name = var.name + '_%~2'
 
         return var
@@ -390,13 +396,19 @@ class Batch(CodeGenerator):
     @code_emitter(syntax.FUNC)
     def __func(self, node):
         func_name = node.data
+
+        is_global = True
         if not func_name:
             func_name = self.tempvar().name
+            is_global = False
 
-        self.decl_var(func_name, STR)
+        self.decl_var(func_name, STR, global_scope=is_global)
         self.enter_scope()
         self.decl_var('this', STR)
-        self.emit('set {}={}'.format(func_name, func_name), 'decl')
+        if is_global:
+            self.emit('set {}={}'.format(func_name, func_name), 'decl')
+        else:
+            self.emit('set {}={}'.format(func_name, func_name))
         self.emit('goto {}_'.format(func_name)),
         self.emit(':{}'.format(func_name))
         #self.emit('setlocal')

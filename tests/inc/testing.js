@@ -7,7 +7,7 @@ assert.areEqual = function (a, b, s) {
 
     console.log()
     console.log('----------')
-    console.log('assertion failed', s)
+    console.log('assertion failed:', s)
     console.log('expected value:', b)
     console.log('actual value:', a)
     test.fail()
