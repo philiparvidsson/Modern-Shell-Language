@@ -223,7 +223,22 @@ console.log(MY_STRING)
  */
 for (i=0; i < process.argv.length; i++)
     console.log(process.argv[i])
-    
+
+/**
+ * process.exec(path)       - Starts a new process.
+ * process.exec(path, args) - Optional args: passes argument string to started process.
+ *
+ * process.execSync(path)   - Similar to exec(). Pauses batch processing until spawned process exits.
+ *                            Like exec(), arguments can be supplied as well.
+ *
+ * Examples:
+ */
+// starts notepad and continues batch processing
+process.exec('notepad.exe')
+
+// starts notepad, opens|creates 'new file.txt', waits for user to close notepad before continuing
+process.execSync('notepad.exe', 'new file.txt')
+
 /**
  * process.exit(code) - Exits the process.
  *
