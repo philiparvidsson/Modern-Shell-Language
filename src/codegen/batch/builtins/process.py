@@ -20,6 +20,28 @@ if "%~1" neq "" (
 
 CODE = (
 '''
+set {0}.exec={0}.exec
+goto {0}.exec_
+:{0}.exec
+set _call=start /min cmd /c
+set _proc="%~3"
+set _args="%~4"
+!_call! "!_proc! !_args!"
+set %~1=0
+goto :eof
+:{0}.exec_
+
+set {0}.execSync={0}.execSync
+goto {0}.execSync_
+:{0}.execSync
+set _call=start /wait /min cmd /c
+set _proc="%~3"
+set _args="%~4"
+!_call! "!_proc! !_args!"
+set %~1=!errorlevel!
+goto :eof
+:{0}.execSync_
+
 set {0}.exit={0}.exit
 goto {0}.exit_
 :{0}.exit
