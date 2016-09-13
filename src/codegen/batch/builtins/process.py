@@ -23,10 +23,9 @@ CODE = (
 set {0}.exec={0}.exec
 goto {0}.exec_
 :{0}.exec
-set _call=start /min cmd /c
 set _proc="%~3"
 set _args="%~4"
-!_call! "!_proc! !_args!"
+if "!_args!" == "" (start /min cmd /c "!_proc!") else (start /min cmd /c "!_proc! !_args!")
 set %~1=0
 goto :eof
 :{0}.exec_
@@ -34,10 +33,9 @@ goto :eof
 set {0}.execSync={0}.execSync
 goto {0}.execSync_
 :{0}.execSync
-set _call=start /wait /min cmd /c
 set _proc="%~3"
 set _args="%~4"
-!_call! "!_proc! !_args!"
+if "!_args!" == "" (start /wait /min cmd /c "!_proc!") else (start /wait /min cmd /c "!_proc! !_args!")
 set %~1=!errorlevel!
 goto :eof
 :{0}.execSync_
