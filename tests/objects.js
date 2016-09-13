@@ -35,6 +35,7 @@ h = f()
 i = f()
 
 assert.areEqual(h.a_prop, 'world hello', 'object returning failed 1')
+// FIXME: Syntax not yet supported.
 //assert.areEqual(f().a_prop, 'world hello', 'object returning failed 2')
 
 h.test_prop = '123'

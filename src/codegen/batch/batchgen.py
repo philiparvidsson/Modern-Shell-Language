@@ -464,10 +464,12 @@ class Batch(CodeGenerator):
         var = self.scope.var(func_name)
 
         if self.scope.nesting == 0:
-            nesting = self.scope.nesting
+            nesting = '!__call__!'
+            self.emit('set /a __call__+=1')
         else:
             t = self.tempvar(INT)
             self.emit('set /a "{}=(1 + %~2)"'.format(t.name))
+            self.emit('set /a __call__={}'.format(t.name))
             nesting = '!{}!'.format(t.name)
 
         s = 'call :{} {} {} {}'
@@ -676,6 +678,8 @@ class Batch(CodeGenerator):
     def __program(self, node):
         self.emit('@echo off', 'pre')
         self.emit('setlocal EnableDelayedExpansion', 'pre')
+
+        self.emit('set __call__=0', 'pre')
 
         for child in node.children:
             self._gen_code(child)
