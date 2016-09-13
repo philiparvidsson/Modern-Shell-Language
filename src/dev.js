@@ -1,15 +1,12 @@
-function k() {
-    obj = []
+function outer(x) {
+    outer_var = x
 
-    obj.test_func = function qq() {
-        return obj.value
+    inner = function () {
+        console.log('ass', outer_var)
     }
 
-    return obj
+    return inner
 }
 
-l = k()
-
-l.value = 444
-
-console.log(l.test_func())
+q = outer('abc')
+q()
