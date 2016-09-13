@@ -45,4 +45,10 @@ i.test_prop = 'abc'
 assert.areEqual(h.test_prop, '123', 'object reference error 1')
 assert.areEqual(i.test_prop, 'abc', 'object reference error 2')
 
-// 5.
+// 4. Nested objects
+
+j = []
+j.nested = []
+j.nested.func = function () { return 12345 }
+
+assert.areEqual(j.nested.func(), 12345, 'nested objects not working properly')
