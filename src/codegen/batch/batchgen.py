@@ -309,10 +309,16 @@ class Batch(CodeGenerator):
         self._gen_code(node.children[0])
 
         a = self.pop()
+        b = self.deref(a)
+
+        # Maybe this is hacky? Well, it seems to work.
+        s = a.value
+        if hasattr(a, 'var'):
+            s = a.var.name
 
         temp = self.tempvar(INT)
-        self.emit('set /a "{}={}"'.format(temp.name, a.value))
-        self.emit('set /a "{}={}-1"'.format(a.var.name, a.value))
+        self.emit('set /a "{}={}"'.format(temp.name, b.value))
+        self.emit('set /a "{}={}-1"'.format(s, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.DIVIDE)
@@ -511,9 +517,14 @@ class Batch(CodeGenerator):
         a = self.pop()
         b = self.deref(a)
 
+        # Maybe this is hacky? Well, it seems to work.
+        s = a.value
+        if hasattr(a, 'var'):
+            s = a.var.name
+
         temp = self.tempvar(INT)
         self.emit('set /a "{}={}"'.format(temp.name, b.value))
-        self.emit('set /a "{}={}+1"'.format(a.var.name, b.value))
+        self.emit('set /a "{}={}+1"'.format(s, b.value))
         self.push(temp, VAR)
 
     @code_emitter(syntax.IF)
