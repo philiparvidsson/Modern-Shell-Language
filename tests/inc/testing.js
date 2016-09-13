@@ -2,14 +2,15 @@ assert = []
 test   = []
 
 assert.areEqual = function (a, b, s) {
-    if (a != b) {
-        console.log()
-        console.log('----------')
-        console.log('assertion failed', s)
-        console.log('expected value:', b)
-        console.log('actual value:', a)
-        test.fail()
-    }
+    if (a == b)
+        return false
+
+    console.log()
+    console.log('----------')
+    console.log('assertion failed', s)
+    console.log('expected value:', b)
+    console.log('actual value:', a)
+    test.fail()
 
     return true
 }

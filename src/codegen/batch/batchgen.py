@@ -383,7 +383,7 @@ class Batch(CodeGenerator):
         var = self.scope.decl_var(name, type_)
 
         if self.scope.nesting > 0:
-            var.name = var.name + '%~2'
+            var.name = var.name + '_%~2'
 
         return var
 
