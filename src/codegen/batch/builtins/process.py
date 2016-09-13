@@ -23,8 +23,7 @@ CODE = (
 set {0}.exit={0}.exit
 goto {0}.exit_
 :{0}.exit
-setlocal
-if not "%2"=="" (set {0}.exitCode=%2)
+if not "%3"=="" (set {0}.exitCode=%3)
 :{0}_unwind_stack
 set x=%0
 set x=!x:~0,1!
@@ -36,8 +35,7 @@ if "!x!"==":" (
 ) else (
     exit /b !{0}.exitCode!
 )
-endlocal
-exit /b
+goto :eof
 :{0}.exit_
 
 set {0}.exitCode=0

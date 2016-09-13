@@ -15,6 +15,7 @@ class Scope(object):
         self.name = None
         self.nested_scopes = []
         self.variables = {}
+        self.nesting = 0
 
     def decl_var(self, name, type_):
         var = Variable(name, type_)
@@ -35,5 +36,6 @@ class Scope(object):
 
     def nested_scope(self):
         scope = Scope(self)
+        scope.nesting = self.nesting+1
         self.nested_scopes.append(scope)
         return scope

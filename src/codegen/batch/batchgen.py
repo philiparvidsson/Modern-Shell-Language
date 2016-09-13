@@ -70,8 +70,12 @@ class Batch(CodeGenerator):
         self.tempvar_counter = b.tempvar_counter
         self.label_counter = b.label_counter
 
+        #top_scope = self.scope
+        #while top_scope.parent_scope:
+        #    top_scope = top_scope.parent_scope
+
         for varname, var in b.scope.variables.iteritems():
-            self.scope.decl_var(varname, var.type_)
+            self.decl_var(varname, var.type_)
 
         self.emit(b.segments['init'], 'init')
         self.emit(b.segments['decl'], 'decl')
@@ -87,7 +91,16 @@ class Batch(CodeGenerator):
             mod = None
 
         if mod:
+            old_scope = self.scope
+            top_scope = self.scope
+            while top_scope.parent_scope:
+                top_scope = top_scope.parent_scope
+
+            self.scope = top_scope
+
             mod.emit_code(self)
+
+            self.scope = old_scope
 
 
     def code(self):
@@ -119,10 +132,10 @@ class Batch(CodeGenerator):
         self.tempvar_counter += 1
 
         name =  '__{}'.format(self.tempvar_counter)
-        return self.scope.decl_var(name, type_)
+        return self.decl_var(name, type_)
 
     def enter_scope(self):
-        self.scope = Scope(self.scope)
+        self.scope = self.scope.nested_scope()
 
     def leave_scope(self):
         self.scope = self.scope.parent_scope
@@ -230,7 +243,7 @@ class Batch(CodeGenerator):
                 type_ = b.type_
                 if type_ == REF:
                     type_ = VAR
-                self.scope.decl_var(a, type_)
+                a = self.decl_var(a, type_).name
         else:
             self._gen_code(ident)
             a = self.pop().value
@@ -360,27 +373,36 @@ class Batch(CodeGenerator):
 
         self.loop_labels.pop()
 
+    def decl_var(self, name, type_):
+        var = self.scope.decl_var(name, type_)
+
+        if self.scope.nesting > 0:
+            var.name = var.name + '%~2'
+
+        return var
+
     @code_emitter(syntax.FUNC)
     def __func(self, node):
         func_name = node.data
         if not func_name:
             func_name = self.tempvar().name
 
-        self.scope.decl_var(func_name, STR)
+        self.decl_var(func_name, STR)
         self.enter_scope()
-        self.scope.decl_var('this', STR)
+        self.decl_var('this', STR)
         self.emit('set {}={}'.format(func_name, func_name), 'decl')
         self.emit('goto {}_'.format(func_name)),
         self.emit(':{}'.format(func_name))
-        self.emit('setlocal')
+        #self.emit('setlocal')
 
         params = node.children[0]
         body = node.children[1]
 
-        param_counter = 2
+        # Start from 3 since first 2 args are reserved for impl.
+        param_counter = 3
         for param in params.children:
             # TODO: Don't assume str here. Be water, my friend!
-            var = self.scope.decl_var(param.data, STR)
+            var = self.decl_var(param.data, STR)
             var.name = param_counter
             param_counter += 1
 
@@ -388,11 +410,14 @@ class Batch(CodeGenerator):
             self._gen_code(expr)
 
         if not body.children or not body.children[-1].construct == syntax.RETURN:
-            self.emit('endlocal & (set %1=0)')
-            self.emit('exit /b')
+            self.emit('set %~1=0')
+            self.emit('goto :eof')
+        #    self.emit('endlocal & (set %1=0)')
+        #    self.emit('exit /b')
+        self.emit(':{}_'.format(func_name))
+
         self.leave_scope()
         self.push(func_name, STR)
-        self.emit(':{}_'.format(func_name))
 
     @code_emitter(syntax.FUNC_CALL)
     def __func_call(self, node):
@@ -432,8 +457,15 @@ class Batch(CodeGenerator):
         temp = self.tempvar(STR) # FIXME: Don't assume str!
         var = self.scope.var(func_name)
 
-        s = 'call :{} {} {}'
-        self.emit(s.format(func_name, temp.name, ' '.join(args)))
+        if self.scope.nesting == 0:
+            nesting = self.scope.nesting
+        else:
+            t = self.tempvar(INT)
+            self.emit('set /a "{}=(1 + %~2)"'.format(t.name))
+            nesting = '!{}!'.format(t.name)
+
+        s = 'call :{} {} {} {}'
+        self.emit(s.format(func_name, temp.name, nesting, ' '.join(args)))
         self.push(temp, VAR)
 
     @code_emitter(syntax.GREATER)
@@ -643,16 +675,17 @@ class Batch(CodeGenerator):
 
         a = self.pop_deref()
 
-        self.emit('endlocal & (')
+        #self.emit('endlocal & (')
 
         if hasattr(a, 'var'):
-            a.value = '%{}%'.format(a.var.name)
+            a.value = '!{}!'.format(a.var.name)
 
         s = 'set /a %1={}' if a.type_ == INT else 'set %1={}'
         self.emit(s.format(a.value))
 
-        self.emit(')')
-        self.emit('exit /b')
+        #self.emit(')')
+        #self.emit('exit /b')
+        self.emit('goto :eof')
 
     @code_emitter(syntax.SHIFT_L)
     def __shift_l(self, node):
