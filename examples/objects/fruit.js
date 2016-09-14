@@ -9,17 +9,19 @@ function fruit(name) {
     // Add a name property with the specified value.
     this.name = name
 
+    // The peel function works like an instance method.
     this.peel = function (how) {
         console.log('i peel the', this.name, how)
     }
 
+    // Return the newly created objects.
     return this
 }
 
 // Create one apple and one orange.
-apple  = fruit('apple')
+apple = fruit('apple')
 orange = fruit('orange')
 
-// Then peel them!
+// Let's peel them!
 apple.peel('with a knife')
 orange.peel('with my fingers')

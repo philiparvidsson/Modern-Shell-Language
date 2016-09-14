@@ -10,8 +10,13 @@ function other_func(s) {
 function main() {
     // This is a function!
 
-    // Variables in functions are local to their scope.
+    // Variables in functions are local to their scope...
     a = 'foo'
+
+    // ...but can be accessed by inner functions:
+    b = function () {
+        return a // returns 'foo'
+    }
 
     // Functions can call other functions.
     s = other_func('hello')
