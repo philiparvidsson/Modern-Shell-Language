@@ -4,7 +4,9 @@
 
 import os
 import subprocess
+import time
 
+# Options used when compiling tests
 OPTS = [
     '--no-logo',
     '--no-optim',
@@ -25,6 +27,8 @@ if __name__ == '__main__':
 
     passing = []
     failing = []
+
+    start_time = time.time()
 
     d = os.getcwd()
     for f in os.listdir(d):
@@ -55,8 +59,11 @@ if __name__ == '__main__':
             failing.append(f2)
             print 'test {} failed to compile'.format(f2)
 
+    end_time = time.time()
+    secs = end_time - start_time
+
     print
-    print 'ran {} tests'.format(len(passing)+len(failing))
+    print 'ran {} tests in {:.2f} seconds'.format(len(passing)+len(failing), secs)
     print
     print 'results:'
     print
