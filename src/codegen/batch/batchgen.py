@@ -48,7 +48,6 @@ class Batch(CodeGenerator):
 
     def raw(self, code, target):
         if target:
-            print smaragd.conf.option('--target'), target
             if smaragd.conf.option('--target') != target:
                 # Maybe validate target?
                 return
