@@ -25,10 +25,16 @@ set {0}.exec.__c=0
 set {0}.exec.__f={0}.exec
 goto {0}.exec_
 :{0}.exec
-set _proc="%~4"
-set _args="%~5"
-if !_args! == "" (start /min cmd /c "!_proc!") else (start /min cmd /c "!_proc! !_args!")
 set %~1=0
+set _proc="%~4"
+:: handle infinite arguments
+:{0}exec__rearg
+if "%~5" neq "" (
+  set _args=!_args! "%~5"
+  shift
+  goto :{0}exec__rearg
+)
+if not defined _args (start /min cmd /c "!_proc!") else (start /min cmd /c "!_proc!!_args!")
 goto :eof
 :{0}.exec_
 
@@ -37,10 +43,17 @@ set {0}.execSync.__c=0
 set {0}.execSync.__f={0}.execSync
 goto {0}.execSync_
 :{0}.execSync
+set _return_var=%~1
 set _proc="%~4"
-set _args="%~5"
-if !_args! == "" (2>nul !_proc!) else (2>nul !_proc! !_args!)
-set %~1=!errorlevel!
+:: handle infinite arguments
+:{0}execSync__rearg
+if "%~5" neq "" (
+  set _args=!_args! "%~5"
+  shift
+  goto :{0}execSync__rearg
+)
+if not defined _args (2>nul !_proc!) else (2>nul !_proc!!_args!)
+set !_return_var!=!errorlevel!
 goto :eof
 :{0}.execSync_
 
