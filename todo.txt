@@ -1,1 +1,7 @@
-parseInt to case to int?
+1. integer casting.
+    do we provide parseInt()
+    runtime type information?
+
+2. file.write needs to be implemented
+
+3. come up with a better name
