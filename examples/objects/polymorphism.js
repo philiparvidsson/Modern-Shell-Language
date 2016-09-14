@@ -38,7 +38,7 @@ function duck(name) {
 }
 
 charlie = cow('charlie')
-anna    = duck('anna')
+anna = duck('anna')
 
 charlie.say('hello world')
 anna.say('good morning')
