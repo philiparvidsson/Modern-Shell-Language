@@ -70,6 +70,7 @@ set {0}.sleep.__f={0}.sleep
 goto {0}.sleep_
 :{0}.sleep
 choice /T %~4 /C X /D X /N >nul
+goto :eof
 :{0}.sleep_
 
 set {0}.exitCode=0
