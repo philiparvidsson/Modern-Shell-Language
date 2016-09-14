@@ -17,7 +17,4 @@ a = Array()
 a.push('hej')
 a.push('bosse')
 
-for (i = 0; i < a.length; i++) {
-    console.log(a[i])
-    process.sleep(1)
-}
+while (a.length > 0) console.log(a.pop())
