@@ -40,7 +40,7 @@ set lf=^
 
 
 set "r="
-for /f "delims=" %%s in (%~4) do (set "r=!r!%%s!lf!")
+for /f "usebackq delims=" %%s in ("%~4") do (set "r=!r!%%s!lf!")
 set %1=%r%
 goto :eof
 :{0}.read_
