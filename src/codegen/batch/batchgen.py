@@ -40,8 +40,9 @@ class Batch(CodeGenerator):
         self.loop_labels = []
 
         self.segments = collections.OrderedDict((
-            ('pre' , ''),
+            ('preinit' , ''),
             ('init', ''),
+            ('postinit' , ''),
             ('decl', ''),
             ('code', '')
         ))
@@ -74,10 +75,8 @@ class Batch(CodeGenerator):
         #while top_scope.parent_scope:
         #    top_scope = top_scope.parent_scope
 
-        for varname, var in b.scope.variables.iteritems():
-            # redeclare all non built-ins
-            if not varname.startswith('__'):
-                self.decl_var(varname, var.type_)
+        #for varname, var in b.scope.variables.iteritems():
+        #    self.decl_var(varname, var.type_)
 
         self.emit(b.segments['init'], 'init')
         self.emit(b.segments['decl'], 'decl')
@@ -736,17 +735,17 @@ class Batch(CodeGenerator):
 
     @code_emitter(syntax.PROGRAM)
     def __program(self, node):
-        self.emit('@echo off', 'pre')
-        self.emit('setlocal EnableDelayedExpansion', 'pre')
+        self.emit('@echo off', 'preinit')
+        self.emit('setlocal EnableDelayedExpansion', 'preinit')
+
+        self.emit('set __i__=0'               , 'postinit')
+        self.emit('call :__main__ __ !__i__!' , 'postinit')
+        self.emit('goto :eof'                 , 'postinit')
+        self.emit(':__main__'                 , 'postinit')
+        self.emit('set __c_%~2__=%~2'         , 'postinit')
 
         for child in node.children:
             self._gen_code(child)
-
-        self.emit('set __i__=0', 'pre')
-        self.emit('call :__main__ __ !__i__!', 'pre')
-        self.emit('goto :eof', 'pre')
-        self.emit(':__main__', 'pre')
-        self.emit('set __c_%~2__=%~2', 'pre')
 
     @code_emitter(syntax.RETURN)
     def __return(self, node):

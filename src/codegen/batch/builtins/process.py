@@ -6,16 +6,16 @@ INIT = (
 '''
 set {0}={0}
 
-rem set {0}.argv={0}.argv
-rem set {0}.argv.length=0
-rem
-rem :{0}_argv
-rem if "%~1" neq "" (
-rem     set "{0}.argv.!{0}.argv.length!=%~1"
-rem     set /a {0}.argv.length+=1
-rem     shift
-rem     goto {0}_argv
-rem )
+set {0}.argv={0}.argv
+set {0}.argv.length=0
+
+:{0}_argv
+if "%~1" neq "" (
+    set "{0}.argv.!{0}.argv.length!=%~1"
+    set /a {0}.argv.length+=1
+    shift
+    goto {0}_argv
+)
 ''')
 
 CODE = (
