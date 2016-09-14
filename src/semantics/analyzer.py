@@ -180,6 +180,8 @@ class SemanticAnalyzer(object):
         func = None
         if node.data:
             if self.scope.nesting > 0:
+                # FIXME: Maybe replace nested named functions with assignments
+                # of anonymous functions in parser?
                 smaragd.error('nested functions must be anonymous', node.token)
             func = self.scope.decl_var(node.data, 'func')
             scope_name = 'function ' + node.data
@@ -189,10 +191,11 @@ class SemanticAnalyzer(object):
         decl = node.children[0]
         defi = node.children[1]
 
-        if len(decl.children) > 7:
+        if len(decl.children) > 6:
             # This is actually a limitation in Batch files, but since we want
             # portability we have to stick to the lowest common denominator.
-            smaragd.error('functions cannot have more than 7 parameters')
+            # Also, Batch supports 9 parameters but 3 are reserved for impl.
+            smaragd.error('functions cannot have more than 6 parameters')
 
         if func:
             func.num_args = len(decl.children)
