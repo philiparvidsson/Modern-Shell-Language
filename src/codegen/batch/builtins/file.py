@@ -12,7 +12,7 @@ set {0}.delete.__f={0}.delete
 goto {0}.delete_
 :{0}.delete
 if exist "%~4" (
-    del "%~4
+    del "%~4"
     set r=1
 ) else (
     set r=0
