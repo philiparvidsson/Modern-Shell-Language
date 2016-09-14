@@ -35,10 +35,10 @@ var = None
 # FUNCTIONS
 #-------------------------------------------------
 
-def emit_code(b):
+def emit_code(bat):
     global var
     if not var:
-        var = b.tempvar('string')
+        var = bat.tempvar('string')
         var.name = '__console'
-        b.emit(CODE.format(var.name), 'decl')
-        b.decl_var('console', 'variable').name = var.name
+        bat.emit(CODE.format(var.name), 'decl')
+        bat.decl_var('console', 'variable').name = var.name

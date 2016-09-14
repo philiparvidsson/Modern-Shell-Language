@@ -5,14 +5,16 @@
 CODE = (
 '''
 set {0}={0}
+set {0}.__c=0
+set {0}.__f={0}
 goto {0}_
 :{0}
 setlocal
 set r=%1
 set s=
 :{0}_next
-if "%~2" equ "" (goto {0}_done)
-set "s=%s%%~2 "
+if "%~4" equ "" (goto {0}_done)
+set "s=%s%%~4 "
 shift
 goto {0}_next
 :{0}_done
@@ -32,10 +34,10 @@ var = None
 # FUNCTIONS
 #-------------------------------------------------
 
-def emit_code(p):
+def emit_code(bat):
     global var
     if not var:
-        var = p.tempvar('string')
-        p.emit(CODE.format(var.name), 'decl')
-
-    p.scope.decl_var('readline', 'variable').name = var.name
+        var = bat.tempvar('string')
+        var.name = '__readline'
+        bat.emit(CODE.format(var.name), 'decl')
+        bat.scope.decl_var('readline', 'variable').name = var.name

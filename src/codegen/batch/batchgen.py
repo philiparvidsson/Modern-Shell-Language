@@ -748,15 +748,14 @@ class Batch(CodeGenerator):
         self.emit('@echo off', 'pre')
         self.emit('setlocal EnableDelayedExpansion', 'pre')
 
-        self.emit('set __i__=0', 'pre')
-
-        self.emit('call :__main__ __ !__i__!', 'pre')
-        self.emit('goto :eof', 'pre')
-        self.emit(':__main__', 'pre')
-        self.emit('set __c_%~2__=%~2', 'pre')
-
         for child in node.children:
             self._gen_code(child)
+
+        self.emit('set __i__=0', 'init')
+        self.emit('call :__main__ __ !__i__!', 'init')
+        self.emit('goto :eof', 'init')
+        self.emit(':__main__', 'init')
+        self.emit('set __c_%~2__=%~2', 'init')
 
     @code_emitter(syntax.RETURN)
     def __return(self, node):

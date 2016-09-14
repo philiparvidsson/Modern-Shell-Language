@@ -21,20 +21,24 @@ if "%~1" neq "" (
 CODE = (
 '''
 set {0}.exec={0}.exec
+set {0}.exec.__c=0
+set {0}.exec.__f={0}.exec
 goto {0}.exec_
 :{0}.exec
-set _proc="%~3"
-set _args="%~4"
+set _proc="%~4"
+set _args="%~5"
 if !_args! == "" (start /min cmd /c "!_proc!") else (start /min cmd /c "!_proc! !_args!")
 set %~1=0
 goto :eof
 :{0}.exec_
 
 set {0}.execSync={0}.execSync
+set {0}.execSync.__c=0
+set {0}.execSync.__f={0}.execSync
 goto {0}.execSync_
 :{0}.execSync
-set _proc="%~3"
-set _args="%~4"
+set _proc="%~4"
+set _args="%~5"
 if !_args! == "" (2>nul !_proc!) else (2>nul !_proc! !_args!)
 set %~1=!errorlevel!
 goto :eof
@@ -73,11 +77,11 @@ var = None
 # FUNCTIONS
 #-------------------------------------------------
 
-def emit_code(b):
+def emit_code(bat):
     global var
     if not var:
-        var = b.tempvar('string')
+        var = bat.tempvar('string')
         var.name = '__process'
-        #b.emit(INIT.format(var.name), 'init')
-        b.emit(CODE.format(var.name), 'decl')
-        b.scope.decl_var('process', 'variable').name = var.name
+        bat.emit(INIT.format(var.name), 'init')
+        bat.emit(CODE.format(var.name), 'decl')
+        bat.scope.decl_var('process', 'variable').name = var.name
