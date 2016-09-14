@@ -40,4 +40,4 @@ def emit_code(bat):
         var = bat.tempvar('string')
         var.name = '__readline'
         bat.emit(CODE.format(var.name), 'decl')
-        bat.scope.decl_var('readline', 'variable').name = var.name
+        bat.decl_var('readline', 'variable', global_scope=True).name = var.name

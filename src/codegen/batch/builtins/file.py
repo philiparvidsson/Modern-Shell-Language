@@ -62,4 +62,4 @@ def emit_code(bat):
         var = bat.tempvar('string')
         var.name = '__file'
         bat.emit(CODE.format(var.name), 'decl')
-        bat.scope.decl_var('file', 'variable').name = var.name
+        bat.decl_var('file', 'variable', global_scope=True).name = var.name

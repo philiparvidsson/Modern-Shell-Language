@@ -41,4 +41,4 @@ def emit_code(bat):
         var = bat.tempvar('string')
         var.name = '__console'
         bat.emit(CODE.format(var.name), 'decl')
-        bat.decl_var('console', 'variable').name = var.name
+        bat.decl_var('console', 'variable', global_scope=True).name = var.name

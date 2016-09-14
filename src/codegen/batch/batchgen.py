@@ -63,6 +63,7 @@ class Batch(CodeGenerator):
         p = Parser(Lexer(StringSource(s)))
         ast = p.generate_ast()
         b = Batch(ast)
+        b.scope = self.scope
         b.tempvar_counter = self.tempvar_counter
         b.label_counter = self.label_counter
         b.generate_code()
@@ -74,7 +75,9 @@ class Batch(CodeGenerator):
         #    top_scope = top_scope.parent_scope
 
         for varname, var in b.scope.variables.iteritems():
-            self.decl_var(varname, var.type_)
+            # redeclare all non built-ins
+            if not varname.startswith('__'):
+                self.decl_var(varname, var.type_)
 
         self.emit(b.segments['init'], 'init')
         self.emit(b.segments['decl'], 'decl')
@@ -90,17 +93,7 @@ class Batch(CodeGenerator):
             mod = None
 
         if mod:
-            old_scope = self.scope
-            top_scope = self.scope
-            while top_scope.parent_scope:
-                top_scope = top_scope.parent_scope
-
-            self.scope = top_scope
-
             mod.emit_code(self)
-
-            self.scope = old_scope
-
 
     def code(self):
         code = ''
@@ -577,7 +570,6 @@ class Batch(CodeGenerator):
             self.push('!{}!.{}'.format(t.name, var_name), REF)
             return
 
-
         self.push(var, VAR)
 
     @code_emitter(syntax.INC)
@@ -750,11 +742,11 @@ class Batch(CodeGenerator):
         for child in node.children:
             self._gen_code(child)
 
-        self.emit('set __i__=0', 'init')
-        self.emit('call :__main__ __ !__i__!', 'init')
-        self.emit('goto :eof', 'init')
-        self.emit(':__main__', 'init')
-        self.emit('set __c_%~2__=%~2', 'init')
+        self.emit('set __i__=0', 'pre')
+        self.emit('call :__main__ __ !__i__!', 'pre')
+        self.emit('goto :eof', 'pre')
+        self.emit(':__main__', 'pre')
+        self.emit('set __c_%~2__=%~2', 'pre')
 
     @code_emitter(syntax.RETURN)
     def __return(self, node):
