@@ -35,7 +35,7 @@ if __name__ == '__main__':
         if not f.endswith('.js'):
             continue
 
-        f2 = f
+        f2 = f[:-3]
         f = os.path.join(d, f)
 
         args = ['python', a]
