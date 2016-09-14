@@ -19,5 +19,5 @@ a.push('bosse')
 
 for (i = 0; i < a.length; i++) {
     console.log(a[i])
-    process.sleep(5)
+    process.sleep(1)
 }
