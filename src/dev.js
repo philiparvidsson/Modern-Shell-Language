@@ -1,5 +1,3 @@
-function a(x) {
-    console.log(x == 'hej san bos se')
-}
+include('../lib/console.js')
 
-a('hej san bos se')
+println('heylo')
