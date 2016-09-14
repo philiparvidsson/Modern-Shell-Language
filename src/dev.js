@@ -11,6 +11,13 @@ a.push('123')
 
 for (i = 0; i < a.length; i++) console.log(a[i])
 */
-include ('../lib/test.js')
+include ('../lib/array.js')
 
-console.log(Date.now())
+a = Array()
+a.push('hej')
+a.push('bosse')
+
+for (i = 0; i < a.length; i++) {
+    console.log(a[i])
+    process.sleep(5)
+}

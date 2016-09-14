@@ -69,7 +69,7 @@ set {0}.sleep.__c=0
 set {0}.sleep.__f={0}.sleep
 goto {0}.sleep_
 :{0}.sleep
-choice /T %~3 /C X /D X /N >nul
+choice /T %~4 /C X /D X /N >nul
 :{0}.sleep_
 
 set {0}.exitCode=0
