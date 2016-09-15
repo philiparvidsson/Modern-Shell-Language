@@ -57,7 +57,8 @@ class Batch(CodeGenerator):
 
     def include(self, file_name):
         # TODO: Provide some general compilation function so we can reuse flags here
-        f = open(file_name)
+        s = smaragd.find_include_file(file_name)
+        f = open(s)
         s = f.read()
         f.close()
 

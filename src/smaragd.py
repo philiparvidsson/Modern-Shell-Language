@@ -2,6 +2,7 @@
 # IMPORTS
 #-------------------------------------------------
 
+import os
 import sys
 
 #-------------------------------------------------
@@ -28,6 +29,8 @@ VERSION = '0.18'
 
 class Config(object):
     def __init__(self, opts):
+        self.include_dirs = [ os.path.join(os.getcwd(), '../include') ]
+
         self.options = {
             '--max-errors': '10',
             # FIXME: Pick default target depending on platform.
@@ -43,6 +46,10 @@ class Config(object):
                 key   = opt
                 value = True
 
+            if key == '--inc-dir':
+                self.include_dirs.append(value)
+                continue
+
             self.options[key] = value
 
     def flag(self, s):
@@ -57,6 +64,15 @@ class Config(object):
 #-------------------------------------------------
 # FUNCTIONS
 #-------------------------------------------------
+
+def find_include_file(s):
+    if os.path.isfile(s):
+        return s
+
+    for path in conf.include_dirs:
+        t = os.path.join(path, s)
+        if os.path.isfile(t):
+            return t
 
 def trace(*args):
     if not args:

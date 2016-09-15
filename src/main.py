@@ -76,6 +76,7 @@ Usage: smaragd [options] <srcfile> [destfile]
 
 Options:
   --analyze         - only perform semantic analysis
+  --inc-dir=<s>     - adds a path as an include directory
   --max-errors=<n>  - set the max number of errors before exiting
   --no-logo         - don't display logo
   --no-optim        - don't optimize

@@ -74,9 +74,15 @@ class SemanticAnalyzer(object):
         pass
 
     def include(self, file_name):
+        s = smaragd.find_include_file(file_name)
+
+        if not s:
+            smaragd.error('cannot include {}: no such file exists'.format(file_name))
+            return
+
         # FIXME: This crap needs to be cleaned up and moved into some other
         # function in another file.
-        with open(file_name, 'r') as f:
+        with open(s, 'r') as f:
             source = StringSource(f.read())
 
         lexer  = Lexer(source)
