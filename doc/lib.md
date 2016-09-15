@@ -1,8 +1,8 @@
 # mshl stdlib manual
 
-### array.js
+## array.js
 
-## Array
+### Array
 
 The Array class provides a simple, mutable array implementation.
 
