@@ -1,8 +1,11 @@
+include('stdio.js')
+
 i = 0;
 while (i < 5) {
-  print(i + " ");
+  //print(i + " ");
   i = i + 1;
 }
+//println();
 
 // Fibonacci
 n = 0;
@@ -13,4 +16,5 @@ while (n < 40) {
   i = j;
   j = k;
   n = n + 1;
+  //println(k);
 }

@@ -4,7 +4,7 @@
 
 import re
 
-import smaragd
+import mshl
 
 from .lexemes import EOF, LEXEME_MAP, NEWLINE
 from .token   import Token
@@ -100,7 +100,7 @@ class Lexer(object):
             #print token
             return token
 
-        smaragd.error('sequence not understood: {}'.format(lexeme))
+        mshl.error('sequence not understood: {}'.format(lexeme))
 
     def peek_char(self):
         return self.source.peek_char()

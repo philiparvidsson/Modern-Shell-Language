@@ -4,7 +4,7 @@
 
 import collections
 
-import smaragd
+import mshl
 
 from ..codegenerator import code_emitter, CodeGenerator
 
@@ -50,7 +50,7 @@ class Batch(CodeGenerator):
 
     def raw(self, code, target):
         if target:
-            if smaragd.conf.option('--target') != target:
+            if mshl.conf.option('--target') != target:
                 # Maybe validate target?
                 return
 
@@ -58,7 +58,7 @@ class Batch(CodeGenerator):
 
     def include(self, file_name):
         # TODO: Provide some general compilation function so we can reuse flags here
-        s = smaragd.find_include_file(file_name)
+        s = mshl.find_include_file(file_name)
 
         if s in self.includes:
             return

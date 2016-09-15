@@ -2,7 +2,7 @@
 # IMPORTS
 #--------------------------------------------------
 
-import smaragd
+import mshl
 
 from .node   import Node
 from .syntax import PROGRAM, parse_expr
@@ -45,7 +45,7 @@ class Parser(object):
             token = self.read_token()
 
             if token.category != lexeme:
-                smaragd.error('expected {}'.format(lexeme), token)
+                mshl.error('expected {}'.format(lexeme), token)
 
             tokens.append(token)
 

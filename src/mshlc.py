@@ -5,7 +5,7 @@
 import os
 import sys
 
-import smaragd
+import mshl
 
 from codegen.batch.batchgen import Batch
 from debug.ast              import visualize_ast
@@ -26,38 +26,38 @@ def parse_file(s):
     lexer  = Lexer(source)
     parser = Parser(lexer)
 
-    if smaragd.num_errors > 0:
-        smaragd.fatal('there were errors')
+    if mshl.num_errors > 0:
+        mshl.fatal('there were errors')
 
     tree = parser.generate_ast()
 
-    if not smaragd.conf.flag('--no-optim'):
+    if not mshl.conf.flag('--no-optim'):
         optim = ASTOptimizer()
         optim.optimize_ast(tree)
 
     analyzer = SemanticAnalyzer()
     analyzer.verify(tree)
 
-    if smaragd.num_errors > 0:
-        smaragd.fatal('there were errors')
+    if mshl.num_errors > 0:
+        mshl.fatal('there were errors')
 
     return tree
 
 def compile_(tree, destfile):
-    target = smaragd.conf.option('--target')
+    target = mshl.conf.option('--target')
     if target == 'bat':
         codegen = Batch(tree)
     else:
         # FIXME: Generate error here.
-        smaragd.fatal('unsupported target'.format(target))
+        mshl.fatal('unsupported target'.format(target))
 
-    #smaragd.trace('generating code...')
+    #mshl.trace('generating code...')
 
     codegen.generate_code()
     code = codegen.code()
 
-    if smaragd.conf.option('--show-code'):
-        smaragd.trace(code)
+    if mshl.conf.option('--show-code'):
+        mshl.trace(code)
     else:
         with open(destfile, 'w') as f:
             f.write(code)
@@ -65,14 +65,14 @@ def compile_(tree, destfile):
 def print_logo():
     print (
 '''
-smaragd v{}\n\ndevs: {}
-'''.format(smaragd.VERSION, '\n      '.join(smaragd.AUTHORS))
+mshl v{}\n\ndevs: {}
+'''.format(mshl.VERSION, '\n      '.join(mshl.AUTHORS))
 )
 
 def print_usage():
     print (
 '''
-Usage: smaragd [options] <srcfile> [destfile]
+Usage: mshlc [options] <srcfile> [destfile]
 
 Options:
   --analyze         - only perform semantic analysis
@@ -94,9 +94,9 @@ def show_ast(root):
 
 def main():
     opts = filter(lambda s: s.startswith('--'), sys.argv)
-    smaragd.conf = smaragd.Config(opts)
+    mshl.conf = mshl.Config(opts)
 
-    if not smaragd.conf.flag('--no-logo'):
+    if not mshl.conf.flag('--no-logo'):
         print_logo()
 
     if len(sys.argv) < 2:
@@ -107,16 +107,16 @@ def main():
     destfile = srcfile + '.bat'
 
     if not os.path.isfile(srcfile):
-        smaragd.fatal('no such file')
+        mshl.fatal('no such file')
 
-    #os.chdir(os.path.dirname(os.path.abspath(smaragd.conf.srcfile)))
+    #os.chdir(os.path.dirname(os.path.abspath(mshl.conf.srcfile)))
 
-    #smaragd.trace('generating syntax tree...')
+    #mshl.trace('generating syntax tree...')
     tree = parse_file(srcfile)
 
-    if smaragd.conf.flag('--show-ast'):
+    if mshl.conf.flag('--show-ast'):
         show_ast(tree)
-    elif not smaragd.conf.flag('--analyze'):
+    elif not mshl.conf.flag('--analyze'):
         # Semantic analysis is really only relevant for code generation.
         compile_(tree, destfile)
 

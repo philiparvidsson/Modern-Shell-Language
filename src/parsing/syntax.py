@@ -2,7 +2,7 @@
 # IMPORTS
 #--------------------------------------------------
 
-import smaragd
+import mshl
 
 from .node import Node
 
@@ -315,6 +315,7 @@ def parse_expr3(parser):
             if tok.category != lexemes.L_PAREN:
                 break
 
+
     # <expr3>[<expr>]
     elif tok.category == lexemes.L_BRACK:
         while True:
@@ -380,6 +381,12 @@ def parse_expr4(parser):
     elif tok.category == lexemes.IDENT:
         expr = parse_ident(parser)
 
+    # -<integer>
+    elif tok.category == lexemes.MINUS_SIGN:
+        parser.read_token()
+        expr = parse_int(parser)
+        expr.data = -int(expr.data)
+
     # <integer>
     elif tok.category == lexemes.INT:
         expr = parse_int(parser)
@@ -410,7 +417,7 @@ def parse_expr4(parser):
 
         if parser.peek_token().category == lexemes.NEWLINE:
             tok = parser.peek_token()
-            smaragd.warning('prefer semicolon or expression on same row as return keyword', tok)
+            mshl.warning('prefer semicolon or expression on same row as return keyword', tok)
 
         parser.eat_whitespace()
 
@@ -449,7 +456,7 @@ def parse_expr4(parser):
     #    pass
 
     elif tok.category != lexemes.EOF:
-        smaragd.error("unexpected token: {}".format(tok.category), tok)
+        mshl.error("unexpected token: {}".format(tok.category), tok)
 
     if expr:
         expr.token = tok
@@ -493,7 +500,7 @@ def parse_for(parser):
     if tok.category == lexemes.L_BRACE:
         parser.read_token()
         while True:
-            parser.eat_whitespace()
+            parser.eat_whitespace(eat_semicolons=True)
 
             tok = parser.peek_token()
             if tok.category == lexemes.R_BRACE:
@@ -653,7 +660,7 @@ def parse_int(parser):
     value = tok.lexeme
     if value.startswith("0x"):
         if len(value) == 2:
-            smaragd.error("invalid hex value", tok)
+            mshl.error("invalid hex value", tok)
             value = 0
         else:
             value = int(value[2:], 16)
@@ -669,7 +676,7 @@ def parse_str(parser):
 
     if ((not value.startswith('"') or not value.endswith('"')) and
         (not value.startswith('\'') or not value.endswith('\''))):
-            smaragd.error("unterminated string", tok)
+            mshl.error("unterminated string", tok)
 
     value = value[1:-1]
 
@@ -689,7 +696,7 @@ def parse_while(parser):
     if tok.category == lexemes.L_BRACE:
         parser.read_token()
         while True:
-            parser.eat_whitespace()
+            parser.eat_whitespace(eat_semicolons=True)
 
             tok = parser.peek_token()
             if tok.category == lexemes.R_BRACE:

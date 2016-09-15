@@ -73,10 +73,10 @@ class SemanticAnalyzer(object):
             self.scope.var(s).writes = 999
 
     def include(self, file_name):
-        s = smaragd.find_include_file(file_name)
+        s = mshl.find_include_file(file_name)
 
         if not s:
-            smaragd.error('cannot include {}: no such file exists'.format(file_name))
+            mshl.error('cannot include {}: no such file exists'.format(file_name))
             return
 
         if s in self.includes:
@@ -92,7 +92,7 @@ class SemanticAnalyzer(object):
         lexer  = Lexer(source)
         parser = Parser(lexer)
 
-        #smaragd.trace('generating syntax tree...')
+        #mshl.trace('generating syntax tree...')
         tree = parser.generate_ast()
 
         self.verify_internal(tree)
@@ -120,14 +120,14 @@ class SemanticAnalyzer(object):
             if not var.name.startswith('_') and var.reads <= var.writes:
                 if var.type_ == 'func':
                     if scope.name:
-                        smaragd.warning('function not used in {}: {}'.format(scope.name, var.name))
+                        mshl.warning('function not used in {}: {}'.format(scope.name, var.name))
                     else:
-                        smaragd.warning('function not used: {}'.format(var.name))
+                        mshl.warning('function not used: {}'.format(var.name))
                 else:
                     if scope.name:
-                        smaragd.warning('variable not used in {}: {}'.format(scope.name, var.name))
+                        mshl.warning('variable not used in {}: {}'.format(scope.name, var.name))
                     else:
-                        smaragd.warning('variable not used: {}'.format(var.name))
+                        mshl.warning('variable not used: {}'.format(var.name))
 
         for nested in scope.nested_scopes:
             self.verify_scope(nested)
@@ -170,7 +170,7 @@ class SemanticAnalyzer(object):
         if (a.construct in (INTEGER, STRING)
         and b.construct in (INTEGER, STRING)
         and a.construct != b.construct):
-            smaragd.warning('adding integer and string', node.token)
+            mshl.warning('adding integer and string', node.token)
 
         self.verify_children(node)
 
@@ -197,7 +197,7 @@ class SemanticAnalyzer(object):
             if self.scope.nesting > 0:
                 # FIXME: Maybe replace nested named functions with assignments
                 # of anonymous functions in parser?
-                smaragd.error('nested functions must be anonymous', node.token)
+                mshl.error('nested functions must be anonymous', node.token)
             func = self.global_scope.decl_var(node.data, 'func')
             scope_name = 'function ' + node.data
 
@@ -210,7 +210,7 @@ class SemanticAnalyzer(object):
             # This is actually a limitation in Batch files, but since we want
             # portability we have to stick to the lowest common denominator.
             # Also, Batch supports 9 parameters but 3 are reserved for impl.
-            smaragd.error('functions cannot have more than 6 parameters')
+            mshl.error('functions cannot have more than 6 parameters')
 
         if func:
             func.num_args = len(decl.children)
@@ -237,11 +237,11 @@ class SemanticAnalyzer(object):
         if func_name == 'include':
             # Function name and a string is required.
             if len(node.children) != 2:
-                smaragd.error('include() takes exactly one argument', node.token)
+                mshl.error('include() takes exactly one argument', node.token)
                 return
 
             if node.children[1].construct != STRING:
-                smaragd.error('included file name must be a compile-time constant', node.token)
+                mshl.error('included file name must be a compile-time constant', node.token)
                 return
 
             file_name = node.children[1].data
@@ -251,24 +251,24 @@ class SemanticAnalyzer(object):
             return
         elif func_name == 'raw':
             if len(node.children) < 2 or len(node.children) > 3:
-                smaragd.error('raw() takes one or two arguments', node.token)
+                mshl.error('raw() takes one or two arguments', node.token)
                 return
 
             if node.children[1].construct != STRING:
-                smaragd.error('raw command must be a compile-time constant', node.token)
+                mshl.error('raw command must be a compile-time constant', node.token)
                 return
 
             target = None
             if len(node.children) > 2:
                 if node.children[2].construct != STRING:
-                    smaragd.error('target must be a compile-time constant', node.token)
+                    mshl.error('target must be a compile-time constant', node.token)
                 else:
                     target = node.children[2].data
             else:
-                smaragd.warning('using raw() without specifying target is non-portable')
+                mshl.warning('using raw() without specifying target is non-portable')
 
         if hasattr(func, 'num_args') and len(node.children) != func.num_args+1:
-            smaragd.warning('function {} takes {} arguments'.format(func_name, func.num_args), node.token)
+            mshl.warning('function {} takes {} arguments'.format(func_name, func.num_args), node.token)
 
         self.verify_children(node)
 
@@ -276,7 +276,7 @@ class SemanticAnalyzer(object):
     def __identifier(self, node):
         var = node.scope.var(node.data)
         if not var:
-            smaragd.error('identifier not declared: {}'.format(node.data), node.token)
+            mshl.error('identifier not declared: {}'.format(node.data), node.token)
         else:
             var.reads += 1
 
@@ -286,13 +286,13 @@ class SemanticAnalyzer(object):
         b = node.children[1]
 
         if a.construct == STRING or b.construct == STRING:
-            smaragd.error('division only allowed with integers', node.token)
+            mshl.error('division only allowed with integers', node.token)
 
         elif a.construct == INTEGER and b.construct == INTEGER:
             if int(b.data) == 0:
-                smaragd.warning('division by zero', node.token)
+                mshl.warning('division by zero', node.token)
             elif int(a.data) > int(b.data):
-                smaragd.warning('division will result in zero', node.token)
+                mshl.warning('division will result in zero', node.token)
 
         self.verify_children(node)
 
@@ -302,7 +302,7 @@ class SemanticAnalyzer(object):
         b = node.children[1]
 
         if a.construct == STRING or b.construct == STRING:
-            smaragd.error('multiplication only allowed with integers', node.token)
+            mshl.error('multiplication only allowed with integers', node.token)
 
         self.verify_children(node)
 
@@ -312,6 +312,6 @@ class SemanticAnalyzer(object):
         b = node.children[1]
 
         if a.construct == STRING or b.construct == STRING:
-            smaragd.error('subtraction only allowed with integers', node.token)
+            mshl.error('subtraction only allowed with integers', node.token)
 
         self.verify_children(node)

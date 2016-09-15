@@ -19,7 +19,7 @@ OPTS = [
 
 if __name__ == '__main__':
     d = os.getcwd()
-    a = os.path.join(d, 'main.py')
+    a = os.path.join(d, 'mshlc.py')
 
     os.chdir('../tests')
 

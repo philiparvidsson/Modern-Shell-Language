@@ -21,7 +21,7 @@ AUTHORS = [
     'Mattias Eriksson <pls enter mail>'
 ]
 
-VERSION = '0.18'
+VERSION = '0.38'
 
 #-------------------------------------------------
 # CLASSES
@@ -79,7 +79,6 @@ def trace(*args):
         print
     else:
         print ' '.join(args)
-
 
 def error(s, t=None):
     if t:

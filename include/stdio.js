@@ -3,16 +3,35 @@
  *
  * @param text The text to output.
  */
+function print() {
+    /* Windows */
+    raw('set r=%1'                                         , 'bat')
+    raw('set s='                                           , 'bat')
+    raw(':__print'                                         , 'bat')
+    raw('if "%~4" equ "" (goto __print_done)'              , 'bat')
+    raw('set "s=%s%%~4"'                                   , 'bat')
+    raw('shift'                                            , 'bat')
+    raw('goto __print'                                     , 'bat')
+    raw(':__print_done'                                    , 'bat')
+    raw('if "%s%" neq "" (echo|set /p="%s%") else (echo.)' , 'bat')
+    raw('set %r%=0'                                        , 'bat')
+}
+
+/**
+ * Outputs a line of text to the standard output.
+ *
+ * @param text The text to output.
+ */
 function println() {
     /* Windows */
     raw('set r=%1'                                , 'bat')
     raw('set s='                                  , 'bat')
-    raw(':{0}_echo'                               , 'bat')
-    raw('if "%~4" equ "" (goto :{0}_done)'        , 'bat')
+    raw(':__println'                              , 'bat')
+    raw('if "%~4" equ "" (goto __println_done)'   , 'bat')
     raw('set "s=%s%%~4 "'                         , 'bat')
     raw('shift'                                   , 'bat')
-    raw('goto :{0}_echo'                          , 'bat')
-    raw(':{0}_done'                               , 'bat')
+    raw('goto __println'                          , 'bat')
+    raw(':__println_done'                         , 'bat')
     raw('if "%s%" neq "" (echo %s%) else (echo.)' , 'bat')
     raw('set %r%=0'                               , 'bat')
 }
