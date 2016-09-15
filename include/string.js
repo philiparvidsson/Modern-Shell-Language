@@ -22,5 +22,5 @@ String = function (s) {
 }
 
 String.concat = function (a, b) {
-    return a.value+b.value
+    return a.value + b.value
 }
