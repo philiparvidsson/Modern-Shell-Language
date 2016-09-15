@@ -29,7 +29,7 @@ VERSION = '0.38'
 
 class Config(object):
     def __init__(self, opts):
-        self.include_dirs = [ os.path.join(os.getcwd(), '../include') ]
+        self.include_dirs = [ os.path.join(os.getcwd(), '../lib') ]
 
         self.options = {
             '--max-errors': '10',
