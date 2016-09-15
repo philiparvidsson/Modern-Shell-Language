@@ -4,7 +4,7 @@ include('stdio.js')
 a = [123, 456, 789]
 
 for (i = 0; i < a.length; i++)
-    console.log(a[i])
+    println(a[i])
 
 // Arrays can also be nested:
 b = [['a', 'b', 'c'],
@@ -18,7 +18,7 @@ for (i = 0; i < b.length; i++)
 // Arrays are also dictionaries!
 c = []
 c['foo'] = 'hello world'
-printlnc['foo'])
+println(c['foo'])
 
 // Dictionary values can also be accessed like this:
 println(c.foo)
