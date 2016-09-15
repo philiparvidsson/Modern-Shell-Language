@@ -1,5 +1,11 @@
 include('assert.js')
 
+/**
+ * This test is taken from the Batsh test suite.
+ *
+ * See https://github.com/BYVoid/Batsh for more information.
+ */
+
 a = "Value: " + 1+(4+6)*3;
 Assert.equal(a, 'Value: 31', '')
 b = 3 + 4;

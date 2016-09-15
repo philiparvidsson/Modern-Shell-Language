@@ -1,5 +1,11 @@
 include ('assert.js')
 
+/**
+ * This test is taken from the Batsh test suite.
+ *
+ * See https://github.com/BYVoid/Batsh for more information.
+ */
+
 Assert.equal(false          ,  0 , 'batsh test failed 1')
 Assert.equal(true           ,  1 , 'batsh test failed 2')
 Assert.equal(42             ,  42, 'batsh test failed 3')

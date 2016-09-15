@@ -1,5 +1,11 @@
 include('assert.js')
 
+/**
+ * This test is taken from the Batsh test suite.
+ *
+ * See https://github.com/BYVoid/Batsh for more information.
+ */
+
 function loop(num) {
   //println(num);
   if (num > 0) {

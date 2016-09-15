@@ -1,5 +1,11 @@
 include ('assert.js')
 
+/**
+ * This test is taken from the Batsh test suite.
+ *
+ * See https://github.com/BYVoid/Batsh for more information.
+ */
+
 function len(a) { return a.length }
 
 a = ["", "y", -1, 1];

@@ -1,5 +1,11 @@
 include('assert.js')
 
+/**
+ * This test is taken from the Batsh test suite.
+ *
+ * See https://github.com/BYVoid/Batsh for more information.
+ */
+
 // Function call
 function func1(p1, p2) {
     Assert.equal(p1, 'Hello', 'batsh test failed 1')

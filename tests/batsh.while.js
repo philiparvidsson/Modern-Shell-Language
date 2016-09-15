@@ -1,5 +1,11 @@
 include('stdio.js')
 
+/**
+ * This test is taken from the Batsh test suite.
+ *
+ * See https://github.com/BYVoid/Batsh for more information.
+ */
+
 i = 0;
 while (i < 5) {
   //print(i + " ");
