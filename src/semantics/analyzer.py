@@ -102,7 +102,9 @@ class SemanticAnalyzer(object):
             var = scope.var(s)
 
             # One read means the variable is never used (only assigned once).
-            if var.reads <= var.writes:
+            # Also, no warnings for vars with leading underscores.  They're used
+            # for raw code implementation.
+            if not var.name.startswith('_') and var.reads <= var.writes:
                 if var.type_ == 'func':
                     if scope.name:
                         smaragd.warning('function not used in {}: {}'.format(scope.name, var.name))
