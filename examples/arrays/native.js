@@ -1,3 +1,5 @@
+include/'stdio.js')
+
 // Arrays contain elements:
 a = [123, 456, 789]
 
@@ -11,12 +13,12 @@ b = [['a', 'b', 'c'],
 
 for (i = 0; i < b.length; i++)
     for (j = 0; j < b[i].length; j++)
-        console.log(b[i][j])
+        println(b[i][j])
 
 // Arrays are also dictionaries!
 c = []
 c['foo'] = 'hello world'
-console.log(c['foo'])
+printlnc['foo'])
 
 // Dictionary values can also be accessed like this:
-console.log(c.foo)
+println(c.foo)
