@@ -1,4 +1,4 @@
-include/'stdio.js')
+include('stdio.js')
 
 // Arrays contain elements:
 a = [123, 456, 789]
