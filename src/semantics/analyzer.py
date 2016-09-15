@@ -2,6 +2,9 @@
 # IMPORTS
 #-------------------------------------------------
 
+# FIXME: Check for duplicate arg names
+# FIXME: Check for duplicate function names (only for named functions)
+
 from lexing.lexer    import Lexer
 from lexing.source   import StringSource
 from parsing.parser  import Parser
