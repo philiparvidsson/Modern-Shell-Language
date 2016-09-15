@@ -22,7 +22,7 @@ Assert.equal = function (a, b, s) {
     println('expected value:', b)
     println('actual value:', a)
 
-    process.exit()
+    process.exit(10001)
 }
 
 /**

@@ -1,14 +1,12 @@
-include('inc/testing.js')
-
-test.name = 'functions test'
+include('assert.js')
 
 function a(x, y) {
-    assert.areEqual(x, 'hello', 'x should contain hello')
-    assert.areEqual(y, 'world', 'y should contain world')
+    Assert.equal(x, 'hello', 'x should contain hello')
+    Assert.equal(y, 'world', 'y should contain world')
 }
 
 function b(x) {
-    assert.areEqual(x, 'hello world', 'x should contain hello world')
+    Assert.equal(x, 'hello world', 'x should contain hello world')
 }
 
 function c() {
@@ -19,13 +17,13 @@ function d() {
     return;
 
     // Should never happen since we return.
-    test.fail()
+    Assert.isTrue(false, 'return statement failed')
 }
 
 a('hello', 'world')
 b('hello world')
 
-assert.areEqual(c(), 'hello world', 'c() should return hello world')
+Assert.equal(c(), 'hello world', 'c() should return hello world')
 
 b(c())
 d()

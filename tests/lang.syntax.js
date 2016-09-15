@@ -1,4 +1,4 @@
-include('inc/testing.js')
+include('assert.js')
 
 // This file contains some challenging syntax constructs.
 
@@ -17,9 +17,9 @@ c
 {
     return x*10
 }
-assert
+Assert
     .
-    areEqual (
+    equal (
         c(
         b)
                 ,

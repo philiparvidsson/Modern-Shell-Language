@@ -1,6 +1,4 @@
-include('inc/testing.js')
-
-test.name = 'raw built-in test'
+include('assert.js')
 
 raw('goto :eof', 'bat')
-test.fail()
+Assert.isTrue(false, 'raw did not work properly')

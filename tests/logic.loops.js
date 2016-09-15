@@ -1,6 +1,4 @@
-include('inc/testing.js')
-
-test.name = 'loops test'
+include('assert.js')
 
 i = 0
 j = 20
@@ -8,8 +6,8 @@ for (i = 0; i < j; i++) {
     j--
 }
 
-assert.areEqual(i, 10, 'for-loop produced incorrect results')
-assert.areEqual(i, j , 'i and j should be equal')
+Assert.equal(i, 10, 'for-loop produced incorrect results')
+Assert.equal(i, j , 'i and j should be equal')
 
 k = 4
 l = 0
@@ -18,8 +16,8 @@ while (k <= 10) {
     l -= 3
 }
 
-assert.areEqual(k, 12  , 'while loop produced incorrect results 1')
-assert.areEqual(l, 0-12, 'while loop produced incorrect results 2')
+Assert.equal(k, 12  , 'while loop produced incorrect results 1')
+Assert.equal(l, 0-12, 'while loop produced incorrect results 2')
 
 m = 10
 while (m > 0) {
@@ -27,13 +25,13 @@ while (m > 0) {
     if (m == 5) break
 }
 
-assert.areEqual(m, 5, 'break did not seem to work correctly 1')
+Assert.equal(m, 5, 'break did not seem to work correctly 1')
 
 for (n = 0; n < 10; n++) {
     if (n == 7) break
 }
 
-assert.areEqual(n, 7, 'break did not seem to work correctly 2')
+Assert.equal(n, 7, 'break did not seem to work correctly 2')
 
 o = 0
 for (p = 0; p < 10; p++) {
@@ -44,7 +42,7 @@ for (p = 0; p < 10; p++) {
     }
 }
 
-assert.areEqual(o, 21, 'break did not seem to work correctly 3')
+Assert.equal(o, 21, 'break did not seem to work correctly 3')
 
 r = 10
 s = 0
@@ -54,7 +52,7 @@ while (r > 0) {
     s++
 }
 
-assert.areEqual(s, 9, 'continue did not seem to work correctly 1')
+Assert.equal(s, 9, 'continue did not seem to work correctly 1')
 
 t = 0
 for (u = 0; u < 10; u++) {
@@ -64,7 +62,7 @@ for (u = 0; u < 10; u++) {
     t++
 }
 
-assert.areEqual(t, 8, 'continue did not seem to work correctly 2')
+Assert.equal(t, 8, 'continue did not seem to work correctly 2')
 
 u = 0
 for (v = 0; v < 10; v++) {
@@ -75,4 +73,4 @@ for (v = 0; v < 10; v++) {
     }
 }
 
-assert.areEqual(u, 72, 'continue did not seem to work correctly 3')
+Assert.equal(u, 72, 'continue did not seem to work correctly 3')

@@ -1,9 +1,5 @@
-include('inc/testing.js')
-
 include('assert.js')
 include('file.js')
-
-test.name = 'file operations test'
 
 FILE_NAME = 'file.txt'
 FILE_TEXT = 'hello 123 abc'

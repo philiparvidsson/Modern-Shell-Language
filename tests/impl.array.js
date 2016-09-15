@@ -1,9 +1,5 @@
-include('inc/testing.js')
-
 include('array.js')
 include('assert.js')
-
-test.name = 'file operations test'
 
 a = Array()
 Assert.equal(a.length, 0, 'new array should be zero-length')

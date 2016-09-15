@@ -1,17 +1,17 @@
-include('inc/testing.js')
-
-test.name = 'scopes test'
+include('assert.js')
 
 // Test access to global/outer scopes.
 a = '123'
 function b() {
-    assert.areEqual(a, '123', 'could not access global var a')
+    Assert.equal(a, '123', 'could not read global var a')
+    a = 'pqr'
+    Assert.equal(a, 'pqr', 'could not mutate global var a')
 
     c = 'xyz'
 
     // FIXME: nested functions may not be named
     d = function () {
-        assert.areEqual(c, 'xyz', 'could not access outer scope var c')
+        Assert.equal(c, 'xyz', 'could not access outer scope var c')
     }
 
     d()

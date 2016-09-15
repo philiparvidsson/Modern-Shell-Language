@@ -1,16 +1,10 @@
-i = 0;
-while (i < 5) {
-  print(i + " ");
-  i = i + 1;
-}
+include('stdio.js')
 
-// Fibonacci
-n = 0;
-i = 0;
-j = 1;
-while (n < 40) {
-  k = i + j;
-  i = j;
-  j = k;
-  n = n + 1;
+a = '123'
+function b() {
+    println(a)
+    a = 'hej'
+    //println(a)
 }
+b()
+//println(a)

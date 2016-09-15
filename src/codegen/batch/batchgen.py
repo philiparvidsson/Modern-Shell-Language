@@ -244,6 +244,7 @@ class Batch(CodeGenerator):
                 a = self.decl_var(ident.data, type_).name
             else:
                 a = self.scope.var(ident.data).name
+
         else:
             self._gen_code(ident)
             a = self.pop().value
