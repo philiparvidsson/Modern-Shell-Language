@@ -41,6 +41,7 @@ def analyzes(c, p):
 class SemanticAnalyzer(object):
     def __init__(self):
         self.analyzer_funcs = {}
+        self.includes = []
 
         for s in dir(self):
             func = getattr(self, s, None)
@@ -56,7 +57,8 @@ class SemanticAnalyzer(object):
             self.analyzer_funcs[p][c] = func
 
         self.cur_pass = 0
-        self.scope = Scope()
+        self.global_scope = Scope()
+        self.scope = self.global_scope
 
         # Built-ins
         self.scope.decl_var('console' , 'string')
@@ -70,15 +72,17 @@ class SemanticAnalyzer(object):
             self.scope.var(s).reads  = 1000
             self.scope.var(s).writes = 999
 
-    def raw(self, code, target):
-        pass
-
     def include(self, file_name):
         s = smaragd.find_include_file(file_name)
 
         if not s:
             smaragd.error('cannot include {}: no such file exists'.format(file_name))
             return
+
+        if s in self.includes:
+            return
+
+        self.includes.append(s)
 
         # FIXME: This crap needs to be cleaned up and moved into some other
         # function in another file.
@@ -194,7 +198,7 @@ class SemanticAnalyzer(object):
                 # FIXME: Maybe replace nested named functions with assignments
                 # of anonymous functions in parser?
                 smaragd.error('nested functions must be anonymous', node.token)
-            func = self.scope.decl_var(node.data, 'func')
+            func = self.global_scope.decl_var(node.data, 'func')
             scope_name = 'function ' + node.data
 
         self.enter_scope(scope_name)
