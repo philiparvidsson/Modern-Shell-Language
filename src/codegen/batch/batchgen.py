@@ -38,6 +38,7 @@ class Batch(CodeGenerator):
         self.value_stack = []
         self.scope = Scope()
         self.loop_labels = []
+        self.includes = []
 
         self.segments = collections.OrderedDict((
             ('preinit' , ''),
@@ -58,6 +59,10 @@ class Batch(CodeGenerator):
     def include(self, file_name):
         # TODO: Provide some general compilation function so we can reuse flags here
         s = smaragd.find_include_file(file_name)
+
+        if s in self.includes:
+            return
+
         f = open(s)
         s = f.read()
         f.close()
@@ -85,6 +90,8 @@ class Batch(CodeGenerator):
 
         # Don't kill the stack.
         self.push('include', STR)
+
+        self.includes.append(s)
 
     def check_builtin(self, name):
         try:
