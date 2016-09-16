@@ -6,7 +6,7 @@
 
 ## Functions
 
-### println()
+### `println()`
 
 The `println` function outputs a piece of text to the standard output.
 
@@ -19,9 +19,9 @@ println('hello, world!')
 
 ## Objects
 
-### array
+### `array`
 
-The array class provides a simple, mutable array implementation for managing collections of objects. It doubles as a dictionary or property-object.
+The `array` class provides a simple, mutable array implementation for managing collections of objects. It doubles as a dictionary or property-object.
 
 #### Example
 ```javascript
