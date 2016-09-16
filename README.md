@@ -58,9 +58,8 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* Dropwizard - Bla bla bla
-* Maven - Maybe
-* Atom - ergaerga
+* emacs - The best text editor out there! ;-)
+* Python - A widely used high-level, general-purpose, interpreted, dynamic programming language.
 
 ## Contributing
 
