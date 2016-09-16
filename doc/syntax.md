@@ -153,7 +153,7 @@ log_fn('hello again')
 
 ## Arrays
 
-Arrays are native, although loosely typed, objects in mshl. They can be used as regular arrays, mutable dictionaries or as objects with properties. Below, we use an array in the most intuitive way. See the [examples](https://github.com/philiparvidsson/mshl/tree/master/examples) for more information on how arrays (and other features of mshl) can be used.
+Arrays are native, although loosely typed, objects in mshl. They can be used as regular arrays, mutable dictionaries or as objects with properties. Below, we use an array in the most intuitive way. See the [examples](../examples) for more information on how arrays (and other features of mshl) can be used.
 
 ```javascript
 include('stdio.js')
