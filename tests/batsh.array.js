@@ -13,19 +13,19 @@ a[0] = 2 * 9;
 a[2] = "abx";
 a[4] = "5" + a[0];
 
-Assert.equal(a[0], 18, '')
-Assert.equal(a[1], 'y', '')
-Assert.equal(a[2], 'abx', '')
-Assert.equal(a[3], 1, '')
-Assert.equal(a[4], '518', '')
+assert.equal(a[0], 18, '')
+assert.equal(a[1], 'y', '')
+assert.equal(a[2], 'abx', '')
+assert.equal(a[3], 1, '')
+assert.equal(a[4], '518', '')
 
 a = [1, 2, 3];
 
-Assert.equal(a[0], 1, '')
-Assert.equal(a[1], 2, '')
-Assert.equal(a[2], 3, '')
+assert.equal(a[0], 1, '')
+assert.equal(a[1], 2, '')
+assert.equal(a[2], 3, '')
 
 
-Assert.equal(("10" + a[0]) * 2, 202, '')
-Assert.equal(len(a), 3, '')
-Assert.equal(len(a) * 8, 24, '')
+assert.equal(("10" + a[0]) * 2, 202, '')
+assert.equal(len(a), 3, '')
+assert.equal(len(a) * 8, 24, '')

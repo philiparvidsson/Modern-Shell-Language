@@ -4,10 +4,10 @@ include('file.js')
 FILE_NAME = 'file.txt'
 FILE_TEXT = 'hello 123 abc'
 
-file = File(FILE_NAME, 'a')
-Assert.isFalse(file.exists(FILE_NAME), "file used in test should not exist yet")
-file.write(FILE_TEXT)
-Assert.isTrue(file.exists(FILE_NAME), "File.write seems to have failed")
-Assert.equal(file.read(), FILE_TEXT, "File.write or File.read failed")
-file.delete()
-Assert.isFalse(file.exists(FILE_NAME), "file should not exist anymore")
+f = file(FILE_NAME, 'a')
+assert.isFalse(f.exists(), "file used in test should not exist yet")
+f.write(FILE_TEXT)
+assert.isTrue(f.exists(), "File.write seems to have failed")
+assert.equal(f.read(), FILE_TEXT, "File.write or File.read failed")
+f.delete()
+assert.isFalse(f.exists(), "file should not exist anymore")

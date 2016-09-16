@@ -1,5 +1,3 @@
-include('stdio.js')
-
 /**
  * This test is taken from the Batsh test suite.
  *

@@ -544,10 +544,10 @@ class Batch(CodeGenerator):
     def __identifier(self, node):
         ident = node.data
         var = self.scope.var(ident)
-        if not var:
-            #self.builtins.check(self, ident)
-            self.check_builtin(ident)
-            var = self.scope.var(ident)
+        #if not var:
+        #    #self.builtins.check(self, ident)
+        #    #self.check_builtin(ident)
+        #    #var = self.scope.var(ident)
 
         if var.scope != self.scope and isinstance(var.name, str) and var.name.startswith('__c_%~2__.'):
             scopes_out = 0
@@ -746,6 +746,15 @@ class Batch(CodeGenerator):
     def __program(self, node):
         self.emit('@echo off', 'preinit')
         self.emit('setlocal EnableDelayedExpansion', 'preinit')
+
+        self.emit('set __argv.length=0'             , 'preinit')
+        self.emit(':__argv'                         , 'preinit')
+        self.emit('if "%~1" neq "" ('               , 'preinit')
+        self.emit('set "__argv.!__argv.length!=%~1"', 'preinit')
+        self.emit('set /a __argv.length+=1'         , 'preinit')
+        self.emit('shift'                           , 'preinit')
+        self.emit('goto __argv'                     , 'preinit')
+        self.emit(')'                               , 'preinit')
 
         self.emit('set __i__=0'               , 'postinit')
         self.emit('call :__main__ __ !__i__!' , 'postinit')

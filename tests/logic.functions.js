@@ -1,12 +1,12 @@
 include('assert.js')
 
 function a(x, y) {
-    Assert.equal(x, 'hello', 'x should contain hello')
-    Assert.equal(y, 'world', 'y should contain world')
+    assert.equal(x, 'hello', 'x should contain hello')
+    assert.equal(y, 'world', 'y should contain world')
 }
 
 function b(x) {
-    Assert.equal(x, 'hello world', 'x should contain hello world')
+    assert.equal(x, 'hello world', 'x should contain hello world')
 }
 
 function c() {
@@ -17,13 +17,13 @@ function d() {
     return;
 
     // Should never happen since we return.
-    Assert.isTrue(false, 'return statement failed')
+    assert.isTrue(false, 'return statement failed')
 }
 
 a('hello', 'world')
 b('hello world')
 
-Assert.equal(c(), 'hello world', 'c() should return hello world')
+assert.equal(c(), 'hello world', 'c() should return hello world')
 
 b(c())
 d()

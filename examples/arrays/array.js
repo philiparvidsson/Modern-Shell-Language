@@ -3,7 +3,7 @@ include('stdio.js')
 
 // This example uses the mutable Array class provided by the mshl standard library.
 
-a = Array()
+a = array()
 
 a.push('a')
 a.push('c')

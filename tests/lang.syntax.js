@@ -17,7 +17,7 @@ c
 {
     return x*10
 }
-Assert
+assert
     .
     equal (
         c(

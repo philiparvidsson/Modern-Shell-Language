@@ -6,13 +6,13 @@ include('assert.js')
 a = []
 a.prop = 'foo'
 
-Assert.equal(a.prop, 'foo', 'object properties not working')
+assert.equal(a.prop, 'foo', 'object properties not working')
 
 // 2. Passing objects to functions
 b = []
 b.some_prop = 'bar'
 c = function (o) {
-    Assert.equal(o.some_prop, 'bar')
+    assert.equal(o.some_prop, 'bar')
 }
 c(b)
 
@@ -21,7 +21,7 @@ d = []
 e = function (o) { o.the_prop = 'hello world' }
 e(d)
 
-Assert.equal(d.the_prop, 'hello world', 'object mutation in function failed')
+assert.equal(d.the_prop, 'hello world', 'object mutation in function failed')
 
 // 4. Returning objects from functions
 f = function() {
@@ -34,17 +34,17 @@ f = function() {
 h = f()
 i = f()
 
-Assert.equal(h.a_prop, 'world hello', 'object returning failed 1')
+assert.equal(h.a_prop, 'world hello', 'object returning failed 1')
 // FIXME: Syntax not yet supported.
-//Assert.equal(f().a_prop, 'world hello', 'object returning failed 2')
+//assert.equal(f().a_prop, 'world hello', 'object returning failed 2')
 
 h.test_prop = '123'
 i.test_prop = 'abc'
 
 // h and i should not point to the same object since we instantiated two objects
 // with two calls to f()
-Assert.equal(h.test_prop, '123', 'object reference error 1')
-Assert.equal(i.test_prop, 'abc', 'object reference error 2')
+assert.equal(h.test_prop, '123', 'object reference error 1')
+assert.equal(i.test_prop, 'abc', 'object reference error 2')
 
 // 5. Nested objects
 
@@ -52,7 +52,7 @@ j = []
 j.nested = []
 j.nested.func = function () { return 12345 }
 
-Assert.equal(j.nested.func(), 12345, 'nested objects not working properly')
+assert.equal(j.nested.func(), 12345, 'nested objects not working properly')
 
 // 6. Self-referencing objects (this keyword, kind of)
 // FIXME: Implement this-keyword
@@ -75,8 +75,8 @@ m = k()
 l.value = 444
 m.value = 777
 
-Assert.equal(l.test_func(), 444, 'self-reference failed 1')
-Assert.equal(m.test_func(), 777, 'self-reference failed 2')
+assert.equal(l.test_func(), 444, 'self-reference failed 1')
+assert.equal(m.test_func(), 777, 'self-reference failed 2')
 
 // 7. Objects inside arrays (with 'ctor' args)
 
@@ -90,5 +90,5 @@ n = function (x) {
 
 p = [n('xyz'), n('pqr')]
 
-Assert.equal(p[0].val, 'xyz', 'object in array failed 1')
-Assert.equal(p[1].val, 'pqr', 'object in array failed 2')
+assert.equal(p[0].val, 'xyz', 'object in array failed 1')
+assert.equal(p[1].val, 'pqr', 'object in array failed 2')
