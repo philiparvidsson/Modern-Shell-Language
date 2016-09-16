@@ -349,6 +349,17 @@ class Batch(CodeGenerator):
         self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
+    @code_emitter(syntax.EQUAL_UNDEF)
+    def __equal_undef(self, node):
+        self._gen_code(node.children[0])
+
+        a = self.pop_deref().value
+
+        temp = self.tempvar(INT)
+        s = 'if "{}" equ "" (set /a {}=1) else (set /a {}=0)'
+        self.emit(s.format(a, temp.name, temp.name))
+        self.push(temp, VAR)
+
     @code_emitter(syntax.FOR)
     def __for(self, node):
         label = self.label()

@@ -6,63 +6,64 @@
 EOF = '<eof>'
 
 # Special characters.
-ASTERISK       = 'asterisk'
-ASTERISK_EQ    = 'asterisk equals'
-BIN_AND        = 'binary and'
-BIN_AND_EQ     = 'binary and equals'
-BIN_OR         = 'binary or'
-BIN_OR_EQ      = 'binary or equals'
-BIN_XOR        = 'binary xor'
-BIN_XOR_EQ     = 'binary xor equals'
-BREAK          = 'break'
-COLON          = 'colon'
-COMMA          = 'comma'
-CONTINUE       = 'continue'
-EQ_SIGN        = 'equals sign'
-EQ_SIGN_2      = 'double equals sign'
-GREATER        = 'greater than'
-GREATER_EQ     = 'greater than or equal'
-LESS           = 'less than'
-LESS_EQ        = 'less than or equal'
-LOGIC_AND      = 'logical and'
-LOGIC_OR       = 'logical or'
-L_BRACE        = 'left brace'
-L_BRACK        = 'left bracket'
-L_PAREN        = 'left parenthesis'
-MINUS_EQ       = 'minus equals'
-MINUS_MINUS    = 'double minus sign'
-MINUS_SIGN     = 'minus sign'
-MODULO         = 'modulo'
-MODULO_EQ      = 'modulo equals'
-NEWLINE        = 'newline'
-NOT            = 'not'
-NOT_EQ         = 'not equal'
-PERIOD         = 'period'
-PLUS_EQ        = 'plus equals'
-PLUS_PLUS      = 'double plus sign'
-PLUS_SIGN      = 'plus sign'
-Q_MARK         = 'question mark'
-R_BRACE        = 'right brace'
-R_BRACK        = 'right bracket'
-R_PAREN        = 'right parenthesis'
-SEMICOLON      = 'semicolon'
-SHIFT_L        = 'shift left'
-SHIFT_L_EQ     = 'shift left equals'
-SHIFT_R        = 'shift right'
-SHIFT_R_EQ     = 'shift right equals'
-SLASH          = 'slash'
-SLASH_EQ       = 'slash equals'
-COMMENT = 'comment'
-FOR = 'for'
+ASTERISK    = 'asterisk'
+ASTERISK_EQ = 'asterisk equals'
+BIN_AND     = 'binary and'
+BIN_AND_EQ  = 'binary and equals'
+BIN_OR      = 'binary or'
+BIN_OR_EQ   = 'binary or equals'
+BIN_XOR     = 'binary xor'
+BIN_XOR_EQ  = 'binary xor equals'
+BREAK       = 'break'
+COLON       = 'colon'
+COMMA       = 'comma'
+COMMENT     = 'comment'
+CONTINUE    = 'continue'
+EQ_SIGN     = 'equals sign'
+EQ_SIGN_2   = 'double equals sign'
+FOR         = 'for'
+GREATER     = 'greater than'
+GREATER_EQ  = 'greater than or equal'
+LESS        = 'less than'
+LESS_EQ     = 'less than or equal'
+LOGIC_AND   = 'logical and'
+LOGIC_OR    = 'logical or'
+L_BRACE     = 'left brace'
+L_BRACK     = 'left bracket'
+L_PAREN     = 'left parenthesis'
+MINUS_EQ    = 'minus equals'
+MINUS_MINUS = 'double minus sign'
+MINUS_SIGN  = 'minus sign'
+MODULO      = 'modulo'
+MODULO_EQ   = 'modulo equals'
+NEWLINE     = 'newline'
+NOT         = 'not'
+NOT_EQ      = 'not equal'
+PERIOD      = 'period'
+PLUS_EQ     = 'plus equals'
+PLUS_PLUS   = 'double plus sign'
+PLUS_SIGN   = 'plus sign'
+Q_MARK      = 'question mark'
+R_BRACE     = 'right brace'
+R_BRACK     = 'right bracket'
+R_PAREN     = 'right parenthesis'
+SEMICOLON   = 'semicolon'
+SHIFT_L     = 'shift left'
+SHIFT_L_EQ  = 'shift left equals'
+SHIFT_R     = 'shift right'
+SHIFT_R_EQ  = 'shift right equals'
+SLASH       = 'slash'
+SLASH_EQ    = 'slash equals'
 
 # Keywords.
-ELSE   = 'else'
-FUNC   = 'function'
-IF     = 'if'
-WHILE  = 'while'
-RETURN = 'return'
-TRUE   = 'true'
-FALSE  = 'false'
+ELSE      = 'else'
+FALSE     = 'false'
+FUNC      = 'function'
+IF        = 'if'
+RETURN    = 'return'
+TRUE      = 'true'
+UNDEFINED = 'undefined'
+WHILE     = 'while'
 
 # User specified.
 IDENT = 'identifier'
@@ -119,16 +120,17 @@ LEXEME_MAP = {
     '\}'                       : R_BRACE,
 
     # Keywords.
-    'break'    : BREAK,
-    'continue' : CONTINUE,
-    'else'     : ELSE,
-    'false'    : FALSE,
-    'for'      : FOR,
-    'function' : FUNC,
-    'if'       : IF,
-    'return'   : RETURN,
-    'true'     : TRUE,
-    'while'    : WHILE,
+    'break'     : BREAK,
+    'continue'  : CONTINUE,
+    'else'      : ELSE,
+    'false'     : FALSE,
+    'for'       : FOR,
+    'function'  : FUNC,
+    'if'        : IF,
+    'return'    : RETURN,
+    'true'      : TRUE,
+    'undefined' : UNDEFINED,
+    'while'     : WHILE,
 
     # User specified.
     '0x[0-9A-Fa-f]+'         : INT,
