@@ -141,7 +141,7 @@ Functions also have the ability to carry properties, and thus can be used as arr
 include('stdio.js')
 
 function my_func(s) {
-    console.log(s)
+    println(s)
 }
 
 my_func('hello world')
