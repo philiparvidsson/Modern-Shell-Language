@@ -21,7 +21,6 @@ On Linux, depending on your distribution, Python comes pre-installed. This means
 
 On Windows, you need to install Python manually. See [this link](https://wiki.python.org/moin/BeginnersGuide/Download) for more information.
 
-
 #### Download the latest mshl release.
 The latest mshl binary is always available from here. Download and save it to a directory on your computer.
 
