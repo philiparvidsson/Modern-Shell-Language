@@ -42,11 +42,11 @@ Run the tests by executing `python runtests.py` in the `src`directory. All tests
 
 ## Deployment
 
-### Deploying the Compiler
+### Deploying the compiler
 
 Deploying the mshl compiler is a matter of downloading the mshl binary. The compiler is then invoked with Python by typing `python mshlc <srcfile>`, which will generate a shell script for the target platform.
 
-### Deploying Compiled Programs
+### Deploying compiled programs
 
 Programs compiled with mshlc are shell scripts that run on their target platforms without requiring the installation of any software. Simply transfer the compiled script to the target system and run it!
 
