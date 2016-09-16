@@ -6,16 +6,16 @@
 
 ## array.js
 
-### Array
+### array
 
-The Array class provides a simple, mutable array implementation.
+The array class provides a simple, mutable array implementation for managing collections of objects. It doubles as a dictionary or property-object.
 
-**Usage**
+#### Example
 ```javascript
 include('array.js')
 include('stdio.js')
 
-a = Array()
+a = array()
 
 a.push('world')
 a.push('hello')
