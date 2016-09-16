@@ -18,7 +18,6 @@ num_errors = 0
 
 AUTHORS = [
     'Philip Arvidsson <contact@philiparvidsson.com>',
-    'Mattias Eriksson <pls enter mail>'
 ]
 
 VERSION = '0.38'
