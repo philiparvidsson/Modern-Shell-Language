@@ -1,11 +1,12 @@
 # Syntax
-The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
 
-### Assignment
-The most basic operations are variable assignments. mshl tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in mshl.
+The syntax is based on JavaScript to provide a familiar environment, make porting already-existing programs less of a hassle and to provide a simple syntax that is easily understandable.
+
+## Assignment
+
+The most basic operations are variable assignments. mshl tries to 'infer' types in the sense that it can tell integer and string variables apart most of the time. Also, semicolons after statements are almost always optional in mshl, the exception being after the return keyword when there is no return expression.
 
 ```javascript
-
 /* Numbers */
 a = 10
 b = 0x10
@@ -16,7 +17,10 @@ x = "a string"
 y = 'another string'
 ```
 
-### Integer Operations
+## Integer Operations
+
+Integer operations are various ways of working with integers. mshl does not place a restriction on the magnitude of integers used in scripts, although, for the sake of portability, you should take care to stick inside signed 32-bit ranges.
+
 ```javascript
 a = 7
 b = 5
@@ -41,7 +45,10 @@ k = a>>b // Right-shift
 // Most of the operations above also exist as assign-operations, i.e. a+=1, b<<=1 etc.
 ```
 
-### String Operations
+## String Operations
+
+Strings are a basic and native literal type in mshl, just like integers. Instead of numbers, they contain a piece of text. Strings are not restricted in any way by mshl, but different output targets might have varying limits on string length, encoding etc.
+
 ```javascript
 a = 'foo'
 b = 'bar'
@@ -49,10 +56,13 @@ b = 'bar'
 c = a+b // Concatenation
 ```
 
-### Boolean Operations
+## Boolean Operations
+
+Boolean logic in mshl is also native and internally use integer operations. For example, the value true is exactly 1, and the value false is 0. Anything non-zero, however, is considered to be true during evaluation of boolean expressions.
+
 ```javascript
-a = true
-b = false
+a = true   // 1
+b = false // 0
 
 c = a && b // Logical and
 d = a || b // Logical or
@@ -70,10 +80,15 @@ l = e>=f // true
 m = !true // not-operator
 ```
 
-### Conditional Statements
+## Conditional Statements
+
+Conditional statements build syntactic suger on boolean operations to provide a more natural and intuitive way to perform operations only when certain conditions are met.
+
 ```javascript
-function foo() { console.log('foo'); return false }
-function bar() { console.log('bar'); return true }
+include('stdio.js')
+
+function foo() { println('foo'); return false }
+function bar() { println('bar'); return true }
 
 a = false
 
@@ -97,23 +112,34 @@ foo() && bar() // Only prints 'foo' since foo() returns false!
 foo() || bar() // Prints 'foo' and 'bar'
 ```
 
-### Loops
+## Loops
+
+Performing the same operation over and over a given number of times requires its own syntax construct, namely loops. For-loop and while-loops work under the same principles—do the same thing over and over until a certain condition no longer holds.
+
 ```javascript
+include('stdio.js')
+
 /* While-loop */
 a = 0
-while ((a++) < 10) {
-    console.log(a) // Prints 1 through 10.
+while (a++ < 10) {
+    println(a) // Prints 1 through 10.
 }
 
 /* For-loop */
 for (i=1; i <= 10; i++) {
-    console.log(i) // Prints 1 through 10.
+    println(i) // Prints 1 through 10.
 }
 ```
 
-### Functions
-mshl naturally supports functions.
+## Functions
+
+Functions provide a way to batch a series of statements together and perform a certain task. During a function call, the function has its own [scope](https://en.wikipedia.org/wiki/Scope_(computer_science)). If this scope is referenced by further nested function calls, it is stored as a [closure](https://en.wikipedia.org/wiki/Closure_(computer_programming)).
+
+Functions also have the ability to carry properties, and thus can be used as arrays, dictionaries or objects. More on this below!
+
 ```javascript
+include('stdio.js')
+
 function my_func(s) {
     console.log(s)
 }
@@ -121,13 +147,17 @@ function my_func(s) {
 my_func('hello world')
 
 // Anonymous functions are supported too!
-log_fn = function (s) { console.log(s) }
+log_fn = function (s) { println(s) }
 log_fn('hello again')
 ```
 
-### Arrays
-mshl has support for arrays.
+## Arrays
+
+Arrays are native, although loosely typed, objects in mshl. They can be used as regular arrays, mutable dictionaries or as objects with properties. Below, we use an array in the most intuitive way. See the [examples](https://github.com/philiparvidsson/mshl/tree/master/examples) for more information on how arrays (and other features of mshl) can be used.
+
 ```javascript
+include('stdio.js')
+
 function print_all(a) {
     i = 0
     s = ''
@@ -135,17 +165,21 @@ function print_all(a) {
         s += (a[i] + ' and ')
         i++
     }
-    console.log(s)
+    println(s)
 }
 
 print_all(['one', 'two', 'three'])
 ```
 
-### Objects
-mshl also supports objects!
+## Objects
+
+In mshl, we can use array declarations or function definitions as objects, depending on the intent.
+
 ```javascript
+include('stdio.js')
+
 function show_fruit_info(f) {
-    console.log('the', f.name, 'is', f.taste)
+    println('the', f.name, 'is', f.taste)
 }
 
 fruit = [] // Array declarations can be used as objects!
@@ -155,50 +189,19 @@ fruit.taste = 'sweet'
 show_fruit_info(fruit)
 
 // Objects can have functions!
-fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
+fruit.eat = function (s) { println('wow, what a', s, 'apple') }
 fruit.eat('crunchy')
 ```
 
-## Built-in Functions/Objects
-
-### console
-```javascript
-/**
- * console.log(s) - Prints text to the console.
- *
- * Examples:
- */
-console.log('hello', 'world') // Print 'hello world' to the console.
-```
-
-### file
-```javascript
-/**
- * file.delete(s) - Deletes the specified file if it exists. Returns true if the file existed.
- *
- * Examples:
- */
-file.delete('myfile.txt')
-
-/**
- * file.exists(s) - Returns true if the specified file exists.
- *
- * Examples:
- */
-file.exists('myfile.txt') ? console.log('file exists') : console.log('no such file')
-
-/**
- * file.read(s) - Reads the contents of the file with the specified name and returns it as a string.
- *
- * Examples:
- */
-s = file.read('myfile.txt')
-```
+## Built-in functions
 
 ### include()
+
+The `include()` function is a built-in compile-time function that includes another mshl source file by inserting it into the source file with the `include()`-statement, where the statement was encountered.
+
 ```javascript
 /**
- * include(fileName) - Includes the specified file for use in the current source file.
+ * include(s) - Includes the specified file for use in the current source file.
  *
  * Examples:
  */
@@ -207,64 +210,17 @@ s = file.read('myfile.txt')
 MY_STRING = 'hello world'
 
 // b.js:
+include('stdio.js') // needed for println()
+
 include('a.js')
-console.log(MY_STRING)
-```
 
-### process
-```javascript
-/**
- * process.argv - Array containing the arguments passed to the program.
- *
- * Examples:
- */
-for (i=0; i < process.argv.length; i++)
-    console.log(process.argv[i])
-
-/**
- * process.exec(path)       - Starts a new process.
- * process.exec(path, args) - Optional args: passes argument string to started process.
- *
- * process.execSync(path)   - Similar to exec(). Pauses batch processing until spawned process exits.
- *                            Like exec(), arguments can be supplied as well.
- *
- * Examples:
- */
-// starts notepad and continues batch processing
-process.exec('notepad.exe')
-
-// starts notepad, opens|creates 'new file.txt', waits for user to close notepad before continuing
-process.execSync('notepad.exe', 'new file.txt')
-
-/**
- * process.exit(code) - Exits the process.
- *
- * Examples:
- */
-process.exit()  // Exit with process.exitCode
-process.exit(1) // Exit with code one.
-
-/**
- * process.exitCode - The exit code to use if no code is specified in the call to process.exit()
- *
- * Examples:
- */
-process.exitCode = 1
-process.exit() // Exit with code one
-```
-
-### readline()
-```javascript
-/**
- * readline(s) - Reads a line form the console.
- *
- * Examples:
- */
-s = readline('Enter name') // Asks the user to input his or her name.
-s = readline()             // Reads a line from the user without displaying a prompt.
+println((MY_STRING)
 ```
 
 ### raw()
+
+The `raw()` function is, again, a built-in compile-time function. It provides a way to inject code directly into the compiled code, at the point where the function is used.
+
 ```javascript
 /**
  * raw(s)   - Inserts the string s directly into the shell script.
