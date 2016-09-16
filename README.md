@@ -13,6 +13,7 @@ Depending on your platform, you will have a file named `<filename>.bat` in your 
 ### Prerequisities
 
 * [Python 2.7.x](https://wiki.python.org/moin/BeginnersGuide/Download)
+  * mshl requires Python to be able to run.
 
 ```
 mshl requires Python to be able to run.
