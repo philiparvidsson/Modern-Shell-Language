@@ -6,7 +6,7 @@
 
 1. Download and install [Python 2.7.x](https://www.python.org/downloads/).
 2. Write a program in mshl or download one of the [examples](examples).
-3. Compile the program with mshlc by invoking it with Python (make sure you are in the correct directory first!): `python mshlc.zip filename.js`
+3. Compile the program with mshlc by invoking it with Python (make sure you are in the correct directory first!): `python mshlc filename.js`
 
 Depending on your platform, you will have a file named `<filename>.bat` in your current directory. It is the compiled shell script, ready to be deployed and executed on any system. The system that you deploy the program on will **not require any software installation**—a mere copy of the compiled script file is required.
 
