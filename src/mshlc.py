@@ -7,13 +7,13 @@ import sys
 
 import mshl
 
-from codegen.batch.batchgen import Batch
-from debug.ast              import visualize_ast
-from lexing.lexer           import Lexer
-from lexing.source          import StringSource
-from optimize.astoptimizer  import ASTOptimizer
-from parsing.parser         import Parser
-from semantics.analyzer     import SemanticAnalyzer
+from codegen.batchgen      import Batch
+from debug.ast             import visualize_ast
+from lexing.lexer          import Lexer
+from lexing.source         import StringSource
+from optimize.astoptimizer import ASTOptimizer
+from parsing.parser        import Parser
+from semantics.analyzer    import SemanticAnalyzer
 
 #-------------------------------------------------
 # FUNCTIONS

@@ -6,7 +6,7 @@ import collections
 
 import mshl
 
-from ..codegenerator import code_emitter, CodeGenerator
+from .codegenerator import code_emitter, CodeGenerator
 
 from parsing import syntax
 
