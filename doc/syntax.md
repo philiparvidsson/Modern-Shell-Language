@@ -214,7 +214,7 @@ include('stdio.js') // needed for println()
 
 include('a.js')
 
-println((MY_STRING)
+println(MY_STRING)
 ```
 
 ### raw()
