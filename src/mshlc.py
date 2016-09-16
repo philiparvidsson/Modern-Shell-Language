@@ -93,6 +93,7 @@ def show_ast(root):
     visualize_ast(root)
 
 def main():
+    args = filter(lambda s: not s.startswith('--'), sys.argv)
     opts = filter(lambda s: s.startswith('--'), sys.argv)
     mshl.conf = mshl.Config(opts)
 
@@ -103,8 +104,12 @@ def main():
         print_usage()
         sys.exit()
 
-    mshl.srcfile  = sys.argv[-1]
-    destfile = mshl.srcfile + '.bat'
+    mshl.srcfile  = args[1]
+
+    if len(args) > 2:
+        destfile = args[2]
+    else:
+        destfile = mshl.srcfile + '.bat'
 
     if not os.path.isfile(mshl.srcfile):
         mshl.fatal('no such file')

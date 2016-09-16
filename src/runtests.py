@@ -50,7 +50,7 @@ if __name__ == '__main__':
         subprocess.call(args)
 
         if os.path.isfile(f + '.bat'):
-            r = subprocess.call([f + '.bat', 'abc', '123'])
+            r = subprocess.call([f + '.bat', 'space in arg', '123abc'])
             if r != 0:
                 failing.append(f2)
             else:
