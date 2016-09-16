@@ -1,6 +1,6 @@
 # Modern Shell Language <img align="right" src="img/mshl-logo.png">
 
-**mshl** is a language for performing automated shell tasks. It's similar to JavaScript in its syntax and compiles to Windows batch files (a bash target is planned!). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux **without requiring the end user to install any extra piece of software**.
+**mshl** is a language for performing automated shell tasks. It's similar to JavaScript in its [syntax](https://github.com/philiparvidsson/mshl/blob/master/doc/syntax.md) and compiles to Windows batch files (a bash target is planned!). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux **without requiring the end user to install any extra piece of software**.
 
 ## Getting Started
 
@@ -72,6 +72,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## Authors
 
 * **Philip Arvidsson** - *Initial work* - [philiparvidsson](https://github.com/philiparvidsson)
+* **Mattias Eriksson** - *Complementary work* - [matteyas](https://github.com/matteyas)
 
 See also the list of [contributors](https://github.com/philiparvidsson/mshl/contributors) who participated in this project.
 
