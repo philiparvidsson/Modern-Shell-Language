@@ -1,12 +1,12 @@
 # What is mshl?
 
-mshl is a compiler for a JavaScript-like language. It compiles to Windows Batch (more targets will be provided in the future!) files. This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows without requiring the end user to install any piece of software.
+Mshl is a language for performing automated shell tasks. It's similar to JavaScript in its syntax and compiles to Windows batch files (a bash target is planned). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux without requiring the end user to install any extra piece of software.
 
 ## Syntax
 The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
 
 ### Assignment
-The most basic operations are variable assignments. Smaragd tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in Smaragd.
+The most basic operations are variable assignments. mshl tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in mshl.
 
 ```javascript
 
@@ -116,7 +116,7 @@ for (i=1; i <= 10; i++) {
 ```
 
 ### Functions
-Smaragd naturally supports functions.
+mshl naturally supports functions.
 ```javascript
 function my_func(s) {
     console.log(s)
@@ -130,7 +130,7 @@ log_fn('hello again')
 ```
 
 ### Arrays
-Smaragd has support for arrays.
+mshl has support for arrays.
 ```javascript
 function print_all(a) {
     i = 0
@@ -146,7 +146,7 @@ print_all(['one', 'two', 'three'])
 ```
 
 ### Objects
-Smaragd also supports objects!
+mshl also supports objects!
 ```javascript
 function show_fruit_info(f) {
     console.log('the', f.name, 'is', f.taste)
