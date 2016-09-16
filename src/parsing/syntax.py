@@ -452,10 +452,10 @@ def parse_expr4(parser):
         expr = Node(INTEGER, 0)
 
     # undefined (should not be used this way, see == operator)
-    elif tok.category == lexemes.UNDEFINED:
-        parser.read_token()
-        expr = Node(INTEGER, 0)
-        mshl.warning('undefined should only be used in equality tests')
+    #elif tok.category == lexemes.UNDEFINED:
+    #    parser.read_token()
+    #    expr = Node(INTEGER, 0)
+    #    mshl.warning('undefined should only be used in equality tests')
 
     elif tok.category == lexemes.NOT:
         parser.read_token()
@@ -476,6 +476,7 @@ def parse_expr4(parser):
     #    pass
 
     elif tok.category != lexemes.EOF:
+        parser.read_token()
         mshl.error("unexpected token: {}".format(tok.category), tok)
 
     if expr:

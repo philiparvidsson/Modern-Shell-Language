@@ -26,17 +26,17 @@ def parse_file(s):
     lexer  = Lexer(source)
     parser = Parser(lexer)
 
+    tree = parser.generate_ast()
+
     if mshl.num_errors > 0:
         mshl.fatal('there were errors')
 
-    tree = parser.generate_ast()
+    analyzer = SemanticAnalyzer()
+    analyzer.verify(tree)
 
     if not mshl.conf.flag('--no-optim'):
         optim = ASTOptimizer()
         optim.optimize_ast(tree)
-
-    analyzer = SemanticAnalyzer()
-    analyzer.verify(tree)
 
     if mshl.num_errors > 0:
         mshl.fatal('there were errors')

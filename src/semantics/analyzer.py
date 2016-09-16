@@ -115,6 +115,9 @@ class SemanticAnalyzer(object):
             # Also, no warnings for vars with leading underscores.  They're used
             # for raw code implementation.
             if not var.name.startswith('_') and var.reads <= var.writes:
+                # FIXME: should probably use this for unnamed functions too
+                if hasattr(var, 'node'):
+                    var.node.is_unused = True
                 if var.type_ == 'func':
                     if scope.name:
                         mshl.warning('function not used in {}: {}'.format(scope.name, var.name))
@@ -182,6 +185,7 @@ class SemanticAnalyzer(object):
 
             var = self.scope.var(var_name)
             var.writes += 1
+            var.node = node
 
         self.verify_children(node)
 
@@ -198,6 +202,7 @@ class SemanticAnalyzer(object):
             if self.scope.is_decl(node.data):
                 mshl.error('duplicate function name: {}'.format(node.data), node.token)
             func = self.global_scope.decl_var(node.data, 'func')
+            func.node = node
             scope_name = 'function ' + node.data
 
         self.enter_scope(scope_name)

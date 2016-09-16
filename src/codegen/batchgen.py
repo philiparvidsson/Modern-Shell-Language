@@ -243,7 +243,35 @@ class Batch(CodeGenerator):
                     type_ = VAR
                 a = self.decl_var(ident.data, type_).name
             else:
+
                 a = self.scope.var(ident.data).name
+
+                var = self.scope.var(ident.data)
+                if var.scope != self.scope and isinstance(var.name, str) and var.name.startswith('__c_%~2__.'):
+                    scopes_out = 0
+                    scope = self.scope
+                    while scope != var.scope:
+                        scope = scope.parent_scope
+                        scopes_out += 1
+
+                    var_name = var.name[10:]
+
+                    t = self.tempvar(INT)
+
+                    self.emit('set {}=__c_%~2__'.format(t.name))
+
+                    #self.emit('echo oo')
+                    #self.emit('echo !{}!'.format(t.name))
+                    for i in range(scopes_out):
+                        self.emit('set {}=!{}!.__p'.format(t.name, t.name))
+                        #self.emit('echo a !{}!'.format(t.name))
+                        self.emit('call set {}=__c_%%!{}!%%__'.format(t.name, t.name))
+                        #self.emit('echo b !{}!'.format(t.name))
+
+                    a = '!{}!.{}'.format(t.name, var_name)
+
+
+
 
         else:
             self._gen_code(ident)
@@ -498,10 +526,10 @@ class Batch(CodeGenerator):
         num_args = len(node.children)
         for i in range(1, num_args):
             a = self.pop_deref()
-            if a.type_ == STR:
-                args.append('"{}"'.format(a.value))
-            else:
+            if a.type_ == INT:
                 args.append(a.value)
+            else:
+                args.append('"{}"'.format(a.value))
 
         args.reverse()
 
@@ -555,6 +583,7 @@ class Batch(CodeGenerator):
     def __identifier(self, node):
         ident = node.data
         var = self.scope.var(ident)
+
         #if not var:
         #    #self.builtins.check(self, ident)
         #    #self.check_builtin(ident)
@@ -754,7 +783,7 @@ class Batch(CodeGenerator):
         self.push(temp, VAR)
 
     @code_emitter(syntax.NOT_EQ_UNDEF)
-    def __not_eq(self, node):
+    def __not_eq_undef(self, node):
         self._gen_code(node.children[0])
 
         a = self.pop_deref().value
@@ -795,7 +824,9 @@ class Batch(CodeGenerator):
 
         #self.emit('endlocal & (')
 
-        if hasattr(a, 'var'):
+        # the not-part in the condition below is a hack to prevent bugs with
+        # returning of args, ie function f(x) { return x }
+        if hasattr(a, 'var') and not a.value.startswith('%~'):
             a.value = '!{}!'.format(a.var.name)
 
         s = 'set /a %1={}' if a.type_ == INT else 'set %1={}'

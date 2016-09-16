@@ -7,6 +7,7 @@ function a(x, y) {
 
 function b(x) {
     assert.equal(x, 'hello world', 'x should contain hello world')
+    return x
 }
 
 function c() {
@@ -25,5 +26,5 @@ b('hello world')
 
 assert.equal(c(), 'hello world', 'c() should return hello world')
 
-b(c())
+assert.equal(b(c()), 'hello world', 'b did not return expected value')
 d()

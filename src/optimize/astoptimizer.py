@@ -31,9 +31,12 @@ class ASTOptimizer(object):
 
     def optimize_ast(self, root):
         if root.children:
-            num_children = len(root.children)
-            for i in range(num_children):
-                root.children[i] = self.optimize_ast(root.children[i])
+            children = root.children
+            root.children = []
+            for child in children:
+                node = self.optimize_ast(child)
+                if node:
+                    root.children.append(node)
 
         if root.construct in self.optimizer_funcs:
             func = self.optimizer_funcs[root.construct]
@@ -59,6 +62,13 @@ class ASTOptimizer(object):
 
         return node
 
+    @node_optimizer(ASSIGN)
+    def __assign(self, node):
+        if hasattr(node, 'is_unused') and node.is_unused:
+            return None
+
+        return node
+
     @node_optimizer(DIVIDE)
     def __divide(self, node):
         if not self.optimize_literals:
@@ -70,6 +80,13 @@ class ASTOptimizer(object):
         if a.construct == INTEGER and b.construct == INTEGER:
             value = int(a.data) / int(b.data)
             return Node(INTEGER, value, node.token)
+
+        return node
+
+    @node_optimizer(FUNC)
+    def __func(self, node):
+        if hasattr(node, 'is_unused') and node.is_unused:
+            return None
 
         return node
 
