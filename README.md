@@ -24,6 +24,8 @@ On Windows, you need to install Python manually. See [this link](https://wiki.py
 #### Download the latest mshl release.
 The latest mshl binary is always available from here. Download and save it to a directory on your computer.
 
+### Compiling
+
 #### Write a simple program in mshl.
 To familiarize yourself with mshl, you can begin by writing a simple test program. You could also use one of the [example programs](examples), or the one below if you just want to try mshl out quickly:
 
