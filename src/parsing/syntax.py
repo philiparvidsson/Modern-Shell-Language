@@ -12,49 +12,50 @@ from lexing import lexemes
 # CONSTANTS
 #--------------------------------------------------
 
-ADD         = 'add'
-ARRAY       = 'array'
-ARRAY_IDX   = 'array index'
-ASSIGN      = 'assign'
-BIN_AND     = 'binary and'
-BIN_OR      = 'binary or'
-BIN_XOR     = 'binary xor'
-BREAK       = 'break'
-CONTINUE    = 'continue'
-DEC         = 'decrement'
-DIVIDE      = 'divide'
-ELSE        = 'else'
-END         = 'end'
-EQUAL       = 'equal'
-EQUAL_UNDEF = 'equals undefined'
-FOR         = 'for'
-FUNC        = 'func'
-FUNC_CALL   = 'func call'
-FUNC_DECL   = 'func decl'
-FUNC_DEF    = 'func def'
-GREATER     = 'greater'
-GREATER_EQ  = 'greater or eq'
-IDENTIFIER  = 'ident'
-IF          = 'if'
-IF_TERNARY  = 'if ternary'
-INC         = 'increment'
-INTEGER     = 'integer'
-LESS        = 'less'
-LESS_EQ     = 'less or equal'
-LOGIC_AND   = 'logic and'
-LOGIC_OR    = 'logic or'
-MODULO      = 'modulo'
-MULTIPLY    = 'multiply'
-NOOP        = 'no-op'
-NOT_EQ      = 'not equal'
-PROGRAM     = 'program'
-RETURN      = 'return'
-SHIFT_L     = 'left-shift'
-SHIFT_R     = 'right-shift'
-STRING      = 'string'
-SUBTRACT    = 'subtract'
-THEN        = 'then'
-WHILE       = 'while'
+ADD          = 'add'
+ARRAY        = 'array'
+ARRAY_IDX    = 'array index'
+ASSIGN       = 'assign'
+BIN_AND      = 'binary and'
+BIN_OR       = 'binary or'
+BIN_XOR      = 'binary xor'
+BREAK        = 'break'
+CONTINUE     = 'continue'
+DEC          = 'decrement'
+DIVIDE       = 'divide'
+ELSE         = 'else'
+END          = 'end'
+EQUAL        = 'equal'
+EQUAL_UNDEF  = 'equals undefined'
+FOR          = 'for'
+FUNC         = 'func'
+FUNC_CALL    = 'func call'
+FUNC_DECL    = 'func decl'
+FUNC_DEF     = 'func def'
+GREATER      = 'greater'
+GREATER_EQ   = 'greater or eq'
+IDENTIFIER   = 'ident'
+IF           = 'if'
+IF_TERNARY   = 'if ternary'
+INC          = 'increment'
+INTEGER      = 'integer'
+LESS         = 'less'
+LESS_EQ      = 'less or equal'
+LOGIC_AND    = 'logic and'
+LOGIC_OR     = 'logic or'
+MODULO       = 'modulo'
+MULTIPLY     = 'multiply'
+NOOP         = 'no-op'
+NOT_EQ       = 'not equal'
+NOT_EQ_UNDEF = 'not equal undefined'
+PROGRAM      = 'program'
+RETURN       = 'return'
+SHIFT_L      = 'left-shift'
+SHIFT_R      = 'right-shift'
+STRING       = 'string'
+SUBTRACT     = 'subtract'
+THEN         = 'then'
+WHILE        = 'while'
 
 #--------------------------------------------------
 # FUNCTIONS
@@ -260,7 +261,13 @@ def parse_expr2(parser):
     # <expr3> != <expr>
     elif tok.category == lexemes.NOT_EQ:
         parser.read_token()
-        expr = Node(NOT_EQ, children=[expr, parse_expr3(parser)])
+
+        tok = parser.peek_token()
+        if tok.category == lexemes.UNDEFINED:
+            parser.read_token()
+            expr = Node(NOT_EQ_UNDEF, children=[expr])
+        else:
+            expr = Node(NOT_EQ, children=[expr, parse_expr3(parser)])
 
     # <expr3> < <expr>
     elif tok.category == lexemes.LESS:

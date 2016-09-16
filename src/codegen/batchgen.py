@@ -753,6 +753,17 @@ class Batch(CodeGenerator):
         self.emit(s.format(a, b, temp.name, temp.name))
         self.push(temp, VAR)
 
+    @code_emitter(syntax.NOT_EQ_UNDEF)
+    def __not_eq(self, node):
+        self._gen_code(node.children[0])
+
+        a = self.pop_deref().value
+
+        temp = self.tempvar(INT)
+        s = 'if "{}" neq "" (set /a {}=1) else (set /a {}=0)'
+        self.emit(s.format(a, temp.name, temp.name))
+        self.push(temp, VAR)
+
     @code_emitter(syntax.PROGRAM)
     def __program(self, node):
         self.emit('@echo off', 'preinit')
