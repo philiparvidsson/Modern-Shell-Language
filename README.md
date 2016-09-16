@@ -36,29 +36,19 @@ until finished
 
 End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
+## Running the Tests
 
 Run the tests by executing `python runtests.py` in the `src`directory. All tests in the `tests` directory will be built and run automatically, ending with a report of passing and failing tests, as well as how much time it took to run them.
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+### Deploying the Compiler
+
+Deploying the mshl compiler is a matter of downloading the mshl binary. The compiler is then invoked with Python by typing `python mshlc <srcfile>`, which will generate a shell script for the target platform.
+
+### Deploying Compiled Programs
+
+Programs compiled with mshlc are shell scripts that run on their target platforms without requiring the installation of any software. Simply transfer the compiled script to the target system and run it!
 
 ## Built With
 
