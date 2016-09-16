@@ -82,7 +82,7 @@ m = !true // not-operator
 
 ## Conditional Statements
 
-Conditional statements build syntactic suger on boolean operations to provide a more natural and intuitive way to perform operations only when certain conditions are met.
+Conditional statements build syntactic sugar on boolean operations to provide a more natural and intuitive way to perform operations only when certain conditions are met.
 
 ```javascript
 include('stdio.js')
