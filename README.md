@@ -34,7 +34,7 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Run the tests by executing `python runtests.py` in the `src`directory. All tests in the `tests` directory will be built and run automatically, ending with a report of passing and failing tests, as well as how much time it took to run them.
 
 ### Break down into end to end tests
 
