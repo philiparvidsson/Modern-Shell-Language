@@ -20,7 +20,7 @@ AUTHORS = [
     'Philip Arvidsson <contact@philiparvidsson.com>',
 ]
 
-VERSION = '0.38'
+VERSION = '0.42'
 
 #-------------------------------------------------
 # CLASSES
