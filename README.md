@@ -24,11 +24,11 @@ On Linux, depending on your distribution, Python comes pre-installed. This means
 On Windows, you need to install Python manually. See [this link](https://wiki.python.org/moin/BeginnersGuide/Download) for more information.
 
 
-### Download the latest mshl release.
+### Download the latest mshl release
 
 The latest mshl binary is always available from here. Download and save it to a directory on your computer.
 
-#### Write a simple program in mshl.
+#### Write a simple program in mshl
 
 To familiarize yourself with mshl, you can begin by writing a simple test program. You could also use one of the [example programs](examples), or the one below if you just want to try mshl out quickly:
 
@@ -41,7 +41,7 @@ println('hey, ', s, '... oh, and hello world')
 
 Mshl is able to compile very complex programs, generating advanced shell scripts performing tasks unthinkable in hand-written shell scripts!
 
-### Compile your program.
+### Compile your program
 
 Save your program in a file and compile it with mshlc by invoking it through Python. Let's say, for example, that you saved the example code above in a file named myprog.js. You can then compile it by invoking mshlc in the following way: `python mshlc myprog.js`
 
