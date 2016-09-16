@@ -1,7 +1,9 @@
+include('stdio.js')
+
 function other_func(s) {
     // Variables can also point to functions!
-    print = console.log
-    print(s)
+    print_fn = println
+    print_fn(s)
 
     // Functions can return values!
     return 'world'
@@ -21,7 +23,7 @@ function main() {
     // Functions can call other functions.
     s = other_func('hello')
 
-    console.log(s)
+    println(s)
 }
 
 // The line below would result in an error since a is inside main()!

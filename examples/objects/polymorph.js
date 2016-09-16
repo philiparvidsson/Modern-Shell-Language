@@ -1,3 +1,5 @@
+include('stdio.js')
+
 // This is a kind of constructor function for the base class. You can
 // think of it as the abstract super class initializer function.
 function animal(kind) {
@@ -14,7 +16,7 @@ function animal(kind) {
     // variable through closures so we could use 'this' inside it.
     // Take a look at the instance methods in cow() and animal()
     this.say = function () {
-        console.log('hello from base class')
+        println('hello from base class')
     }
 
     return this
@@ -30,7 +32,7 @@ function cow(name) {
 
     this.say = function (s) {
         super_say() // <-- This is where we call the super class say() function!
-        console.log(this.name, 'the cow moos', s, "because he's a", this.kind)
+        println(this.name, 'the cow moos', s, "because he's a", this.kind)
     }
 
     return this
@@ -43,7 +45,7 @@ function duck(name) {
     this.name = name
 
     this.say = function (s) {
-        console.log(this.name, 'the duck quacks', s, "because she's a duck")
+        println(this.name, 'the duck quacks', s, "because she's a duck")
     }
 
     return this

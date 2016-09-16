@@ -1,3 +1,5 @@
+include('stdio.js')
+
 // This example shows the use of closures in Smaragd.
 
 // Let's define a constructor function.
@@ -11,7 +13,7 @@ function fruit(name) {
 
     // The peel function works like an instance method.
     this.peel = function (how) {
-        console.log('i peel the', this.name, how)
+        println('i peel the', this.name, how)
     }
 
     // Return the newly created objects.

@@ -1,11 +1,13 @@
+include('stdio.js')
+
 // Loops are useful for repeating operations:
 for (i = 1; i <= 10; i++)
-    console.log(i) // Prints 1 through 10.
+    println(i) // Prints 1 through 10.
 
 // There are also while-loops that keep repeating until a condition is met:
 i = 1
 while (i < 20) {
-    console.log(i) // Prints odd numbers 1 through 19.
+    println(i) // Prints odd numbers 1 through 19.
     i += 2
 }
 
@@ -17,11 +19,11 @@ for (i = 0; i < 10; i++) {
     }
 }
 
-console.log('looped', counter, 'times')
+println('looped', counter, 'times')
 
 // We can also abort loops by breaking out of them:
 for (i = 0; i < 1000; i++) {
-    console.log('hi')
+    println('hi')
 
     // We break when i equals 2, so we only print
     // 'hi' three times.
@@ -34,5 +36,5 @@ for (i = 0; i < 1000; i++) {
     // iterations except the last one.
     if (i < 999) continue
 
-    console.log('hello')
+    println('hello')
 }
