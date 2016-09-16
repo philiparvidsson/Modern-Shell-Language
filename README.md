@@ -1,283 +1,88 @@
-# What is mshl? <img align="right" src="img/mshl-logo.png">
+# Modern Shell Language <img align="right" src="img/mshl-logo.png">
 
-Mshl is a language for performing automated shell tasks. It's similar to JavaScript in its syntax and compiles to Windows batch files (a bash target is planned). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux without requiring the end user to install any extra piece of software.
+**mshl** is a language for performing automated shell tasks. It's similar to JavaScript in its syntax and compiles to Windows batch files (a bash target is planned!). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux **without requiring the end user to install any extra piece of software**.
 
+## Getting Started
 
-## Syntax
-The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Assignment
-The most basic operations are variable assignments. mshl tries to 'infer' types in the sense that it can tell integer and string variables apart for the most part. Also, semicolons after statements are always optional in mshl.
+### Prerequisities
 
-```javascript
+What things you need to install the software and how to install them
 
-/* Numbers */
-a = 10
-b = 0x10
-c = 10b // Binary numbers are supported!
-
-/* Strings */
-x = "a string"
-y = 'another string'
+```
+Give examples
 ```
 
-### Integer Operations
-```javascript
-a = 7
-b = 5
+### Installing
 
-/* Basic */
-a++ // Post-increment
-b-- // Post-decrement
+A step by step series of examples that tell you have to get a development env running
 
-/* Arithmetic */
-c = a+b // Addition
-d = a-b // Subtraction
-e = a*b // Multiplication
-f = a/b // Division
+Stay what the step will be
 
-/* Binary */
-g = a&b  // And
-h = a|b  // Or
-i = a^b  // Xor
-j = a<<b // Left-shift
-k = a>>b // Right-shift
-
-// Most of the operations above also exist as assign-operations, i.e. a+=1, b<<=1 etc.
+```
+Give the example
 ```
 
-### String Operations
-```javascript
-a = 'foo'
-b = 'bar'
+And repeat
 
-c = a+b // Concatenation
+```
+until finished
 ```
 
-### Boolean Operations
-```javascript
-a = true
-b = false
+End with an example of getting some data out of the system or using it for a little demo
 
-c = a && b // Logical and
-d = a || b // Logical or
+## Running the tests
 
-e = 42
-f = 42
+Explain how to run the automated tests for this system
 
-g = e==f // true
-h = e!=f // false
-i = e<f  // false
-j = e<=f // true
-k = e>f  // false
-l = e>=f // true
+### Break down into end to end tests
 
-m = !true // not-operator
+Explain what these tests test and why
+
+```
+Give an example
 ```
 
-### Conditional Statements
-```javascript
-function foo() { console.log('foo'); return false }
-function bar() { console.log('bar'); return true }
+### And coding style tests
 
-a = false
+Explain what these tests test and why
 
-/* Regular if-then-else statements */
-if (a) foo() else bar() // Braces can be omitted for single statements.
-
-if (a) {
-    foo()
-}
-else {
-    bar()
-}
-
-/* Ternary operator */
-fn = a ? foo : bar
-fn()
-// We could also do: a ? foo() : bar()
-
-/* Short-circuiting */
-foo() && bar() // Only prints 'foo' since foo() returns false!
-foo() || bar() // Prints 'foo' and 'bar'
+```
+Give an example
 ```
 
-### Loops
-```javascript
-/* While-loop */
-a = 0
-while ((a++) < 10) {
-    console.log(a) // Prints 1 through 10.
-}
+## Deployment
 
-/* For-loop */
-for (i=1; i <= 10; i++) {
-    console.log(i) // Prints 1 through 10.
-}
-```
+Add additional notes about how to deploy this on a live system
 
-### Functions
-mshl naturally supports functions.
-```javascript
-function my_func(s) {
-    console.log(s)
-}
+## Built With
 
-my_func('hello world')
+* Dropwizard - Bla bla bla
+* Maven - Maybe
+* Atom - ergaerga
 
-// Anonymous functions are supported too!
-log_fn = function (s) { console.log(s) }
-log_fn('hello again')
-```
+## Contributing
 
-### Arrays
-mshl has support for arrays.
-```javascript
-function print_all(a) {
-    i = 0
-    s = ''
-    while (i < a.length) {
-        s += (a[i] + ' and ')
-        i++
-    }
-    console.log(s)
-}
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-print_all(['one', 'two', 'three'])
-```
+## Versioning
 
-### Objects
-mshl also supports objects!
-```javascript
-function show_fruit_info(f) {
-    console.log('the', f.name, 'is', f.taste)
-}
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
-fruit = [] // Array declarations can be used as objects!
-fruit.name = 'apple'
-fruit.taste = 'sweet'
+## Authors
 
-show_fruit_info(fruit)
+* **Philip Arvidsson** - *Initial work* - [philiparvidsson](https://github.com/philiparvidsson)
 
-// Objects can have functions!
-fruit.eat = function (s) { console.log('wow, what a', s, 'apple') }
-fruit.eat('crunchy')
-```
+See also the list of [contributors](https://github.com/philiparvidsson/mshl/contributors) who participated in this project.
 
-## Built-in Functions/Objects
+## License
 
-### console
-```javascript
-/**
- * console.log(s) - Prints text to the console.
- *
- * Examples:
- */
-console.log('hello', 'world') // Print 'hello world' to the console.
-```
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-### file
-```javascript
-/**
- * file.delete(s) - Deletes the specified file if it exists. Returns true if the file existed.
- *
- * Examples:
- */
-file.delete('myfile.txt')
+## Acknowledgments
 
-/**
- * file.exists(s) - Returns true if the specified file exists.
- *
- * Examples:
- */
-file.exists('myfile.txt') ? console.log('file exists') : console.log('no such file')
+* Hat tip to anyone who's code was used
+* Inspiration
+* etc
 
-/**
- * file.read(s) - Reads the contents of the file with the specified name and returns it as a string.
- *
- * Examples:
- */
-s = file.read('myfile.txt')
-```
-
-### include()
-```javascript
-/**
- * include(fileName) - Includes the specified file for use in the current source file.
- *
- * Examples:
- */
-
-// a.js:
-MY_STRING = 'hello world'
-
-// b.js:
-include('a.js')
-console.log(MY_STRING)
-```
-
-### process
-```javascript
-/**
- * process.argv - Array containing the arguments passed to the program.
- *
- * Examples:
- */
-for (i=0; i < process.argv.length; i++)
-    console.log(process.argv[i])
-
-/**
- * process.exec(path)       - Starts a new process.
- * process.exec(path, args) - Optional args: passes argument string to started process.
- *
- * process.execSync(path)   - Similar to exec(). Pauses batch processing until spawned process exits.
- *                            Like exec(), arguments can be supplied as well.
- *
- * Examples:
- */
-// starts notepad and continues batch processing
-process.exec('notepad.exe')
-
-// starts notepad, opens|creates 'new file.txt', waits for user to close notepad before continuing
-process.execSync('notepad.exe', 'new file.txt')
-
-/**
- * process.exit(code) - Exits the process.
- *
- * Examples:
- */
-process.exit()  // Exit with process.exitCode
-process.exit(1) // Exit with code one.
-
-/**
- * process.exitCode - The exit code to use if no code is specified in the call to process.exit()
- *
- * Examples:
- */
-process.exitCode = 1
-process.exit() // Exit with code one
-```
-
-### readline()
-```javascript
-/**
- * readline(s) - Reads a line form the console.
- *
- * Examples:
- */
-s = readline('Enter name') // Asks the user to input his or her name.
-s = readline()             // Reads a line from the user without displaying a prompt.
-```
-
-### raw()
-```javascript
-/**
- * raw(s)   - Inserts the string s directly into the shell script.
- * raw(s,t) - Optionally, t specifies the target platform: 'bat', 'bash'
- *            If the platform does not match t, no changes are made.
- *
- * Examples:
- */
-raw('echo This line will be inserted directly into any shell script')
-raw('echo This one will only be inserted into batch files', 'bat')
-```
