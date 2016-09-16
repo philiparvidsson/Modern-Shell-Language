@@ -14,22 +14,18 @@ Depending on your platform, you will have a file named `<filename>.bat` in your 
 
 * [Python 2.7.x](https://wiki.python.org/moin/BeginnersGuide/Download)
 
-
 ### Installing
 
 #### Begin by downloading and installing [Python 2.7.x](https://www.python.org/downloads/).
-
 On Linux, depending on your distribution, Python comes pre-installed. This means that you do not need to install anything for mshl to work. If you don't have Python (you can check by typing python in a terminal), you might be able to install it by typing `sudo apt-get install python`.
 
 On Windows, you need to install Python manually. See [this link](https://wiki.python.org/moin/BeginnersGuide/Download) for more information.
 
 
 #### Download the latest mshl release
-
 The latest mshl binary is always available from here. Download and save it to a directory on your computer.
 
 #### Write a simple program in mshl
-
 To familiarize yourself with mshl, you can begin by writing a simple test program. You could also use one of the [example programs](examples), or the one below if you just want to try mshl out quickly:
 
 ```javascript
@@ -42,7 +38,6 @@ println('hey, ', s, '... oh, and hello world')
 Mshl is able to compile very complex programs, generating advanced shell scripts performing tasks unthinkable in hand-written shell scripts!
 
 #### Compile your program
-
 Save your program in a file and compile it with mshlc by invoking it through Python. Let's say, for example, that you saved the example code above in a file named myprog.js. You can then compile it by invoking mshlc in the following way: `python mshlc myprog.js`
 
 Make sure you have the mshlc binary in the current directory!
