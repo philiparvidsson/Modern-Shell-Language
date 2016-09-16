@@ -6,7 +6,7 @@ Shell scripting is still an important aspect of automating tasks on computer sys
 
 ## Why are my integer additions treated as string concatenations?
 
-You might encounter a situation where an addition of two integer variables is treated as a concatenation of two strings. Although we try to continuously improve type inference in mshl, the dynamic and loosely typed nature of shell scripting makes this problematic, especially if performance is considered. To resolve the situation, simply cast one or both of the involved variables to an integer by multiplying it with one:
+You might encounter a situation where an addition of two integer variables is treated as a concatenation of two strings. Although we try to continuously improve type inference in mshl, the dynamic and loosely typed nature of shell scripting makes this problematic, especially if performance is considered. To resolve the situation, simply cast one or both of the involved variables to an integer by multiplying with one:
 
 ```javascript
 /* ... */
