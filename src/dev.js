@@ -1,4 +1,4 @@
 include('stdio.js')
-function b() {
-    return 1
-}
+include('process.js')
+
+io.println('heylo')
