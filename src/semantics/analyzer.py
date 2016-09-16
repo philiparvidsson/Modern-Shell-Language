@@ -58,11 +58,8 @@ class SemanticAnalyzer(object):
         self.scope = self.global_scope
 
         # Built-ins
-        self.scope.decl_var('console' , 'string')
-        self.scope.decl_var('file'    , 'string')
         self.scope.decl_var('process' , 'string')
         self.scope.decl_var('raw'     , 'string')
-        self.scope.decl_var('readline', 'string')
 
         # Prevent warnings for built-ins being unused
         for s in self.scope.variables:

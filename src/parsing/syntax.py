@@ -415,16 +415,17 @@ def parse_expr4(parser):
     elif tok.category == lexemes.RETURN:
         parser.read_token()
 
+        newline_after_return = False
         if parser.peek_token().category == lexemes.NEWLINE:
-            tok = parser.peek_token()
-            mshl.warning('prefer semicolon or expression on same row as return keyword', tok)
+            newline_after_return = True
 
         parser.eat_whitespace()
 
-        if parser.peek_token().category == lexemes.SEMICOLON:
-            tok = parser.read_token()
+        if parser.peek_token().category in (lexemes.R_BRACE, lexemes.SEMICOLON):
             expr = Node(RETURN, children=[Node(INTEGER, 0, tok)])
         else:
+            if newline_after_return:
+                mshl.warning('prefer semicolon or expression on same row as return keyword', tok)
             expr = Node(RETURN, children=[parse_expr(parser)])
 
     # true

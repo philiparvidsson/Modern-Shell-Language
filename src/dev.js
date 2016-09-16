@@ -1,6 +1,4 @@
-function ass() {
-
-}
-function ass() {
-
+include('stdio.js')
+function b() {
+    return
 }
