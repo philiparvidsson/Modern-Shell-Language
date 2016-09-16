@@ -92,7 +92,10 @@ class SemanticAnalyzer(object):
         #mshl.trace('generating syntax tree...')
         tree = parser.generate_ast()
 
+        old_srcfile = mshl.srcfile
+        mshl.srcfile = file_name
         self.verify_internal(tree)
+        mshl.srcfile = old_srcfile
 
     def verify_internal(self, node):
         cur_pass = self.cur_pass

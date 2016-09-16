@@ -103,16 +103,16 @@ def main():
         print_usage()
         sys.exit()
 
-    srcfile  = sys.argv[-1]
-    destfile = srcfile + '.bat'
+    mshl.srcfile  = sys.argv[-1]
+    destfile = mshl.srcfile + '.bat'
 
-    if not os.path.isfile(srcfile):
+    if not os.path.isfile(mshl.srcfile):
         mshl.fatal('no such file')
 
-    #os.chdir(os.path.dirname(os.path.abspath(mshl.conf.srcfile)))
+    #os.chdir(os.path.dirname(os.path.abspath(mshl.conf.mshl.srcfile)))
 
     #mshl.trace('generating syntax tree...')
-    tree = parse_file(srcfile)
+    tree = parse_file(mshl.srcfile)
 
     if mshl.conf.flag('--show-ast'):
         show_ast(tree)

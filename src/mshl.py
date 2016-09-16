@@ -11,6 +11,7 @@ import sys
 
 conf = None
 num_errors = 0
+srcfile = None
 
 #-------------------------------------------------
 # CONSTANTS
@@ -81,9 +82,9 @@ def trace(*args):
 
 def error(s, t=None):
     if t:
-        trace('error in ' + '<file>' + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('error in ' + srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace('error in ' + '<file>' + ':', s)
+        trace('error in ' + srcfile + ':', s)
 
     global num_errors
     num_errors += 1
@@ -92,9 +93,9 @@ def error(s, t=None):
 
 def fatal(s, t=None):
     if t:
-        trace('fatal error in ' + '<file>' + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('fatal error in ' + srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace('fatal error in ' + '<file>' + ':', s)
+        trace('fatal error in ' + srcfile + ':', s)
 
     sys.exit()
 
@@ -107,6 +108,6 @@ def warning(s, t=None):
         return
 
     if t:
-        trace('warning in ' + '<file>' + '({}:{})'.format(t.row, t.column) + ':', s)
+        trace('warning in ' + srcfile + '({}:{})'.format(t.row, t.column) + ':', s)
     else:
-        trace('warning in ' + '<file>' + ':', s)
+        trace('warning in ' + srcfile + ':', s)
