@@ -65,7 +65,7 @@ def compile_(tree, destfile):
 def print_logo():
     print (
 '''
-mshl v{}\n\ndevs: {}
+mshlc v{}\n\ndevs: {}
 '''.format(mshl.VERSION, '\n      '.join(mshl.AUTHORS))
 )
 
