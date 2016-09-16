@@ -1,6 +1,7 @@
-# What is mshl? <img style="float: right;" src="img/mshl-logo.png">
+# What is mshl? <img align="right" src="img/mshl-logo.png">
 
 Mshl is a language for performing automated shell tasks. It's similar to JavaScript in its syntax and compiles to Windows batch files (a bash target is planned). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux without requiring the end user to install any extra piece of software.
+
 
 ## Syntax
 The syntax is based on JavaScript to provide a familiar environment, make porting less of a hassle and to provide a simple syntax that is easily understandable.
