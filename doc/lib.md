@@ -1,4 +1,8 @@
-# mshl stdlib manual
+# MSHL Standard Library Guide
+
+```diff
+-UNDER CONSTRUCTION
+```
 
 ## array.js
 
