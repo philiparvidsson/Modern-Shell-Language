@@ -1,4 +1,4 @@
 include('stdio.js')
 function b() {
-    return
+    return 1
 }

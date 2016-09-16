@@ -315,7 +315,6 @@ def parse_expr3(parser):
             if tok.category != lexemes.L_PAREN:
                 break
 
-
     # <expr3>[<expr>]
     elif tok.category == lexemes.L_BRACK:
         while True:
