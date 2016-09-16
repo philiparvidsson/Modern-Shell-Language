@@ -1,10 +1,6 @@
-include('stdio.js')
+function ass() {
 
-a = '123'
-function b() {
-    println(a)
-    a = 'hej'
-    //println(a)
 }
-b()
-//println(a)
+function ass() {
+
+}

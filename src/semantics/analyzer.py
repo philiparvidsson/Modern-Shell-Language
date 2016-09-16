@@ -2,9 +2,6 @@
 # IMPORTS
 #-------------------------------------------------
 
-# FIXME: Check for duplicate arg names
-# FIXME: Check for duplicate function names (only for named functions)
-
 from lexing.lexer    import Lexer
 from lexing.source   import StringSource
 from parsing.parser  import Parser
@@ -174,7 +171,7 @@ class SemanticAnalyzer(object):
 
         self.verify_children(node)
 
-    @analyzes(ASSIGN, PASS_1)
+    @analyzes(ASSIGN, PASS_2)
     def __assign(self, node):
         if node.children[0].construct == IDENTIFIER:
             var_name = node.children[0].data
@@ -198,6 +195,8 @@ class SemanticAnalyzer(object):
                 # FIXME: Maybe replace nested named functions with assignments
                 # of anonymous functions in parser?
                 mshl.error('nested functions must be anonymous', node.token)
+            if self.scope.is_decl(node.data):
+                mshl.error('duplicate function name: {}'.format(node.data), node.token)
             func = self.global_scope.decl_var(node.data, 'func')
             scope_name = 'function ' + node.data
 
@@ -215,8 +214,13 @@ class SemanticAnalyzer(object):
         if func:
             func.num_args = len(decl.children)
 
+        arg_names = []
         for child in decl.children:
             assert child.construct == IDENTIFIER
+            if child.data in arg_names:
+                mshl.error('duplicate arg name: {}'.format(child.data), child.token)
+            arg_names.append(child.data)
+
             # Start with 1 write since they are actually given values when
             # function is called.
             self.scope.decl_var(child.data, 'string').writes = 1
