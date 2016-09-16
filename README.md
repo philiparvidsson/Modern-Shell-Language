@@ -12,20 +12,23 @@ Depending on your platform, you will have a file named `<filename>.bat` in your 
 
 ### Prerequisities
 
-mshl requires [Python 2.7.x](https://wiki.python.org/moin/BeginnersGuide/Download) to compile programs. 
+* [Python 2.7.x](https://wiki.python.org/moin/BeginnersGuide/Download)
 
 ```
-Give examples
+mshl requires Python to be able to run.
 ```
 
 ### Installing
 
 A step by step series of examples that tell you have to get a development env running
 
-Stay what the step will be
+Begin by downloading and installing [Python 2.7.x](https://www.python.org/downloads/).
 
 ```
-Give the example
+On Linux, depending on your distribution, Python comes pre-installed. This means
+that you do not need to install anything for mshl to work. If you don't have
+Python (you can check by typing python in a terminal), you might be able to
+install it by typing sudo apt-get install python.
 ```
 
 And repeat
