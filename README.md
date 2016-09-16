@@ -72,7 +72,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## Authors
 
 * **Philip Arvidsson** - *Initial work* - [philiparvidsson](https://github.com/philiparvidsson)
-* **Mattias Eriksson** - *Complementary work* [matteyas](https://github.com/matteyas)
+* **Mattias Eriksson** - *Complementary work* - [matteyas](https://github.com/matteyas)
 
 See also the list of [contributors](https://github.com/philiparvidsson/mshl/contributors) who participated in this project.
 
