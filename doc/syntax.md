@@ -193,7 +193,7 @@ fruit.eat = function (s) { println('wow, what a', s, 'apple') }
 fruit.eat('crunchy')
 ```
 
-## Built-in functions
+## Built-in Functions
 
 ### include()
 
