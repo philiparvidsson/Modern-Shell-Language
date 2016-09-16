@@ -1,14 +1,18 @@
 # Modern Shell Language <img align="right" src="img/mshl-logo.png">
 
-**mshl** is a language for performing automated shell tasks. It's similar to JavaScript in its [syntax](https://github.com/philiparvidsson/mshl/blob/master/doc/syntax.md) and compiles to Windows batch files (a bash target is planned!). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux **without requiring the end user to install any extra piece of software**.
+**mshl** is a language for performing automated shell tasks. It's similar to JavaScript in its [syntax](doc/syntax.md) and compiles to Windows batch files (a bash target is planned!). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux **without requiring the end user to install any extra piece of software**.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+1. Download and install [Python 2.7.x](https://www.python.org/downloads/).
+2. Write a program in mshl or download one of the [examples](examples).
+3. Compile the program with mshlc by invoking it with Python (make sure you are in the correct directory first!): `python mshlc.zip filename.js`
+
+Depending on your platform, you will have a file named `<filename>.bat` in your current directory. It is the compiled shell script, ready to be deployed and executed on any system. The system that you deploy the program on will **not require any software installation**—a mere copy of the compiled script file is required.
 
 ### Prerequisities
 
-What things you need to install the software and how to install them
+mshl requires [Python 2.7.x](https://wiki.python.org/moin/BeginnersGuide/Download) to compile programs. 
 
 ```
 Give examples
