@@ -83,7 +83,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
+* Some of the tests in the test suite were taken from [Batsh](https://github.com/BYVoid/Batsh) to improve compatibility.
+* Thanks to batch scripting for being painful enough to inspire this project.
