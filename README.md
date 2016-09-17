@@ -2,6 +2,8 @@
 
 **mshl** is a language for performing automated shell tasks. It's similar to JavaScript in its [syntax](doc/syntax.md) and compiles to Windows batch files (a bash target is planned!). This gives you the freedom of modern syntax and language functionality, allowing you to write much more complex programs that run on Windows and Linux **without requiring the end user to install any extra piece of software**.
 
+[Download now!](releases)
+
 ## Getting Started
 
 1. Download and install [Python 2.7.x](https://www.python.org/downloads/).
@@ -22,7 +24,7 @@ On Linux, depending on your distribution, Python comes pre-installed. This means
 On Windows, you need to install Python manually. See [this link](https://wiki.python.org/moin/BeginnersGuide/Download) for more information.
 
 #### Download the latest mshl release.
-The latest mshl binary is always available from here. Download and save it to a directory on your computer.
+The latest mshl binary is always available from [here](releases). Download and save it to a directory on your computer.
 
 ### Compiling
 
