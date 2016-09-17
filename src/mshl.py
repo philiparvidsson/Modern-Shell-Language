@@ -29,7 +29,13 @@ VERSION = '0.42b'
 
 class Config(object):
     def __init__(self, opts):
-        self.include_dirs = [ os.path.join(os.getcwd(), '../lib') ]
+        self.include_dirs = [
+            # For dev env builds
+            os.path.join(os.getcwd(), '../lib'),
+
+            # For bin builds.
+            os.path.join(os.getcwd(), 'mshl')
+        ]
 
         self.options = {
             '--max-errors': '10',
