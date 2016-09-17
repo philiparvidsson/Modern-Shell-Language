@@ -61,8 +61,8 @@ Programs compiled with mshlc are shell scripts that run on their target platform
 
 ## Built With
 
-* **emacs** - *The best text editor out there! ;-)*
-* **Python** - *A widely used high-level, general-purpose, interpreted, dynamic programming language.*
+* **emacs** - The best text editor out there! ;-)
+* **Python** - A widely used high-level, general-purpose, interpreted, dynamic programming language.
 
 ## Contributing
 
