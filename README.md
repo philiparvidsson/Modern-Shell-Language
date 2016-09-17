@@ -28,7 +28,7 @@ The latest mshl binary is always available from [here](https://github.com/philip
 
 ### Compiling
 
-#### Write a simple program in mshl.
+#### Write a simple (or very complex!) program in mshl.
 To familiarize yourself with mshl, you can begin by writing a simple test program. You could also use one of the [example programs](examples), or the one below if you just want to try mshl out quickly:
 
 ```javascript
