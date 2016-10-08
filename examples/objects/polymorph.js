@@ -7,10 +7,8 @@ function animal(kind) {
     // illustrates the intent of this function very well.
     this = []
 
-
     // Here, we add a 'kind' property to the object,
     this.kind = kind
-
 
     // This is a kind of instance method. We can reference any outer
     // variable through closures so we could use 'this' inside it.
