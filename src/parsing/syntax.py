@@ -701,6 +701,8 @@ def parse_str(parser):
 
     value = value[1:-1]
 
+    value = value.replace('\\\\', '\\').replace('\\\'', '\'')
+
     return Node(STRING, value, tok)
 
 def parse_while(parser):
